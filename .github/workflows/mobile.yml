@@ -123,6 +123,7 @@ jobs:
             defaults write "$d" "com.apple.Safari.ContentPageGroupIdentifier.WebKit2DeveloperExtrasEnabled" -bool true || true
           done
           open -a Safari; sleep 6
+          osascript -e 'tell application "Safari" to make new document with properties {URL:"about:blank"}' 2>&1 | head -2; sleep 2
           cat > /tmp/enable.applescript <<'AS'
           on waitWin(n)
             tell application "System Events" to tell process "Safari"
@@ -185,13 +186,13 @@ jobs:
               set frontmost to true
               try
                 try
-                  set its to ""
+                  set itl to ""
                   repeat with mi in (menu items of menu "Develop" of menu bar item "Develop" of menu bar 1)
                     try
-                      set its to its & (name of mi) & " | "
+                      set itl to itl & (name of mi) & " | "
                     end try
                   end repeat
-                  log "develop items: " & its
+                  log "develop items: " & itl
                 end try
                 click menu item "Allow Unsigned Extensions" of menu "Develop" of menu bar item "Develop" of menu bar 1
                 delay 4
