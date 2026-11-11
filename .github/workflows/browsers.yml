@@ -292,6 +292,31 @@ jobs:
           ID=$(pluginkit -mAv -p com.apple.Safari.web-extension | grep -i claritas | head -1 | awk '{print $1}' | tr -d '+-'); echo "ext id: $ID"
           [ -n "$ID" ] && pluginkit -e use -i "$ID" || true
           pluginkit -mAvv -p com.apple.Safari.web-extension | grep -iA3 claritas | head -10 || true
+      - name: Try to enable the extension through UI scripting (diagnostic)
+        continue-on-error: true
+        run: |
+          open -a Safari; sleep 4
+          osascript <<'AS' 2>&1 | head -40
+          tell application "System Events"
+            tell process "Safari"
+              set frontmost to true
+              try
+                set mb to name of every menu bar item of menu bar 1
+                log "menus: " & (mb as string)
+                click menu bar item "Develop" of menu bar 1
+                delay 1
+                set mi to name of every menu item of menu 1 of menu bar item "Develop" of menu bar 1
+                log "develop: " & (mi as string)
+                click menu item "Allow Unsigned Extensions" of menu 1 of menu bar item "Develop" of menu bar 1
+                delay 2
+                log "windows: " & (name of every window as string)
+              on error e
+                log "UI error: " & e
+              end try
+            end tell
+          end tell
+          AS
+          defaults read com.apple.Safari 2>/dev/null | grep -iE "unsigned|extension" | head
       - name: Selenium on real Safari
         run: |
           cat > /tmp/saf.py <<'PY'
