@@ -17,5 +17,6 @@ for f in sorted(glob.glob('t*.py')):
     fl = [l for l in out.splitlines() if l.startswith('FAIL')]
     res[f] = {'pass': out.count('PASS '), 'fail': len(fl), 'rc': rc, 'secs': round(time.time()-t), 'fails': fl[:15], 'tail': out[-700:] if (fl or rc) else ''}
     print(f, res[f]['pass'], 'pass', res[f]['fail'], 'fail rc', rc, flush=True)
+    if res[f]['tail']: print('   TAIL:', res[f]['tail'].replace('\n', '\n   | '), flush=True)
 os.makedirs('results', exist_ok=True)
 json.dump(res, open('results/%s.json' % label, 'w'), indent=1, ensure_ascii=False)

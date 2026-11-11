@@ -85,6 +85,12 @@ jobs:
           sudo apt-get install -y xvfb ffmpeg >/dev/null 2>&1 || true
           [ -n "$BROWSER_EXE" ] && unset BROWSER_CHANNEL
           xvfb-run -a python test/run_matrix.py "${{ matrix.os }}-${{ matrix.browser }}"
+      - name: Prepare tools (Windows / macOS)
+        if: runner.os != 'Linux'
+        shell: bash
+        run: |
+          python -c "import os;os.makedirs('/tmp',exist_ok=True)"
+          if [ "$RUNNER_OS" = macOS ]; then brew install ffmpeg >/dev/null 2>&1 || true; else choco install ffmpeg -y >/dev/null 2>&1 || true; fi
       - name: Run tests (Windows / macOS)
         if: runner.os != 'Linux'
         shell: bash
