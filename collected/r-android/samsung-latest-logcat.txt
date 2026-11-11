@@ -1,0 +1,60 @@
+11-11 21:12:25.923   519  3110 I ActivityManager: Start proc 7381:com.android.chrome:sandboxed_process0:org.chromium.content.app.SandboxedProcessService0:11/u0ai15 for  {com.android.chrome/org.chromium.content.app.SandboxedProcessService0:11}
+11-11 21:12:25.964  7313  7313 D BrowserPreferences: isFirstLaunch preferences file:/data/user/0/com.sec.android.app.sbrowser/shared_prefs/com.sec.android.app.sbrowser_preferences.xml
+11-11 21:12:25.968  7313  7313 D BrowserPreferences: isFirstLaunch preferences file:/data/user/0/com.sec.android.app.sbrowser/shared_prefs/extensions_preferences.xml
+11-11 21:12:25.976  7313  7313 D BrowserPreferences: isFirstLaunch preferences file:/data/user/0/com.sec.android.app.sbrowser/shared_prefs/com.sec.android.app.sbrowser_preferences.xml
+11-11 21:12:25.976  7313  7313 I si__SBrowserMainActivity: package = [com.sec.android.app.sbrowser], versionCode = [1310079502]
+11-11 21:12:25.978  7313  7411 D BrowserPreferences: isFirstLaunch preferences file:/data/user/0/com.sec.android.app.sbrowser/shared_prefs/si_log_preference.xml
+11-11 21:12:25.984   519   821 D ConnectivityService: requestNetwork for uid/pid:10193/7313 activeRequest: null callbackRequest: 176 [NetworkRequest [ REQUEST id=177, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED Uid: 10193 RequestorUid: 10193 RequestorPkg: com.sec.android.app.sbrowser UnderlyingNetworks: Null] ]] callback flags: 0 order: 2147483647
+11-11 21:12:25.996   519   756 D WifiNetworkFactory: got request NetworkRequest [ REQUEST id=177, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED Uid: 10193 RequestorUid: 10193 RequestorPkg: com.sec.android.app.sbrowser UnderlyingNetworks: Null] ]
+11-11 21:12:25.996   519   756 D UntrustedWifiNetworkFactory: got request NetworkRequest [ REQUEST id=177, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED Uid: 10193 RequestorUid: 10193 RequestorPkg: com.sec.android.app.sbrowser UnderlyingNetworks: Null] ]
+11-11 21:12:25.996   519   756 D OemPaidWifiNetworkFactory: got request NetworkRequest [ REQUEST id=177, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED Uid: 10193 RequestorUid: 10193 RequestorPkg: com.sec.android.app.sbrowser UnderlyingNetworks: Null] ]
+11-11 21:12:25.996   519   756 D MultiInternetWifiNetworkFactory: got request NetworkRequest [ REQUEST id=177, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED Uid: 10193 RequestorUid: 10193 RequestorPkg: com.sec.android.app.sbrowser UnderlyingNetworks: Null] ]
+11-11 21:12:26.042  7313  7422 D cr_ChildProcLH: Create a new ChildConnectionAllocator with package name = com.sec.android.app.sbrowser, sandboxed = true
+11-11 21:12:26.061   519   551 I ActivityManager: Start proc 7434:com.sec.android.app.sbrowser:sandboxed_process0:org.chromium.content.app.SandboxedProcessService0:0/u0i1 for service {com.sec.android.app.sbrowser/org.chromium.content.app.SandboxedProcessService0:0}
+11-11 21:12:26.065  7434  7434 W nativebridge: Cannot create code cache directory /data/user/0/com.sec.android.app.sbrowser/code_cache: No such file or directory.
+11-11 21:12:26.073  7313  7313 D NotificationCountListener: [NotificationManager] Listener Registered com.sec.android.app.sbrowser.toolbar.Toolbar{5082097 V.E...... ......ID 0,0-0,0 #7f0b123e app:id/toolbar} Instance Id: 1
+11-11 21:12:26.074  7313  7313 D NotificationCountListener: [NotificationManager] Listener Registered com.sec.android.app.sbrowser.toolbar.Bottombar{7232e1c V.E...... ......ID 0,0-0,0 #7f0b027e app:id/bottombar_layout} Instance Id: 1
+11-11 21:12:26.078  7313  7431 I SmpLog  : [SMP] Test mode: false, v:3.3.11.2, com.sec.android.app.sbrowser
+11-11 21:12:26.102   519  3110 D CoreBackPreview: Window{35ccd10 u0 com.sec.android.app.sbrowser/com.sec.android.app.sbrowser.SBrowserMainActivity}: Setting back callback OnBackInvokedCallbackInfo{mCallback=android.window.IOnBackInvokedCallback$Stub$Proxy@6ca1a6c, mPriority=0, mIsAnimationCallback=false}
+11-11 21:12:26.209  7434  7434 D nativeloader: Configuring clns-6 for other apk /data/app/~~7sSshA0Rbg-TUd75o9bHQg==/com.sec.android.app.sbrowser-_dyf6yMPE33gyNCAZHGaxQ==/base.apk. target_sdk_version=37, uses_libraries=, library_path=/data/app/~~7sSshA0Rbg-TUd75o9bHQg==/com.sec.android.app.sbrowser-_dyf6yMPE33gyNCAZHGaxQ==/lib/arm64:/data/app/~~7sSshA0Rbg-TUd75o9bHQg==/com.sec.android.app.sbrowser-_dyf6yMPE33gyNCAZHGaxQ==/base.apk!/lib/arm64-v8a, permitted_path=/data:/mnt/expand:/data/user/0/com.sec.android.app.sbrowser
+11-11 21:12:26.274   519   551 I ActivityManager: Start proc 7460:com.android.chrome:sandboxed_process0:org.chromium.content.app.SandboxedProcessService0:12/u0ai16 for  {com.android.chrome/org.chromium.content.app.SandboxedProcessService0:12}
+11-11 21:12:26.404   519   538 W system_server: Failed to determine oat file name for dex location /data/app/~~7sSshA0Rbg-TUd75o9bHQg==/com.sec.android.app.sbrowser-_dyf6yMPE33gyNCAZHGaxQ==/base.apk: Dalvik cache directory does not exist
+11-11 21:12:26.404   519   538 W ziparchive: Unable to open '/data/app/~~7sSshA0Rbg-TUd75o9bHQg==/com.sec.android.app.sbrowser-_dyf6yMPE33gyNCAZHGaxQ==/base.dm': No such file or directory
+11-11 21:12:26.406   519   538 I ActivityTaskManager: Displayed com.sec.android.app.sbrowser/.SBrowserMainActivity for user 0: +904ms
+11-11 21:12:26.411  7313  7376 F libc    : Fatal signal 11 (SIGSEGV), code 2 (SEGV_ACCERR), fault addr 0x778b0d1ac4cc in tid 7376 (Thread-11), pid 7313 (id.app.sbrowser)
+11-11 21:12:26.422   519  2511 W InputManager-JNI: Input channel object '206f0d9 Splash Screen com.sec.android.app.sbrowser (client)' was disposed without first being removed with the input manager!
+11-11 21:12:26.423   519  2592 D CoreBackPreview: Window{206f0d9 u0 Splash Screen com.sec.android.app.sbrowser EXITING}: Setting back callback null
+11-11 21:12:26.441   519  2519 I ImeTracker: com.sec.android.app.sbrowser:e32c7b9f: onRequestHide at ORIGIN_SERVER_HIDE_INPUT reason HIDE_UNSPECIFIED_WINDOW
+11-11 21:12:26.441   519  2519 I ImeTracker: com.sec.android.app.sbrowser:e32c7b9f: onCancelled at PHASE_SERVER_SHOULD_HIDE
+11-11 21:12:26.464  1542  1542 I GoogleInputMethodService: GoogleInputMethodService.onStartInput():1877 onStartInput(EditorInfo{inputType=0x0(NULL) imeOptions=0x0 privateImeOptions=null actionName=UNSPECIFIED actionLabel=null actionId=0 initialSelStart=-1 initialSelEnd=-1 initialCapsMode=0x0 hintText=null label=null packageName=com.sec.android.app.sbrowser fieldId=0 fieldName=null extras=null}, false)
+11-11 21:12:26.647  7484  7484 F DEBUG   : Cmdline: com.sec.android.app.sbrowser
+11-11 21:12:26.647  7484  7484 F DEBUG   : pid: 7313, tid: 7376, name: Thread-11  >>> com.sec.android.app.sbrowser <<<
+11-11 21:12:26.647  7484  7484 F DEBUG   :       #00 pc 00000000043a04cc  /data/app/~~7sSshA0Rbg-TUd75o9bHQg==/com.sec.android.app.sbrowser-_dyf6yMPE33gyNCAZHGaxQ==/base.apk (offset 0x5344000)
+11-11 21:12:26.662   519  7497 W ActivityTaskManager:   Force finishing activity com.sec.android.app.sbrowser/.SBrowserMainActivity
+11-11 21:12:26.665   519   539 I ActivityManager: Showing crash dialog for package com.sec.android.app.sbrowser u0
+11-11 21:12:26.691   519  2592 I ActivityManager: Process com.sec.android.app.sbrowser (pid 7313) has died: fg  TOP 
+11-11 21:12:26.692   519   763 D ConnectivityService: releasing NetworkRequest [ REQUEST id=177, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED Uid: 10193 RequestorUid: 10193 RequestorPkg: com.sec.android.app.sbrowser UnderlyingNetworks: Null] ] (release request)
+11-11 21:12:26.692   519   821 I WindowManager: WIN DEATH: Window{35ccd10 u0 com.sec.android.app.sbrowser/com.sec.android.app.sbrowser.SBrowserMainActivity}
+11-11 21:12:26.693   519   821 W InputManager-JNI: Input channel object '35ccd10 com.sec.android.app.sbrowser/com.sec.android.app.sbrowser.SBrowserMainActivity (client)' was disposed without first being removed with the input manager!
+11-11 21:12:26.694   519  1720 I ImeTracker: com.sec.android.app.sbrowser:80bd2bcb: onRequestHide at ORIGIN_SERVER_HIDE_INPUT reason HIDE_REMOVE_CLIENT
+11-11 21:12:26.696   519  1720 I ImeTracker: com.sec.android.app.sbrowser:80bd2bcb: onCancelled at PHASE_SERVER_SHOULD_HIDE
+11-11 21:12:26.696   519   821 W WindowManager: Failed to deliver inset control state change to w=Window{35ccd10 u0 com.sec.android.app.sbrowser/com.sec.android.app.sbrowser.SBrowserMainActivity EXITING}
+11-11 21:12:26.696   519   539 D CoreBackPreview: Window{5f871f2 u0 Application Error: com.sec.android.app.sbrowser}: Setting back callback OnBackInvokedCallbackInfo{mCallback=android.window.WindowOnBackInvokedDispatcher$OnBackInvokedCallbackWrapper@d39f033, mPriority=0, mIsAnimationCallback=false}
+11-11 21:12:26.699   519  2592 I ActivityManager: Killing 7434:com.sec.android.app.sbrowser:sandboxed_process0:org.chromium.content.app.SandboxedProcessService0:0/u0a193i1 (adj 0): isolated not needed
+11-11 21:12:27.169   519   541 W ActivityTaskManager: Activity top resumed state loss timeout for ActivityRecord{d9f3dd u0 com.sec.android.app.sbrowser/.SBrowserMainActivity t17 f} isExiting}
+11-11 21:12:27.227   519   551 I ActivityManager: Start proc 7506:com.android.chrome:sandboxed_process0:org.chromium.content.app.SandboxedProcessService0:13/u0ai17 for  {com.android.chrome/org.chromium.content.app.SandboxedProcessService0:13}
+11-11 21:12:27.337   519  7497 W ActivityManager: Ignoring remove of inactive process: ProcessRecord{e143233 0:com.sec.android.app.sbrowser/u0a193}
+11-11 21:12:27.338   519   539 D CoreBackPreview: Window{5f871f2 u0 Application Error: com.sec.android.app.sbrowser}: Setting back callback null
+11-11 21:12:27.353   519   539 W InputManager-JNI: Input channel object '5f871f2 Application Error: com.sec.android.app.sbrowser (client)' was disposed without first being removed with the input manager!
+11-11 21:12:27.403   519   538 V WindowManager:     info={id=13 t=CLOSE f=0x10 trk=0 r=[0@Point(0, 0)] c=[{WCT{RemoteToken{c58ce1 Task{589fe34 #12 type=standard A=10150:com.android.chrome}}} m=TO_FRONT f=MOVE_TO_TOP leash=Surface(name=Task=12)/@0x195f65 sb=Rect(0, 0 - 320, 640) eb=Rect(0, 0 - 320, 640) d=0},{WCT{RemoteToken{878c249 Task{f085b52 #17 type=standard A=10193:com.sec.android.app.sbrowser}}} m=CLOSE f=NONE leash=Surface(name=Task=17)/@0xf6979e4 sb=Rect(0, 0 - 320, 640) eb=Rect(0, 0 - 320, 640) d=0}]}
+11-11 21:12:27.428   519   542 W WindowManager: Failed to deliver inset control state change to w=Window{35ccd10 u0 com.sec.android.app.sbrowser/com.sec.android.app.sbrowser.SBrowserMainActivity EXITING}
+11-11 21:12:27.433   519  3407 W WindowManager: Exception thrown during dispatchAppVisibility Window{35ccd10 u0 com.sec.android.app.sbrowser/com.sec.android.app.sbrowser.SBrowserMainActivity EXITING}
+11-11 21:12:28.386   519   551 I ActivityManager: Start proc 7525:com.android.chrome:sandboxed_process0:org.chromium.content.app.SandboxedProcessService0:14/u0ai18 for  {com.android.chrome/org.chromium.content.app.SandboxedProcessService0:14}
+11-11 21:12:29.810   519   551 I ActivityManager: Start proc 7562:com.android.chrome:sandboxed_process0:org.chromium.content.app.SandboxedProcessService0:15/u0ai19 for  {com.android.chrome/org.chromium.content.app.SandboxedProcessService0:15}
+11-11 21:12:31.314   519   551 I ActivityManager: Start proc 7581:com.android.chrome:sandboxed_process0:org.chromium.content.app.SandboxedProcessService0:16/u0ai20 for  {com.android.chrome/org.chromium.content.app.SandboxedProcessService0:16}
+11-11 21:12:36.504  7614  7614 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 0 <<<<<<
+11-11 21:12:36.507  7614  7614 I AndroidRuntime: Using default boot image
+11-11 21:12:36.507  7614  7614 I AndroidRuntime: Leaving lock profiling enabled
+11-11 21:12:36.586  7614  7614 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+11-11 21:12:37.615  7614  7614 D AndroidRuntime: Shutting down VM
+11-11 21:12:37.630   519   821 W ActivityManager: Unable to start service Intent { cmp=com.google.android.apps.tachyon/.clientapi.ClientApiService } U=0: not found

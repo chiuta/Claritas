@@ -1,0 +1,31 @@
+READY 8790
+GET Mozilla/5.0 (Linux; Android 14; sdk_gphone64_x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Mobile Safari/537.36
+GET Mozilla/5.0 (Linux; Android 14; sdk_gphone64_x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Mobile Safari/537.36
+REPORT on Mozilla/5.0 (Linux; Android 14; sdk_gphone64_x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Mobile Safa
+GET Mozilla/5.0 (Linux; Android 14; sdk_gphone64_x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Mobile Safari/537.36
+GET Mozilla/5.0 (Linux; Android 14; sdk_gphone64_x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Mobile Safari/537.36
+REPORT yb Mozilla/5.0 (Linux; Android 14; sdk_gphone64_x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Mobile Safa
+GET Mozilla/5.0 (Linux; Android 14; sdk_gphone64_x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Mobile Safari/537.36
+GET Mozilla/5.0 (Linux; Android 14; sdk_gphone64_x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Mobile Safari/537.36
+GET Mozilla/5.0 (Linux; Android 14; sdk_gphone64_x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Mobile Safari/537.36
+GET Mozilla/5.0 (Linux; Android 14; sdk_gphone64_x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Mobile Safari/537.36
+REPORT off Mozilla/5.0 (Linux; Android 14; sdk_gphone64_x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Mobile Safa
+PASS [chrome-android] on: CLR încărcat object
+PASS [chrome-android] on: fără erori JS 
+PASS [chrome-android] on: contrast text pal corectat rgb(88, 88, 88) pe rgb(255, 255, 255) = 7.1
+PASS [chrome-android] on: contrast câmp dezactivat corectat rgb(79, 79, 79) pe rgb(240, 240, 240) = 7.2
+PASS [chrome-android] on: probă CSS de autor (control) rgb(1, 2, 3)
+PASS [chrome-android] on: diagnostic (informativ) {"vis":"visible","hidden":false,"focus":true,"clrStyleLen":1481,"fixed":2,"pAttrs":"id=p;style=color: rgb(187, 187, 187); background: rgb(255, 255, 255); --clr-c: rgb(88, 88, 88);;data-clr-c=1","ctlAttrs":"id=ctl","sheets":2,"tr":"all 1e-06s ease 0s","anim":"none"}
+PASS [chrome-android] on: contrast text pal după încă 8 s (informativ) rgb(88, 88, 88) = 7.1 vis=visible
+PASS [chrome-android] yb: CLR încărcat object
+PASS [chrome-android] yb: fără erori JS 
+PASS [chrome-android] yb: temă galben pe negru rgb(0, 0, 0)
+PASS [chrome-android] yb: probă CSS de autor (control) rgb(1, 2, 3)
+PASS [chrome-android] yb: diagnostic (informativ) {"vis":"visible","hidden":false,"focus":true,"clrStyleLen":2683,"fixed":0,"pAttrs":"id=p;style=color:#bbbbbb;background:#ffffff","ctlAttrs":"id=ctl","sheets":2,"tr":"all 1e-06s ease 0s","anim":"none"}
+PASS [chrome-android] off: CLR încărcat object
+PASS [chrome-android] off: fără erori JS 
+PASS [chrome-android] off: extensie oprită: pagină neschimbată rgb(187, 187, 187)
+PASS [chrome-android] off: probă CSS de autor (control) rgb(1, 2, 3)
+PASS [chrome-android] off: diagnostic (informativ) {"vis":"hidden","hidden":true,"focus":false,"clrStyleLen":null,"fixed":0,"pAttrs":"id=p;style=color:#bbbbbb;background:#ffffff","ctlAttrs":"id=ctl","sheets":1,"tr":"all 0s ease 0s","anim":"none"}
+UA: Mozilla/5.0 (Linux; Android 14; sdk_gphone64_x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Mobile Safari/537.36
+ERORI: niciuna

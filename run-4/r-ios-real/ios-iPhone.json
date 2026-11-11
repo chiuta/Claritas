@@ -1,0 +1,117 @@
+{
+ "tag": "ios-iPhone",
+ "reports": {
+  "on": {
+   "scenario": "on",
+   "ua": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_7 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.2 Mobile/15E148 Safari/604.1",
+   "dpr": 3,
+   "w": 402,
+   "results": [
+    {
+     "name": "CLR încărcat",
+     "ok": true,
+     "detail": "object"
+    },
+    {
+     "name": "fără erori JS",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "name": "contrast text pal corectat",
+     "ok": true,
+     "detail": "rgb(88, 88, 88) pe rgb(255, 255, 255) = 7.1"
+    },
+    {
+     "name": "contrast câmp dezactivat corectat",
+     "ok": true,
+     "detail": "rgb(79, 79, 79) pe rgb(240, 240, 240) = 7.2"
+    },
+    {
+     "name": "probă CSS de autor (control)",
+     "ok": true,
+     "detail": "rgb(1, 2, 3)"
+    },
+    {
+     "name": "diagnostic (informativ)",
+     "ok": true,
+     "detail": "{\"vis\":\"visible\",\"hidden\":false,\"focus\":true,\"clrStyleLen\":1269,\"fixed\":2,\"pAttrs\":\"id=p;style=color: rgb(187, 187, 187); background: rgb(255, 255, 255); --clr-c: rgb(88, 88, 88);;data-clr-c=1\",\"ctlAttrs\":\"id=ctl\",\"sheets\":2,\"tr\":\"all\",\"anim\":\"none\"}"
+    },
+    {
+     "name": "contrast text pal după încă 8 s (informativ)",
+     "ok": true,
+     "detail": "rgb(88, 88, 88) = 7.1 vis=visible"
+    }
+   ],
+   "done": false
+  },
+  "yb": {
+   "scenario": "yb",
+   "ua": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_7 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.2 Mobile/15E148 Safari/604.1",
+   "dpr": 3,
+   "w": 402,
+   "results": [
+    {
+     "name": "CLR încărcat",
+     "ok": true,
+     "detail": "object"
+    },
+    {
+     "name": "fără erori JS",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "name": "temă galben pe negru",
+     "ok": true,
+     "detail": "rgb(0, 0, 0)"
+    },
+    {
+     "name": "probă CSS de autor (control)",
+     "ok": true,
+     "detail": "rgb(1, 2, 3)"
+    },
+    {
+     "name": "diagnostic (informativ)",
+     "ok": true,
+     "detail": "{\"vis\":\"visible\",\"hidden\":false,\"focus\":true,\"clrStyleLen\":2471,\"fixed\":0,\"pAttrs\":\"id=p;style=color:#bbbbbb;background:#ffffff\",\"ctlAttrs\":\"id=ctl\",\"sheets\":2,\"tr\":\"all\",\"anim\":\"none\"}"
+    }
+   ],
+   "done": false
+  },
+  "off": {
+   "scenario": "off",
+   "ua": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_7 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.2 Mobile/15E148 Safari/604.1",
+   "dpr": 3,
+   "w": 402,
+   "results": [
+    {
+     "name": "CLR încărcat",
+     "ok": true,
+     "detail": "object"
+    },
+    {
+     "name": "fără erori JS",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "name": "extensie oprită: pagină neschimbată",
+     "ok": true,
+     "detail": "rgb(187, 187, 187)"
+    },
+    {
+     "name": "probă CSS de autor (control)",
+     "ok": true,
+     "detail": "rgb(1, 2, 3)"
+    },
+    {
+     "name": "diagnostic (informativ)",
+     "ok": true,
+     "detail": "{\"vis\":\"visible\",\"hidden\":false,\"focus\":true,\"clrStyleLen\":null,\"fixed\":0,\"pAttrs\":\"id=p;style=color:#bbbbbb;background:#ffffff\",\"ctlAttrs\":\"id=ctl\",\"sheets\":1,\"tr\":\"all\",\"anim\":\"none\"}"
+    }
+   ],
+   "done": true
+  }
+ }
+}

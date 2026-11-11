@@ -1,0 +1,9 @@
+READY 8790
+GET Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) SamsungBrowser/24.0 Chrome/117.0.0.0 Mobile Safari/537.36
+GET Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) SamsungBrowser/24.0 Chrome/117.0.0.0 Mobile Safari/537.36
+GET Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) SamsungBrowser/24.0 Chrome/117.0.0.0 Mobile Safari/537.36
+FAIL [samsung-v1240615502] scenariu on: fără raport (pagina nu a rulat)
+FAIL [samsung-v1240615502] scenariu yb: fără raport (pagina nu a rulat)
+FAIL [samsung-v1240615502] scenariu off: fără raport (pagina nu a rulat)
+UA: necunoscut
+ERORI: 3

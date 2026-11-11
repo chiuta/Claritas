@@ -1,0 +1,60 @@
+11-11 21:11:00.623  5464  5464 D nativeloader: Configuring clns-6 for other apk /data/app/~~B715RO3_QYXhtRKRpEV1iw==/org.mozilla.fenix-NtB2T7FAwUSTslU-3N9jXA==/base.apk. target_sdk_version=37, uses_libraries=, library_path=/data/app/~~B715RO3_QYXhtRKRpEV1iw==/org.mozilla.fenix-NtB2T7FAwUSTslU-3N9jXA==/lib/x86_64:/data/app/~~B715RO3_QYXhtRKRpEV1iw==/org.mozilla.fenix-NtB2T7FAwUSTslU-3N9jXA==/base.apk!/lib/x86_64, permitted_path=/data:/mnt/expand:/data/user/0/org.mozilla.fenix
+11-11 21:11:00.628  5464  5464 V GraphicsEnvironment: ANGLE GameManagerService for org.mozilla.fenix: false
+11-11 21:11:00.628  5464  5464 V GraphicsEnvironment: org.mozilla.fenix is not listed in per-application setting
+11-11 21:11:00.632  5464  5464 I ServiceChildProcess: onCreate, process name: org.mozilla.fenix:sandboxed_tab_disable_art_image_4
+11-11 21:11:00.706  5464  5464 W org.mozilla.fenix:sandboxed_tab_disable_art_image_4: type=1400 audit(0.0:47): avc:  denied  { read } for  comm=57656220436F6E74656E74 name="product_name" dev="sysfs" ino=781 scontext=u:r:untrusted_app:s0:c192,c256,c512,c768 tcontext=u:object_r:sysfs:s0 tclass=file permissive=0 app=org.mozilla.fenix
+11-11 21:11:00.714  5464  5464 W org.mozilla.fenix:sandboxed_tab_disable_art_image_4: type=1400 audit(0.0:48): avc:  denied  { read } for  comm=57656220436F6E74656E74 name="product_sku" dev="sysfs" ino=785 scontext=u:r:untrusted_app:s0:c192,c256,c512,c768 tcontext=u:object_r:sysfs:s0 tclass=file permissive=0 app=org.mozilla.fenix
+11-11 21:11:02.549   519  1745 W ActivityManager: Unable to start service Intent { act=com.google.android.play.core.splitinstall.BIND_SPLIT_INSTALL_SERVICE pkg=com.android.vending } U=0: not found
+11-11 21:11:03.553   519  2258 I ActivityManager: Background started FGS: Allowed [callingPackage: com.google.android.inputmethod.latin; callingUid: 10145; uidState: IMPB; uidBFSL: n/a; intent: Intent { cmp=com.google.android.inputmethod.latin/com.google.android.apps.inputmethod.libs.dataservice.superpacks.SuperpacksForegroundTaskService }; code:CURRENT_INPUT_METHOD; tempAllowListReason:<null>; targetSdkVersion:33; callerTargetSdkVersion:33; startForegroundCount:0; bindFromPackage:null: isBindService:false]
+11-11 21:11:03.560   519  1641 W ActivityManager: Foreground service started from background can not have location/camera/microphone access: service com.google.android.inputmethod.latin/com.google.android.apps.inputmethod.libs.dataservice.superpacks.SuperpacksForegroundTaskService
+11-11 21:11:05.142   519   551 I ActivityManager: Start proc 5576:com.google.android.webview/u0a134 for broadcast {com.google.android.webview/com.google.android.libraries.phenotype.client.stable.PhenotypeUpdateBackgroundBroadcastReceiver}
+11-11 21:11:06.703   519  1830 W ActivityManager: Unable to start service Intent { act=android.settings.hats.START_SERVICE pkg=com.google.android.settings.intelligence (has extras) } U=0: not found
+11-11 21:11:06.749   519   574 W ActivityManager: Scheduling restart of crashed service com.google.android.settings.intelligence/.modules.routines.impl.RoutinesJobIntentService in 1000ms for connection
+11-11 21:11:06.749   519   574 W ActivityManager: Scheduling restart of crashed service com.google.android.settings.intelligence/.modules.routines.impl.PruneDatabaseJobService in 11000ms for connection
+11-11 21:11:06.750   519   574 W ActivityManager: Scheduling restart of crashed service com.google.android.settings.intelligence/.modules.routines.impl.ComputeNewInferencesJobService in 20999ms for connection
+11-11 21:11:09.805  5639  5639 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 0 <<<<<<
+11-11 21:11:09.815  5639  5639 I AndroidRuntime: Using default boot image
+11-11 21:11:09.815  5639  5639 I AndroidRuntime: Leaving lock profiling enabled
+11-11 21:11:10.060  5639  5639 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+11-11 21:11:11.148  5639  5639 D AndroidRuntime: Shutting down VM
+11-11 21:11:11.175   519   893 W ActivityManager: Unable to start service Intent { cmp=com.google.android.apps.tachyon/.clientapi.ClientApiService } U=0: not found
+11-11 21:11:17.682   519  2520 W ActivityManager: Scheduling restart of crashed service com.google.android.gms/.chimera.GmsBoundBrokerService in 20067ms for connection
+11-11 21:11:17.683   519  2520 W ActivityManager: Scheduling restart of crashed service com.google.android.gms/.wallet.service.PaymentService in 30066ms for connection
+11-11 21:11:17.683   519  2520 W ActivityManager: Scheduling restart of crashed service com.google.android.gms/.icing.service.IndexService in 40066ms for connection
+11-11 21:11:17.683   519  2520 W ActivityManager: Scheduling restart of crashed service com.google.android.gms/.chimera.GmsIntentOperationService in 50066ms for start-requested
+11-11 21:11:17.683   519  2520 W ActivityManager: Scheduling restart of crashed service com.google.android.gms/.chimera.container.ExternalFileApkService in 60066ms for start-requested
+11-11 21:11:17.684   519  2520 W ActivityManager: Scheduling restart of crashed service com.google.android.gms/.chimera.GmsApiService in 70065ms for connection
+11-11 21:11:17.762   519   927 W ActivityManager: Scheduling restart of crashed service com.google.android.gms/com.google.android.location.internal.GoogleLocationManagerService in 79987ms for start-requested
+11-11 21:11:17.763   519   927 W ActivityManager: Scheduling restart of crashed service com.google.android.gms/.chimera.PersistentIntentOperationService in 89986ms for start-requested
+11-11 21:11:17.763   519   927 W ActivityManager: Scheduling restart of crashed service com.google.android.gms/.clearcut.debug.ClearcutDebugDumpService in 99986ms for start-requested
+11-11 21:11:17.763   519   927 W ActivityManager: Scheduling restart of crashed service com.google.android.gms/com.google.android.location.internal.server.HardwareArProviderService in 109986ms for connection
+11-11 21:11:17.763   519   927 W ActivityManager: Scheduling restart of crashed service com.google.android.gms/.location.geocode.GeocodeService in 119986ms for connection
+11-11 21:11:17.763   519   927 W ActivityManager: Scheduling restart of crashed service com.google.android.gms/.common.stats.GmsCoreStatsService in 129986ms for start-requested
+11-11 21:11:17.763   519   927 W ActivityManager: Scheduling restart of crashed service com.google.android.gms/com.google.android.contextmanager.service.ContextManagerService in 139986ms for start-requested
+11-11 21:11:17.763   519   927 W ActivityManager: Scheduling restart of crashed service com.google.android.gms/.deviceconnection.service.DeviceConnectionWatcherService in 149986ms for start-requested
+11-11 21:11:17.763   519   927 W ActivityManager: Scheduling restart of crashed service com.google.android.gms/.nearby.messages.service.NearbyMessagesService in 159986ms for start-requested
+11-11 21:11:17.763   519   927 W ActivityManager: Scheduling restart of crashed service com.google.android.gms/.thunderbird.EmergencyPersistentService in 169986ms for start-requested
+11-11 21:11:17.763   519   927 W ActivityManager: Scheduling restart of crashed service com.google.android.gms/com.google.android.location.fused.FusedLocationService in 179986ms for connection
+11-11 21:11:17.763   519   927 W ActivityManager: Scheduling restart of crashed service com.google.android.gms/.nearby.exposurenotification.service.ExposureMatchingService in 189986ms for start-requested
+11-11 21:11:17.763   519   927 W ActivityManager: Scheduling restart of crashed service com.google.android.gms/.chimera.PersistentApiService in 199986ms for connection
+11-11 21:11:17.764   519   927 W ActivityManager: Scheduling restart of crashed service com.google.android.gms/.nearby.sharing.ReceiveSurfaceService in 209985ms for start-requested
+11-11 21:11:17.764   519   927 W ActivityManager: Scheduling restart of crashed service com.google.android.gms/.chimera.PersistentBoundBrokerService in 219985ms for connection
+11-11 21:11:17.764   519   927 W ActivityManager: Scheduling restart of crashed service com.google.android.gms/.location.persistent.LocationPersistentService in 229985ms for start-requested
+11-11 21:11:17.764   519   927 W ActivityManager: Scheduling restart of crashed service com.google.android.gms/.auth.setup.devicesignals.LockScreenService in 239985ms for start-requested
+11-11 21:11:17.764   519   927 W ActivityManager: Scheduling restart of crashed service com.google.android.gms/.gcm.GcmService in 249985ms for start-requested
+11-11 21:11:17.765   519   927 W ActivityManager: Scheduling restart of crashed service com.google.android.gms/.chimera.PersistentDirectBootAwareApiService in 259984ms for connection
+11-11 21:11:17.765   519   927 W ActivityManager: Scheduling restart of crashed service com.google.android.gms/.gcm.nts.SchedulerService in 269984ms for start-requested
+11-11 21:11:17.765   519   927 W ActivityManager: Scheduling restart of crashed service com.google.android.gms/com.google.android.location.internal.server.GoogleLocationService in 279984ms for start-requested
+11-11 21:11:17.765   519   927 W ActivityManager: Scheduling restart of crashed service com.google.android.gms/com.google.android.location.network.NetworkLocationService in 289984ms for connection
+11-11 21:11:17.765   519   927 W ActivityManager: Scheduling restart of crashed service com.google.android.gms/.geotimezone.GeoTimeZoneService in 299984ms for connection
+11-11 21:11:17.765   519   927 W ActivityManager: Scheduling restart of crashed service com.google.android.gms/.nearby.exposurenotification.service.ExposureNotificationInternalService in 309984ms for start-requested
+11-11 21:11:17.765   519   927 W ActivityManager: Scheduling restart of crashed service com.google.android.gms/com.google.android.location.reporting.service.ReportingAndroidService in 319984ms for connection
+11-11 21:11:17.814   519   551 I ActivityManager: Start proc 5834:com.google.android.settings.intelligence/u0a118 for service {com.google.android.settings.intelligence/com.google.android.settings.intelligence.modules.routines.impl.PruneDatabaseJobService}
+11-11 21:11:17.833   519   551 I ActivityManager: Start proc 5835:com.google.android.gms.persistent/u0a131 for service {com.google.android.gms/com.google.android.gms.chimera.PersistentBoundBrokerService}
+11-11 21:11:17.864   519   550 W ActivityManager: Rescheduling restart of crashed service com.google.android.settings.intelligence/.modules.routines.impl.ComputeNewInferencesJobService in 0ms for other
+11-11 21:11:17.864   519   550 W ActivityManager: Rescheduling restart of crashed service com.google.android.gms/.chimera.GmsBoundBrokerService in 818ms for other
+11-11 21:11:17.864   519   550 W ActivityManager: Rescheduling restart of crashed service com.google.android.gms/.wallet.service.PaymentService in 10818ms for other
+11-11 21:11:17.864   519   550 W ActivityManager: Rescheduling restart of crashed service com.google.android.gms/.icing.service.IndexService in 20818ms for other
+11-11 21:11:17.864   519   550 W ActivityManager: Rescheduling restart of crashed service com.google.android.gms/.chimera.GmsIntentOperationService in 30818ms for other
+11-11 21:11:17.864   519   550 W ActivityManager: Rescheduling restart of crashed service com.google.android.gms/.chimera.container.ExternalFileApkService in 40818ms for other
+11-11 21:11:17.864   519   550 W ActivityManager: Rescheduling restart of crashed service com.google.android.gms/.chimera.GmsApiService in 50818ms for other

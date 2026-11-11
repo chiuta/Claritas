@@ -1,0 +1,27 @@
+READY 8790
+GET Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/27.2 Safari/605.1.15
+GET Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/27.2 Safari/605.1.15
+REPORT on Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/27.2 Safari/605.1.15
+GET Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/27.2 Safari/605.1.15
+REPORT yb Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/27.2 Safari/605.1.15
+GET Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/27.2 Safari/605.1.15
+REPORT off Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/27.2 Safari/605.1.15
+PASS [safari-macos] on: CLR încărcat object
+PASS [safari-macos] on: fără erori JS 
+PASS [safari-macos] on: contrast text pal corectat rgb(88, 88, 88) pe rgb(255, 255, 255) = 7.1
+PASS [safari-macos] on: contrast câmp dezactivat corectat rgb(79, 79, 79) pe rgb(240, 240, 240) = 7.2
+PASS [safari-macos] on: probă CSS de autor (control) rgb(1, 2, 3)
+PASS [safari-macos] on: diagnostic (informativ) {"vis":"visible","hidden":false,"focus":false,"clrStyleLen":1481,"fixed":2,"pAttrs":"id=p;style=color: rgb(187, 187, 187); background: rgb(255, 255, 255); --clr-c: rgb(88, 88, 88);;data-clr-c=1","ctlAttrs":"id=ctl","sheets":2,"tr":"0.000001s","anim":"none"}
+PASS [safari-macos] on: contrast text pal după încă 8 s (informativ) rgb(88, 88, 88) = 7.1 vis=visible
+PASS [safari-macos] yb: CLR încărcat object
+PASS [safari-macos] yb: fără erori JS 
+PASS [safari-macos] yb: temă galben pe negru rgb(0, 0, 0)
+PASS [safari-macos] yb: probă CSS de autor (control) rgb(1, 2, 3)
+PASS [safari-macos] yb: diagnostic (informativ) {"vis":"visible","hidden":false,"focus":false,"clrStyleLen":2683,"fixed":0,"pAttrs":"id=p;style=color:#bbbbbb;background:#ffffff","ctlAttrs":"id=ctl","sheets":2,"tr":"0.000001s","anim":"none"}
+PASS [safari-macos] off: CLR încărcat object
+PASS [safari-macos] off: fără erori JS 
+PASS [safari-macos] off: extensie oprită: pagină neschimbată rgb(187, 187, 187)
+PASS [safari-macos] off: probă CSS de autor (control) rgb(1, 2, 3)
+PASS [safari-macos] off: diagnostic (informativ) {"vis":"visible","hidden":false,"focus":false,"clrStyleLen":null,"fixed":0,"pAttrs":"id=p;style=color:#bbbbbb;background:#ffffff","ctlAttrs":"id=ctl","sheets":1,"tr":"all","anim":"none"}
+UA: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/27.2 Safari/605.1.15
+ERORI: niciuna
