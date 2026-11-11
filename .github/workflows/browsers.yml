@@ -317,6 +317,10 @@ jobs:
             sleep 3; xcrun simctl io "$DEV" screenshot /tmp/$kind.png || true
             xcrun simctl listapps "$DEV" | grep -iE "claritas" | head -5
           done
+          mkdir -p test/results && cp /tmp/iPhone.png /tmp/iPad.png test/results/ 2>/dev/null || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: { name: r-ios, path: test/results }
 
   safari-real:
     runs-on: macos-latest
@@ -401,6 +405,9 @@ jobs:
           AS
           osascript /tmp/enable.applescript 2>&1 | head -40
           defaults read "$HOME/Library/Containers/com.apple.Safari/Data/Library/Preferences/com.apple.Safari" 2>/dev/null | grep -iE "unsigned|extension|Develop" | head
+      - name: Screenshot of the desktop
+        if: always()
+        run: mkdir -p test/results && screencapture -x test/results/safari-desktop.png || true
       - name: Selenium on real Safari
         run: |
           cat > /tmp/saf.py <<'PY'
@@ -419,6 +426,12 @@ jobs:
           d.quit()
           PY
           python /tmp/saf.py 2>&1 | tail -12
+      - name: Screenshot after test
+        if: always()
+        run: mkdir -p test/results && screencapture -x test/results/safari-after.png || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: { name: r-safari-real, path: test/results }
 
   publish:
     needs: [lint, chromium-family, firefox, engines, safari-convert, samsung-emulation, chrome-for-testing, browser-profiles, firefox-android, ios-ipados, safari-real]
