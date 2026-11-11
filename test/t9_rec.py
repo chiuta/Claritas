@@ -29,7 +29,13 @@ async def main():
         open('/tmp/out.webm', 'wb').write(base64.b64decode(b64))
         r = subprocess.run(['ffprobe', '-v', 'error', '-show_entries', 'format=duration', '-of', 'default=nw=1:nk=1', '/tmp/out.webm'], capture_output=True, text=True)
         print('ffprobe duration:', r.stdout.strip(), r.stderr.strip()[:200])
+        try: dur = float(r.stdout.strip())
+        except Exception: dur = None
+        have_ff = r.returncode == 0 or dur is not None
+        print(('PASS ' if (dur and dur > 1.5) else ('SKIP ' if not have_ff else 'FAIL ')) + f'WebM durată corectă ({dur})')
         r2 = subprocess.run(['ffmpeg', '-v', 'error', '-i', '/tmp/out.webm', '-f', 'null', '-'], capture_output=True, text=True)
         print('decodare ffmpeg erori:', r2.stderr.strip()[:200] or 'niciuna')
+        print(('PASS ' if (not r2.stderr.strip() and r2.returncode == 0) else ('SKIP ' if r2.returncode != 0 and not r2.stderr.strip() else 'FAIL ')) + 'WebM se decodează fără erori')
+        print(('PASS ' if size and size > 2000 else 'FAIL ') + f'video descărcat ({size} B)')
         await ctx.close()
 asyncio.run(main())

@@ -21,6 +21,8 @@ async def main():
         print('theme:', (await sw.evaluate("() => chrome.storage.local.get('settings')"))['settings'].get('theme'))
         await pop.click('#t-read'); await pop.screenshot(path='p3_read.png')
         print('popup errors:', errs)
+        print(('PASS ' if not errs else 'FAIL ') + 'popup fără erori JS')
+        print(('PASS ' if st['settings'].get('profile') or st['settings'].get('theme') else 'FAIL ') + 'profil dislexie aplicat în setări')
         # magnifier test
         await sw.evaluate("s => chrome.storage.local.set({settings: s})", {'enabled':True,'magnifier':True,'mask':True,'cursor':True})
         page = await ctx.new_page(); await page.goto(PAGE); await page.wait_for_timeout(1000)
