@@ -34,6 +34,7 @@ async def main():
             await sw.evaluate("async (l)=>{await chrome.storage.local.clear();await chrome.storage.local.set({settings:{enabled:true,lang:l}})}", lg)
             pop = await ctx.new_page(); pop.on('pageerror', lambda e: errs.append(str(e)))
             await pop.set_viewport_size({'width': 400, 'height': 800}); await pop.goto(f'chrome-extension://{eid}/popup.html'); await pop.wait_for_timeout(800)
+            await pop.add_style_tag(content='*{font-family:"DejaVu Sans",sans-serif !important}')  # font lat: stresează depășirile
             bad = set()
             tabs = await pop.query_selector_all('[role=tab], .tabs button')
             for i in range(max(1, len(tabs))):

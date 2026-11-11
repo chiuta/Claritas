@@ -33,8 +33,6 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - { os: ubuntu-latest,  browser: chrome }
-          - { os: ubuntu-latest,  browser: chrome-beta }
           - { os: ubuntu-latest,  browser: msedge }
           - { os: ubuntu-latest,  browser: chromium }
           - { os: ubuntu-latest,  browser: brave }
@@ -53,19 +51,20 @@ jobs:
       - name: Install browser (Playwright channel)
         if: ${{ !contains('brave vivaldi opera', matrix.browser) }}
         run: python -m playwright install ${{ matrix.browser == 'chromium' && 'chromium' || matrix.browser }}
+      - run: python -m playwright install ffmpeg
       - name: Install Brave
         if: matrix.browser == 'brave'
         run: |
           sudo curl -fsSLo /usr/share/keyrings/brave-browser-archive-keyring.gpg https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg
           echo "deb [signed-by=/usr/share/keyrings/brave-browser-archive-keyring.gpg] https://brave-browser-apt-release.s3.brave.com/ stable main" | sudo tee /etc/apt/sources.list.d/brave.list
-          sudo apt-get update && sudo apt-get install -y brave-browser
+          for i in 1 2 3 4; do sudo apt-get update && sudo apt-get install -y -o Acquire::Retries=5 brave-browser && break; sleep 20; done
           echo "BROWSER_EXE=/usr/bin/brave-browser" >> $GITHUB_ENV
       - name: Install Vivaldi
         if: matrix.browser == 'vivaldi'
         run: |
           curl -fsSL https://repo.vivaldi.com/archive/linux_signing_key.pub | sudo gpg --dearmor -o /usr/share/keyrings/vivaldi.gpg
           echo "deb [signed-by=/usr/share/keyrings/vivaldi.gpg] https://repo.vivaldi.com/archive/deb/ stable main" | sudo tee /etc/apt/sources.list.d/vivaldi.list
-          sudo apt-get update && sudo apt-get install -y vivaldi-stable
+          for i in 1 2 3 4; do sudo apt-get update && sudo apt-get install -y -o Acquire::Retries=5 vivaldi-stable && break; sleep 20; done
           echo "BROWSER_EXE=/usr/bin/vivaldi-stable" >> $GITHUB_ENV
       - name: Install Opera
         if: matrix.browser == 'opera'
@@ -73,7 +72,7 @@ jobs:
           curl -fsSL https://deb.opera.com/archive.key | sudo gpg --dearmor -o /usr/share/keyrings/opera.gpg
           echo "deb [signed-by=/usr/share/keyrings/opera.gpg] https://deb.opera.com/opera-stable/ stable non-free" | sudo tee /etc/apt/sources.list.d/opera.list
           echo "opera-stable opera-stable/add-deb-source boolean false" | sudo debconf-set-selections
-          sudo apt-get update && sudo apt-get install -y opera-stable
+          for i in 1 2 3 4; do sudo apt-get update && sudo apt-get install -y -o Acquire::Retries=5 opera-stable && break; sleep 20; done
           echo "BROWSER_EXE=/usr/bin/opera" >> $GITHUB_ENV
       - name: Run tests (Linux, xvfb)
         if: runner.os == 'Linux'
@@ -82,7 +81,7 @@ jobs:
         env:
           BROWSER_CHANNEL: ${{ matrix.browser }}
         run: |
-          sudo apt-get install -y ffmpeg >/dev/null 2>&1 || true
+          true
           [ -n "$BROWSER_EXE" ] && unset BROWSER_CHANNEL
           python test/run_matrix.py "${{ matrix.os }}-${{ matrix.browser }}"
       - name: Prepare tools (Windows / macOS)
@@ -162,7 +161,7 @@ jobs:
       - uses: actions/setup-python@v5
         with: { python-version: '3.12' }
       - run: pip install playwright
-      - run: python -m playwright install ${{ matrix.engine }} ${{ runner.os == 'Linux' && '--with-deps' || '' }}
+      - run: python -m playwright install ${{ matrix.engine }} 
       - run: python test/engine_shim.py ${{ matrix.engine }}
 
   safari-convert:

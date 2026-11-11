@@ -27,13 +27,20 @@ async def main():
         b64 = await rec.evaluate("fetch(document.getElementById('dlv').href).then(r=>r.arrayBuffer()).then(b=>{let s='';const u=new Uint8Array(b);for(let i=0;i<u.length;i+=8192)s+=String.fromCharCode.apply(null,u.subarray(i,i+8192));return btoa(s)})")
         import base64, subprocess
         open('/tmp/out.webm', 'wb').write(base64.b64decode(b64))
-        r = subprocess.run(['ffprobe', '-v', 'error', '-show_entries', 'format=duration', '-of', 'default=nw=1:nk=1', '/tmp/out.webm'], capture_output=True, text=True)
+        import shutil, glob, re, os
+        FF = shutil.which('ffmpeg') or next(iter(sorted(glob.glob(os.path.expanduser('~/.cache/ms-playwright/ffmpeg-*/ffmpeg*')) + glob.glob(os.path.expanduser('~/AppData/Local/ms-playwright/ffmpeg-*/ffmpeg*')) + glob.glob(os.path.expanduser('~/Library/Caches/ms-playwright/ffmpeg-*/ffmpeg*')))), None)
+        class R: pass
+        r = R(); r.returncode = 1; r.stdout = ''; r.stderr = 'fără ffmpeg'
+        if FF:
+            ri = subprocess.run([FF, '-hide_banner', '-i', '/tmp/out.webm'], capture_output=True, text=True)
+            m = re.search(r'Duration: (\d+):(\d+):([\d.]+)', ri.stderr)
+            if m: r.stdout = str(int(m[1])*3600 + int(m[2])*60 + float(m[3])); r.returncode = 0; r.stderr = ''
         print('ffprobe duration:', r.stdout.strip(), r.stderr.strip()[:200])
         try: dur = float(r.stdout.strip())
         except Exception: dur = None
         have_ff = r.returncode == 0 or dur is not None
         print(('PASS ' if (dur and dur > 1.5) else ('SKIP ' if not have_ff else 'FAIL ')) + f'WebM durată corectă ({dur})')
-        r2 = subprocess.run(['ffmpeg', '-v', 'error', '-i', '/tmp/out.webm', '-f', 'null', '-'], capture_output=True, text=True)
+        r2 = subprocess.run([FF or 'ffmpeg', '-v', 'error', '-i', '/tmp/out.webm', '-f', 'null', '-'], capture_output=True, text=True)
         print('decodare ffmpeg erori:', r2.stderr.strip()[:200] or 'niciuna')
         print(('PASS ' if (not r2.stderr.strip() and r2.returncode == 0) else ('SKIP ' if r2.returncode != 0 and not r2.stderr.strip() else 'FAIL ')) + 'WebM se decodează fără erori')
         print(('PASS ' if size and size > 2000 else 'FAIL ') + f'video descărcat ({size} B)')

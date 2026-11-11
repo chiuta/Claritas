@@ -7,7 +7,7 @@ async def _patched(self, user_data_dir, **kw):
     kw.pop('channel', None)
     exe = os.environ.get('BROWSER_EXE'); ch = os.environ.get('BROWSER_CHANNEL')
     if exe: kw['executable_path'] = exe
-    elif ch and ch != 'chromium': kw['channel'] = ch
+    elif ch: kw['channel'] = ch  # 'chromium' = Chromium cu headless nou (suportă extensii)
     elif not ch: kw['channel'] = 'chrome'
     headed = bool(os.environ.get('HEADED'))
     kw['headless'] = not headed
