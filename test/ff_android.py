@@ -56,6 +56,8 @@ try:
         if rgb(c0) != (187, 187, 187): break
         time.sleep(2)
     print('INFO clr-style css:', d.execute_script("const e=document.getElementById('clr-style');return e?[e.textContent.length, e.textContent.indexOf('data-clr-c]'), e.textContent.slice(-260), e.parentNode&&e.parentNode.nodeName, document.styleSheets.length]:null"))
+    print('CSS FULL:', d.execute_script("return document.getElementById('clr-style').textContent"))
+    print('INFO pagecss test:', d.execute_script("const st=document.createElement('style');st.textContent=':root:root:root [data-clr-c]{color:var(--clr-c)!important}';document.head.appendChild(st);const c=getComputedStyle(document.getElementById('p')).color;st.remove();return c"))
     print('INFO match:', d.execute_script("const p=document.getElementById('p');return [p.matches(':root:root:root [data-clr-c]'), getComputedStyle(p).getPropertyValue('--clr-c'), getComputedStyle(p).color]"))
     print('INFO p inline/attrs:', d.execute_script("const e=document.getElementById('p');return [e.getAttribute('style'),[...e.attributes].map(a=>a.name).join(','),document.documentElement.getAttribute('data-clr')||[...document.documentElement.attributes].map(a=>a.name).join(',')]"))
     p = d.execute_script("const s=getComputedStyle(document.getElementById('p'));return [s.color,s.backgroundColor]")
