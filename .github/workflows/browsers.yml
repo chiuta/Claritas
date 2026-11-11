@@ -497,7 +497,7 @@ jobs:
         run: |
           mkdir -p test/results
           python tools/claritas_ci.py test/ci_good.html --format all --out /tmp/rep-good --max-errors 0 | tee test/results/ci-good.txt
-          set +e; python tools/claritas_ci.py test/ci_bad.html --format all --out /tmp/rep-bad --max-errors 0 | tee test/results/ci-bad.txt; RC=$?; set -e
+          set +e; python tools/claritas_ci.py test/ci_bad.html --format all --out /tmp/rep-bad --max-errors 0 > test/results/ci-bad.txt; RC=$?; set -e; cat test/results/ci-bad.txt
           [ "$RC" = 1 ] || { echo "FAIL: pagina proastă trebuia să dea cod 1, a dat $RC"; echo "FAIL ci-mode rc=$RC" > test/results/ci-mode-FAIL.txt; exit 1; }
           for f in /tmp/rep-good/*.json /tmp/rep-bad/*.html /tmp/rep-bad/*.csv; do test -s "$f" || { echo "FAIL: lipsește $f"; exit 1; }; done
           python - <<'PY'

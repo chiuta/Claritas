@@ -33,7 +33,8 @@ async def _cdp_launch(self, kw):
     args = [a for a in kw.get('args', []) if not a.startswith('--headless')]
     cmd = [exe, f'--user-data-dir={prof}', f'--remote-debugging-port={port}', '--no-first-run', '--no-default-browser-check', '--no-sandbox',
            '--disable-features=DisableLoadExtensionCommandLineSwitch'] + (['--headless=new'] if not os.environ.get('HEADED') else []) + args + ['about:blank']
-    proc = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    logf = tempfile.NamedTemporaryFile('w+', suffix='.log', delete=False)
+    proc = subprocess.Popen(cmd, stdout=logf, stderr=logf)
     for _ in range(60):
         try: urllib.request.urlopen(f'http://127.0.0.1:{port}/json/version', timeout=1); break
         except Exception: time.sleep(0.5)

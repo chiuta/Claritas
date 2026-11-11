@@ -1,8 +1,9 @@
 """Module opționale v1.6: părți de vorbire, audit suplimentar, dicționar local, sincronizare profiluri (+ OCR dacă pachetul -ocr e construit)."""
-import asyncio, pathlib, json, sys, base64, os
+import tempfile, asyncio, pathlib, json, sys, base64, os
 from playwright.async_api import async_playwright
 EXT = str(pathlib.Path('../dist/chromium').resolve())
 OCR_EXT = pathlib.Path('../dist/chromium-ocr-unz')
+TMP = tempfile.gettempdir().replace('\\', '/')
 fails = []
 def ok(c, m):
     print(('PASS ' if c else 'FAIL ') + m); sys.stdout.flush()
@@ -17,10 +18,10 @@ HTML = """<!doctype html><html lang="en"><head><meta charset="utf-8"><title>t</t
 <article><h1>Title</h1><p>The quick happiness was running quickly through the beautiful garden and everyone enjoyed management decisions.</p>
 <p>Casa frumoasă are informația importantă și oamenii lucrează repede acolo, iar conducerea hotărăște.</p></article>
 """ + "".join(f"<p>filler {i}</p>" for i in range(60)) + "</body></html>"
-pathlib.Path('/tmp/t13.html').write_text(HTML)
+pathlib.Path(TMP + '/t13.html').write_text(HTML)
 async def main():
     async with async_playwright() as p:
-        ctx = await p.chromium.launch_persistent_context('/tmp/prof13', channel='chrome', headless=True, accept_downloads=True,
+        ctx = await p.chromium.launch_persistent_context(TMP + '/prof13', channel='chrome', headless=True, accept_downloads=True,
             args=[f'--disable-extensions-except={EXT}', f'--load-extension={EXT}', '--headless=new', '--no-sandbox'], viewport={'width': 900, 'height': 700})
         sw = ctx.service_workers[0] if ctx.service_workers else await ctx.wait_for_event('serviceworker', timeout=8000)
         eid = sw.url.split('/')[2]; errs = []
@@ -39,13 +40,13 @@ async def main():
         ok(r['j'] == 2 and r['t'] == 2 and r['bad'] == 0, f'dictParse JSON/TSV {r}')
         ok(r['l1'] == 'clădire de locuit' and r['l2'] == 'plăcută; atrăgătoare' and r['l3'] == 'o publicație tipărită' and r['l4'] is None and r['cnt'] == 4, 'căutare în dicționar local (diacritice, majuscule, punctuație)')
         # import prin interfață
-        pathlib.Path('/tmp/d13.json').write_text(json.dumps({'alfa': 'prima literă', 'beta': 'a doua literă', 'gama': 'a treia'}, ensure_ascii=False))
-        await pop.set_input_files('#dictFile', '/tmp/d13.json'); await pop.wait_for_timeout(600)
+        pathlib.Path(TMP + '/d13.json').write_text(json.dumps({'alfa': 'prima literă', 'beta': 'a doua literă', 'gama': 'a treia'}, ensure_ascii=False))
+        await pop.set_input_files('#dictFile', TMP + '/d13.json'); await pop.wait_for_timeout(600)
         info = await pop.inner_text('#dictInfo'); ok(info.startswith('3'), f'import dicționar din popup: «{info}»')
         # 3. audit suplimentar
         await sw.evaluate("()=>chrome.storage.local.set({settings:{enabled:true,lang:'en',modAuditPlus:false}})")
         page = await ctx.new_page(); page.on('pageerror', lambda e: errs.append(str(e)))
-        await page.goto('file:///tmp/t13.html'); await page.wait_for_timeout(1500)
+        await page.goto(pathlib.Path(TMP + '/t13.html').as_uri()); await page.wait_for_timeout(1500)
         async def feat(cmd, **kw):
             return await sw.evaluate("""async ([cmd,kw]) => { const [t]=await chrome.tabs.query({url:'file:///*'}); return await chrome.tabs.sendMessage(t.id, Object.assign({type:'feat',cmd}, kw)); }""", [cmd, kw])
         a0 = {i['rule'] for i in (await feat('audit'))['items']}
@@ -89,14 +90,14 @@ async def main():
             from PIL import Image, ImageDraw, ImageFont
             im = Image.new('RGB', (900, 200), 'white'); d = ImageDraw.Draw(im)
             f = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf', 56) if os.path.exists('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf') else ImageFont.load_default()
-            d.text((30, 60), 'Hello Claritas OCR 2026', fill='black', font=f); im.save('/tmp/ocr13.png')
-            ctx2 = await p.chromium.launch_persistent_context('/tmp/prof13b', channel='chrome', headless=True,
+            d.text((30, 60), 'Hello Claritas OCR 2026', fill='black', font=f); im.save(TMP + '/ocr13.png')
+            ctx2 = await p.chromium.launch_persistent_context(TMP + '/prof13b', channel='chrome', headless=True,
                 args=[f'--disable-extensions-except={ext2}', f'--load-extension={ext2}', '--headless=new', '--no-sandbox'])
             sw2 = ctx2.service_workers[0] if ctx2.service_workers else await ctx2.wait_for_event('serviceworker', timeout=8000)
             eid2 = sw2.url.split('/')[2]; pg = await ctx2.new_page(); e2 = []
             pg.on('pageerror', lambda e: e2.append(str(e))); pg.on('requestfailed', lambda r: e2.append('REQFAIL ' + r.url[:80]))
             await pg.goto(f'chrome-extension://{eid2}/ocr.html'); await pg.wait_for_timeout(1500)
-            await pg.set_input_files('#file', '/tmp/ocr13.png'); await pg.select_option('#lang', 'eng'); await pg.click('#run')
+            await pg.set_input_files('#file', TMP + '/ocr13.png'); await pg.select_option('#lang', 'eng'); await pg.click('#run')
             for _ in range(40):
                 await pg.wait_for_timeout(2000)
                 if await pg.evaluate('!!(window.__ocrDone||window.__ocrErr)'): break

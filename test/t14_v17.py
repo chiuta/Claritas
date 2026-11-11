@@ -1,8 +1,9 @@
 """Module opționale v1.7: navigare, spotlight, voce, rezumat/glosar, alt imagini, raport, profiluri, reguli pe site, panou confidențialitate."""
-import asyncio, pathlib, json, sys
+import tempfile, asyncio, pathlib, json, sys
 from playwright.async_api import async_playwright
 EXT = str(pathlib.Path('../dist/chromium').resolve())
 SRC = pathlib.Path('../extension')
+TMP = tempfile.gettempdir().replace('\\', '/')
 fails = []
 def ok(c, m):
     print(('PASS ' if c else 'FAIL ') + m); sys.stdout.flush()
@@ -16,10 +17,10 @@ HTML = f"""<!doctype html><html lang="ro"><head><meta charset="utf-8"><title>Pag
 <img id="i2" src="/img/casa-din-brasov-2023.jpg"><img id="i3" src="/img/IMG_1234.jpg" alt="IMG_1234.jpg"><img id="i4" src="/q.png" alt="Grafic vânzări"><img id="i5" src="/d.png" alt="">
 </main><aside aria-label="Lateral"><p>Notă laterală cu text suficient de lung pentru a conta aici.</p></aside><footer><p>Subsol</p></footer>
 """ + "".join(f"<p>umplutură {i}</p>" for i in range(40)) + "</body></html>"
-pathlib.Path('/tmp/t14.html').write_text(HTML)
+pathlib.Path(TMP + '/t14.html').write_text(HTML)
 async def main():
     async with async_playwright() as p:
-        ctx = await p.chromium.launch_persistent_context('/tmp/prof14', channel='chrome', headless=True, accept_downloads=True,
+        ctx = await p.chromium.launch_persistent_context(TMP + '/prof14', channel='chrome', headless=True, accept_downloads=True,
             args=[f'--disable-extensions-except={EXT}', f'--load-extension={EXT}', '--headless=new', '--no-sandbox'], viewport={'width': 1000, 'height': 700})
         sw = ctx.service_workers[0] if ctx.service_workers else await ctx.wait_for_event('serviceworker', timeout=8000)
         eid = sw.url.split('/')[2]; errs = []
@@ -64,8 +65,8 @@ async def main():
           const s=CLR.sanitize(Object.assign({},CLR.DEFAULTS,CLR.PRESETS.tremor)); return {bad,n:Object.keys(CLR.PRESETS).length,dwell:s.dwell,big:s.bigTargets,ad:CLR.sanitize(CLR.PRESETS.adhd).calm}}""")
         ok(pr['bad'] == [] and pr['n'] >= 13 and pr['dwell'] and pr['big'] and pr['ad'], f'profiluri noi valide {pr}')
         # --- D. reguli pe site: import listă de domenii ---
-        pathlib.Path('/tmp/sites14.txt').write_text('example.org\n# comentariu\nbad host!\nfoo.test  # inline\n<script>\n')
-        await pop.set_input_files('#sitesFile', '/tmp/sites14.txt'); await pop.wait_for_timeout(700)
+        pathlib.Path(TMP + '/sites14.txt').write_text('example.org\n# comentariu\nbad host!\nfoo.test  # inline\n<script>\n')
+        await pop.set_input_files('#sitesFile', TMP + '/sites14.txt'); await pop.wait_for_timeout(700)
         st = await sw.evaluate("async()=>(await chrome.storage.local.get('sites')).sites||{}")
         ok(st.get('example.org', {}).get('off') and st.get('foo.test', {}).get('off') and len(st) == 2, f'import listă domenii (doar valide) {list(st)}')
         # --- E. panou confidențialitate ---
@@ -79,7 +80,7 @@ async def main():
         # --- F. integrare pe pagină ---
         await setset(modKeys=True, modVoice=True, modSimplify=True, modImgAlt=True, modCaps=True)
         page = await ctx.new_page(); page.on('pageerror', lambda e: errs.append(str(e)))
-        await page.goto('file:///tmp/t14.html'); await page.wait_for_timeout(3200)
+        await page.goto(pathlib.Path(TMP + '/t14.html').as_uri()); await page.wait_for_timeout(3200)
         async def feat(what, **kw):
             return await sw.evaluate("""async ([what,kw]) => { const [t]=await chrome.tabs.query({url:'file:///*t14.html'}); return await chrome.tabs.sendMessage(t.id, Object.assign({type:'feat',cmd:'m2',what}, kw)); }""", [what, kw])
         alts = await page.evaluate("()=>['i1','i2','i3','i4','i5'].map(i=>document.getElementById(i).getAttribute('alt'))")
@@ -129,4 +130,4 @@ async def main():
         ok(not errs, f'fără erori de pagină {errs[:3]}')
         await ctx.close()
 asyncio.run(main())
-print('\nFAILS:', fails); sys.exit(1 if fails else 0)
+print('\nRESULT:', fails if fails else 'none'); sys.exit(1 if fails else 0)
