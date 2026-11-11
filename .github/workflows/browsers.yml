@@ -46,7 +46,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with: { python-version: '3.12' }
-      - run: pip install playwright pillow
+      - run: pip install playwright pillow imageio-ffmpeg
       - run: python build.py
       - name: Install browser (Playwright channel)
         if: ${{ !contains('brave vivaldi opera', matrix.browser) }}
@@ -192,7 +192,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with: { python-version: '3.12' }
-      - run: pip install playwright pillow && python build.py && python -m playwright install chromium ffmpeg
+      - run: pip install playwright pillow imageio-ffmpeg && python build.py && python -m playwright install chromium ffmpeg
       - name: Chromium cu profil Samsung Internet (UA, 412x915, touch)
         env: { BROWSER_CHANNEL: chromium, EMULATE: samsung }
         run: python test/run_matrix.py samsung-emulation t5_features.py t6_popup_tools.py t7_v14.py t11_lang.py t12_audit3.py

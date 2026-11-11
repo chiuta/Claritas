@@ -28,7 +28,10 @@ async def main():
         import base64, subprocess
         open('/tmp/out.webm', 'wb').write(base64.b64decode(b64))
         import shutil, glob, re, os
-        FF = shutil.which('ffmpeg') or next(iter(sorted(glob.glob(os.path.expanduser('~/.cache/ms-playwright/ffmpeg-*/ffmpeg*')) + glob.glob(os.path.expanduser('~/AppData/Local/ms-playwright/ffmpeg-*/ffmpeg*')) + glob.glob(os.path.expanduser('~/Library/Caches/ms-playwright/ffmpeg-*/ffmpeg*')))), None)
+        try:
+            import imageio_ffmpeg; FF0 = imageio_ffmpeg.get_ffmpeg_exe()
+        except Exception: FF0 = None
+        FF = FF0 or shutil.which('ffmpeg') or next(iter(sorted(glob.glob(os.path.expanduser('~/.cache/ms-playwright/ffmpeg-*/ffmpeg*')) + glob.glob(os.path.expanduser('~/AppData/Local/ms-playwright/ffmpeg-*/ffmpeg*')) + glob.glob(os.path.expanduser('~/Library/Caches/ms-playwright/ffmpeg-*/ffmpeg*')))), None)
         class R: pass
         r = R(); r.returncode = 1; r.stdout = ''; r.stderr = 'fără ffmpeg'
         if FF:
