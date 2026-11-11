@@ -74,6 +74,7 @@ jobs:
           echo "opera-stable opera-stable/add-deb-source boolean false" | sudo debconf-set-selections
           for i in 1 2 3 4; do sudo apt-get update && sudo apt-get install -y -o Acquire::Retries=5 opera-stable && break; sleep 20; done
           echo "BROWSER_EXE=/usr/bin/opera" >> $GITHUB_ENV
+          echo "BROWSER_CDP=1" >> $GITHUB_ENV
       - name: Run tests (Linux, xvfb)
         if: runner.os == 'Linux'
         shell: bash
@@ -151,7 +152,6 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - { os: ubuntu-latest, engine: webkit }
           - { os: ubuntu-latest, engine: firefox }
           - { os: ubuntu-latest, engine: chromium }
           - { os: macos-latest,  engine: webkit }
