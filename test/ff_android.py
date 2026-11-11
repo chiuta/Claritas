@@ -34,7 +34,8 @@ from selenium.webdriver.remote.webdriver import WebDriver as Remote
 d = Remote(command_executor=svc.service_url, options=AO())
 d.command_executor._commands['INSTALL_ADDON'] = ('POST', '/session/$sessionId/moz/addon/install')
 def install_addon(path, temporary=True):
-    return d.execute('INSTALL_ADDON', {'path': path, 'temporary': temporary})['value']
+    import base64
+    return d.execute('INSTALL_ADDON', {'addon': base64.b64encode(open(path, 'rb').read()).decode(), 'temporary': temporary})['value']
 d.install_addon = install_addon
 URL = 'http://10.0.2.2:8771/'
 try:
@@ -43,7 +44,7 @@ try:
     d.get(URL); time.sleep(1)
     before = rgb(d.execute_script("return getComputedStyle(document.getElementById('p')).color"))
     ok(before == (187, 187, 187), f'înainte: text pal neschimbat {before}')
-    d.install_addon('/sdcard/Download/claritas.xpi', temporary=True); ok(True, 'extensia instalată temporar pe Android')
+    d.install_addon(os.environ.get('XPI', 'dist/claritas-firefox.zip'), temporary=True); ok(True, 'extensia instalată temporar pe Android')
     d.get(URL); time.sleep(3)
     p = d.execute_script("const s=getComputedStyle(document.getElementById('p'));return [s.color,s.backgroundColor]")
     ok(ratio(rgb(p[0]), rgb(p[1])) >= 4.5, f'contrast text pal corectat pe Android ({ratio(rgb(p[0]), rgb(p[1])):.1f}:1)')
