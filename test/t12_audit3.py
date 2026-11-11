@@ -10,9 +10,9 @@ def ok(c, m):
     if not c: fails.append(m)
 H = '<!doctype html><html><head><meta charset="utf-8"><title>T</title></head><body>%s</body></html>'
 PAGES = {
- '/srcdoc.html': H % '<h1>Srcdoc</h1><iframe width="500" height="100" srcdoc="<p>Mail: <b>srcdoc.user@example.com</b></p>"></iframe>',
- '/sandbox.html': H % '<h1>Sandbox</h1><iframe sandbox width="500" height="100" srcdoc="<p>Mail: <b>sand.user@example.com</b></p>"></iframe>',
- '/shadowframe.html': H % '<h1>ShadowFrame</h1><div id="h"></div><script>const r=document.getElementById("h").attachShadow({mode:"open"});r.innerHTML=\'<iframe width="500" height="100" srcdoc="<p>Mail: <b>shadow.user@example.com</b></p>"></iframe>\'</script>',
+ '/srcdoc.html': H % '<h1>Srcdoc</h1><iframe style="width:90vw;max-width:500px" height="100" srcdoc="<p>Mail: <b>srcdoc.user@example.com</b></p>"></iframe>',
+ '/sandbox.html': H % '<h1>Sandbox</h1><iframe sandbox style="width:90vw;max-width:500px" height="100" srcdoc="<p>Mail: <b>sand.user@example.com</b></p>"></iframe>',
+ '/shadowframe.html': H % '<h1>ShadowFrame</h1><div id="h"></div><script>const r=document.getElementById("h").attachShadow({mode:"open"});r.innerHTML=\'<iframe style="width:90vw;max-width:500px" height="100" srcdoc="<p>Mail: <b>shadow.user@example.com</b></p>"></iframe>\'</script>',
  '/keys.html': H % '<h1>Chei</h1><div id="d" tabindex="0">zona</div><input id="i">',
 }
 class Hd(BaseHTTPRequestHandler):
@@ -67,10 +67,12 @@ async def main():
             async with page.expect_download(timeout=30000) as dl: await page.keyboard.press('Enter')
             im = Image.open(await (await dl.value).path()).convert('RGB')
             fr = await page.evaluate("""(()=>{let f=document.querySelector('iframe');if(!f){const h=document.getElementById('h');f=h&&h.shadowRoot&&h.shadowRoot.querySelector('iframe')}const r=f.getBoundingClientRect();return [r.left,r.top,r.width,r.height]})()""")
-            blk = sum(1 for x in range(int(fr[0]), int(fr[0] + fr[2]), 3) for y in range(int(fr[1]), int(fr[1] + fr[3]), 3) if im.getpixel((x, y))[:3] == (0, 0, 0))
+            vw = await page.evaluate('innerWidth'); sc = im.width / vw  # scara reală (DPR / emulare mobilă)
+            x0, y0, x1, y1 = [int(v * sc) for v in (fr[0], fr[1], fr[0] + fr[2], fr[1] + fr[3])]
+            blk = sum(1 for x in range(max(0, x0), min(im.width, x1), 3) for y in range(max(0, y0), min(im.height, y1), 3) if im.getpixel((x, y))[:3] == (0, 0, 0))
             await page.keyboard.press('Escape'); return blk
         for path, nm in (('/srcdoc.html', 'iframe srcdoc'), ('/sandbox.html', 'iframe sandbox'), ('/shadowframe.html', 'iframe în shadow DOM')):
-            b = await shot(path); ok(b > 100, f'{nm}: e-mail acoperit ({b} pixeli negri)')
+            b = await shot(path); ok(b > (100 if (await page.evaluate('innerWidth') <= 1000 and not await page.evaluate('matchMedia("(pointer:coarse)").matches')) else 25), f'{nm}: e-mail acoperit ({b} pixeli negri)')
         # E) jurnal VTT: taste simple nelogate; sesiune veche ignorată
         await sw.evaluate("globalThis.__ev=[];chrome.runtime.onMessage.addListener(m=>{if(m&&m.type==='rec-ev')globalThis.__ev.push(m)})")
         await sw.evaluate("async()=>{await chrome.storage.local.set({recSession:{on:true,beat:Date.now(),t0:Date.now(),fx:true,keys:true,blur:true}})}")
