@@ -42,7 +42,7 @@ try:
     print('UA:', d.execute_script('return navigator.userAgent'))
     ok(True, 'sesiune Firefox Android deschisă')
     d.get(URL); time.sleep(1)
-    before = rgb(d.execute_script("return getComputedStyle(document.getElementById('p')).color"))
+    before = rgb(d.execute_script("try{document.getAnimations().forEach(a=>{try{a.finish()}catch(e){}})}catch(e){};return getComputedStyle(document.getElementById('p')).color"))
     ok(before == (187, 187, 187), f'înainte: text pal neschimbat {before}')
     d.install_addon(os.environ.get('XPI', 'dist/claritas-firefox.zip'), temporary=True); ok(True, 'extensia instalată temporar pe Android')
     d.get(URL); time.sleep(4)
@@ -52,7 +52,7 @@ try:
         time.sleep(2)
     ok(bool(d.execute_script("return !!document.getElementById('clr-style')")), 'content script injectat pe Android (clr-style)')
     for _ in range(10):
-        c0 = d.execute_script("return getComputedStyle(document.getElementById('p')).color")
+        c0 = d.execute_script("try{document.getAnimations().forEach(a=>{try{a.finish()}catch(e){}})}catch(e){};return getComputedStyle(document.getElementById('p')).color")
         if rgb(c0) != (187, 187, 187): break
         time.sleep(2)
     print('INFO clr-style css:', d.execute_script("const e=document.getElementById('clr-style');return e?[e.textContent.length, e.textContent.indexOf('data-clr-c]'), e.textContent.slice(-260), e.parentNode&&e.parentNode.nodeName, document.styleSheets.length]:null"))
@@ -61,9 +61,9 @@ try:
     print('INFO variants:', d.execute_script("const out={};const t=(k,css)=>{const st=document.createElement('style');st.textContent=css;document.head.appendChild(st);out[k]=getComputedStyle(document.getElementById('p')).color;st.remove();};t('direct','#p{color:rgb(1,2,3)!important}');t('direct-noimp','#p{color:rgb(1,2,3)}');t('var','#p{color:var(--clr-c)!important}');t('attr','[data-clr-c]{color:rgb(1,2,3)!important}');t('rootroot','html:root [data-clr-c]{color:rgb(1,2,3)!important}');t('rr3','html:root:root:root [data-clr-c]{color:rgb(1,2,3)!important}');out.ua=navigator.userAgent;out.bg=getComputedStyle(document.getElementById('p')).backgroundColor;return JSON.stringify(out)"))
     print('INFO match:', d.execute_script("const p=document.getElementById('p');return [p.matches(':root:root:root [data-clr-c]'), getComputedStyle(p).getPropertyValue('--clr-c'), getComputedStyle(p).color]"))
     print('INFO p inline/attrs:', d.execute_script("const e=document.getElementById('p');return [e.getAttribute('style'),[...e.attributes].map(a=>a.name).join(','),document.documentElement.getAttribute('data-clr')||[...document.documentElement.attributes].map(a=>a.name).join(',')]"))
-    p = d.execute_script("const s=getComputedStyle(document.getElementById('p'));return [s.color,s.backgroundColor]")
+    p = d.execute_script("try{document.getAnimations().forEach(a=>{try{a.finish()}catch(e){}})}catch(e){};const s=getComputedStyle(document.getElementById('p'));return [s.color,s.backgroundColor]")
     ok(ratio(rgb(p[0]), rgb(p[1])) >= 4.5, f'contrast text pal corectat pe Android ({ratio(rgb(p[0]), rgb(p[1])):.1f}:1)')
-    q = d.execute_script("const s=getComputedStyle(document.getElementById('d'));return [s.color,s.backgroundColor]")
+    q = d.execute_script("try{document.getAnimations().forEach(a=>{try{a.finish()}catch(e){}})}catch(e){};const s=getComputedStyle(document.getElementById('d'));return [s.color,s.backgroundColor]")
     ok(ratio(rgb(q[0]), rgb(q[1])) >= 4.5, f'contrast câmp dezactivat corectat ({ratio(rgb(q[0]), rgb(q[1])):.1f}:1)')
     ok(bool(d.execute_script("return !!document.querySelector('claritas-capture, #clr-cap, [id^=clr]') || true")), 'pagina rămâne funcțională')
 except Exception as e:
