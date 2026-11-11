@@ -154,7 +154,7 @@ jobs:
       - name: Convert + build (unsigned)
         run: |
           mkdir -p test/results
-          xcrun safari-web-extension-converter dist/safari --project-location /tmp/safari --app-name Claritas --bundle-identifier tf.trom.claritas --no-open --no-prompt --macos-only --force 2>&1 | tail -30 | tee test/results/safari-convert.txt
+          xcrun safari-web-extension-converter dist/safari --project-location /tmp/safari --app-name Claritas --no-open --no-prompt --macos-only --force 2>&1 | tail -30 | tee test/results/safari-convert.txt
           cd /tmp/safari/Claritas
           xcodebuild -scheme Claritas -configuration Debug CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" build > /tmp/xb.log 2>&1 || true
           echo "--- ERRORS"; grep -E "error:|\*\* BUILD|Signing|requires" /tmp/xb.log | sort -u | head -20 
