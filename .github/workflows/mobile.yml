@@ -194,7 +194,25 @@ jobs:
                   end repeat
                   log "develop items: " & itl
                 end try
-                click menu item "Allow Unsigned Extensions" of menu "Develop" of menu bar item "Develop" of menu bar 1
+                click (first menu item of menu "Develop" of menu bar item "Develop" of menu bar 1 whose name starts with "Developer Settings")
+                delay 3
+                set els to entire contents of window 1
+                set cbs to ""
+                repeat with e in els
+                  try
+                    if role of e is "AXCheckBox" then set cbs to cbs & "[cb:" & (name of e) & "|" & (value of e) & "] "
+                  end try
+                end repeat
+                log "developer settings checkboxes: " & cbs
+                repeat with e in els
+                  try
+                    if role of e is "AXCheckBox" and (name of e) contains "nsigned" then
+                      if (value of e) is 0 then click e
+                      exit repeat
+                    end if
+                  end try
+                end repeat
+                delay 3
                 delay 4
                 log "windows after unsigned: " & (count of windows)
                 repeat with w in windows
