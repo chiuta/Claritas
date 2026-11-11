@@ -51,6 +51,12 @@ try:
         if d.execute_script("return !!document.getElementById('clr-style')"): break
         time.sleep(2)
     ok(bool(d.execute_script("return !!document.getElementById('clr-style')")), 'content script injectat pe Android (clr-style)')
+    for _ in range(10):
+        c0 = d.execute_script("return getComputedStyle(document.getElementById('p')).color")
+        if rgb(c0) != (187, 187, 187): break
+        time.sleep(2)
+    print('INFO clr-style css:', d.execute_script("const e=document.getElementById('clr-style');return e?e.textContent.slice(0,300):null"))
+    print('INFO p inline/attrs:', d.execute_script("const e=document.getElementById('p');return [e.getAttribute('style'),[...e.attributes].map(a=>a.name).join(','),document.documentElement.getAttribute('data-clr')||[...document.documentElement.attributes].map(a=>a.name).join(',')]"))
     p = d.execute_script("const s=getComputedStyle(document.getElementById('p'));return [s.color,s.backgroundColor]")
     ok(ratio(rgb(p[0]), rgb(p[1])) >= 4.5, f'contrast text pal corectat pe Android ({ratio(rgb(p[0]), rgb(p[1])):.1f}:1)')
     q = d.execute_script("const s=getComputedStyle(document.getElementById('d'));return [s.color,s.backgroundColor]")
