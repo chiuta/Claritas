@@ -465,8 +465,8 @@
     if (!on) return;
     const rects = findSensitive(null); if (!rects.length) return;
     maskEl = doc.createElement('claritas-mask');
-    [['display', 'block'], ['position', 'absolute'], ['left', '0'], ['top', '0'], ['width', '0'], ['height', '0'], ['z-index', '2147483647'], ['visibility', 'visible'], ['opacity', '1']].forEach(([k, v]) => maskEl.style.setProperty(k, v, 'important'));
-    rects.forEach((r) => { const d = doc.createElement('div'); d.style.cssText = 'position:absolute;background:#000;left:' + Math.floor(r.x) + 'px;top:' + Math.floor(r.y) + 'px;width:' + Math.ceil(r.w) + 'px;height:' + Math.ceil(r.h) + 'px'; maskEl.appendChild(d); });
+    [['display', 'block'], ['position', 'absolute'], ['left', '0'], ['top', '0'], ['width', '0'], ['height', '0'], ['z-index', '2147483647'], ['visibility', 'visible'], ['opacity', '1'], ['forced-color-adjust', 'none']].forEach(([k, v]) => maskEl.style.setProperty(k, v, 'important'));
+    rects.forEach((r) => { const d = doc.createElement('div'); d.style.cssText = 'forced-color-adjust:none;position:absolute;background:#000;left:' + Math.floor(r.x) + 'px;top:' + Math.floor(r.y) + 'px;width:' + Math.ceil(r.w) + 'px;height:' + Math.ceil(r.h) + 'px'; maskEl.appendChild(d); });
     doc.documentElement.appendChild(maskEl);
     setTimeout(() => { if (maskEl) { maskEl.remove(); maskEl = null; } }, 150000);   // plasă de siguranță (pagini foarte înalte)
   }
