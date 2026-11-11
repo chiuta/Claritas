@@ -261,6 +261,8 @@ jobs:
       - run: pip install selenium && python build.py
       - uses: browser-actions/setup-geckodriver@latest
         id: gd
+      - name: geckodriver path
+        run: echo "GECKODRIVER=$(which geckodriver)" >> $GITHUB_ENV; geckodriver --version | head -1
       - name: KVM
         run: |
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
@@ -280,7 +282,7 @@ jobs:
             adb shell pm list packages | grep -i mozilla
             adb shell pm grant org.mozilla.fenix android.permission.POST_NOTIFICATIONS || true
             adb shell am set-debug-app --persistent org.mozilla.fenix || true
-            GECKODRIVER=${{ steps.gd.outputs.path }} python test/ff_android.py
+            python test/ff_android.py
           
   ios-ipados:
     runs-on: macos-latest
