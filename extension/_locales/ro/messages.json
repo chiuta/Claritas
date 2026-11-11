@@ -1,0 +1,20 @@
+{
+  "extName": {
+    "message": "Claritas — accesibilitate all-in-one"
+  },
+  "extDesc": {
+    "message": "Contrast corectat automat (WCAG), teme de contrast mare, daltonism, dislexie, mod cititor, citire cu voce. Fără telemetrie."
+  },
+  "cmdToggle": {
+    "message": "Pornește/oprește Claritas"
+  },
+  "cmdTheme": {
+    "message": "Schimbă tema de contrast"
+  },
+  "cmdRead": {
+    "message": "Citește selecția/pagina (sau oprește)"
+  },
+  "cmdGuide": {
+    "message": "Riglă de citire"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "extName": {
+    "message": "Claritas — Barrierefreiheit alles in einem"
+  },
+  "extDesc": {
+    "message": "Automatische Kontrastkorrektur (WCAG), Hochkontrast-Designs, Farbenblindheit, Legasthenie-Hilfen, Vorlesen. Keine Telemetrie."
+  },
+  "cmdToggle": {
+    "message": "Claritas ein-/ausschalten"
+  },
+  "cmdTheme": {
+    "message": "Kontrastdesign wechseln"
+  },
+  "cmdRead": {
+    "message": "Auswahl/Seite vorlesen (oder stoppen)"
+  },
+  "cmdGuide": {
+    "message": "Leselineal"
+  }
+}

@@ -1,0 +1,57 @@
+# Claritas
+
+[English](README.md) · [Română](README.ro.md) · [Français](README.fr.md) · **Italiano** · [Español](README.es.md) · [Português](README.pt.md) · [Deutsch](README.de.md) · [Magyar](README.hu.md)
+
+**Versione: 1.5.3 · Ultimo aggiornamento: 11/11/2026**
+
+Estensione di accessibilità tutto-in-uno, gratuita. Nessuna telemetria, nessuna rete, nessun account: tutto resta nel tuo browser.
+
+## Cosa fa
+- **Correzione automatica del contrasto (WCAG AA/AAA)**: misura il contrasto reale testo/sfondo e regola solo il testo insufficiente, compresi i campi disabilitati.
+- **Temi ad alto contrasto**, filtri colore, **daltonismo** (correzione e simulazione), filtro luce blu, simulatore di visione.
+- **Testo**: zoom, dimensione, spaziatura, caratteri (adatto alla dislessia, Lexend, Atkinson Hyperlegible), allineamento a sinistra.
+- **Lettura**: righello, maschera, lente, modalità lettura, lettura veloce, lettura ad alta voce (voci locali), evidenziazioni con esportazione.
+- **Motricità e controllo**: bersagli di clic grandi, clic con permanenza, scansione a pulsante singolo, etichette numerate, sblocco dell’incolla.
+- **Calma e stabilità**: nasconde banner e pop-up, riflusso, ferma le GIF, mantiene il focus visibile.
+- **Verifica WCAG 2.2** con monitoraggio continuo e controlli manuali.
+- **Schermata locale** (area visibile, regione, pagina intera, elemento) con annotazioni, copertura automatica dei dati personali (anche nei frame e nello shadow DOM) e ZIP con PNG + descrizione (.md).
+- **Registrazione locale dello schermo** con anelli al clic, tasti mostrati e registro delle azioni WebVTT.
+- **Profili**, impostazioni per sito, esportazione/importazione JSON, criteri aziendali (managed storage).
+- **8 lingue**: English, Română, Français, Italiano, Español, Português, Deutsch, Magyar.
+
+## Installazione
+
+Scegli il pacchetto adatto al tuo browser (cartella `dist/` o file della release):
+
+| Pacchetto | Browser |
+|---|---|
+| `claritas-chromium.zip` | Chrome, Edge, Opera / Opera GX, Brave, Vivaldi, Arc, Dia, Comet, Yandex, Whale e qualsiasi browser Chromium 109+ |
+| `claritas-firefox.zip` | Firefox (desktop 140+ e Android 142+), LibreWolf, Zen, Floorp, Waterfox, Mullvad Browser |
+| `claritas-safari-source.zip` | Safari macOS / iOS / iPadOS (serve un Mac con Xcode) |
+
+- **Famiglia Chromium**: decomprimi, apri la pagina delle estensioni (`chrome://extensions`, `edge://extensions`, `opera://extensions`…), attiva la *modalità sviluppatore*, scegli *Carica estensione non pacchettizzata* e seleziona la cartella.
+- **Firefox**: `about:debugging#/runtime/this-firefox` → *Carica componente aggiuntivo temporaneo* → `manifest.json`. Per un’installazione permanente, firmalo come componente non elencato su addons.mozilla.org (ID `claritas@trom.tf`).
+- **Safari**: su un Mac con Xcode esegui `./build-safari.sh` dai sorgenti decompressi, poi attivalo in Safari → Impostazioni → Estensioni.
+- **Mobile**: Firefox Android (tramite una raccolta personalizzata di componenti), Edge Android e Samsung Internet (tramite i loro store). Chrome, Brave e Opera su Android non accettano estensioni.
+
+## Scorciatoie
+
+`Alt+Shift+C` attiva/disattiva · `T` tema · `R` lettura · `G` righello · `Alt+Shift+P` menu schermata · `Alt+Shift+H` etichette numerate · `Alt+Shift+S` scansione. Modificabili nelle impostazioni delle scorciatoie delle estensioni del browser (il popup ha un pulsante apposito).
+
+## Privacy
+
+Nessuna richiesta di rete, nessuna telemetria, nessun account. Schermate e registrazioni vengono create e salvate localmente nel browser.
+
+## Limiti noti
+
+- Safari e Samsung Internet non hanno criteri aziendali (managed); Firefox Android non ha la registrazione dello schermo.
+- Safari iOS può ritagliare le schermate; usa l’acquisizione di regione o di elemento.
+- Verificato dal vivo in Chrome; Firefox, Safari e gli altri browser sono stati analizzati in modo statico.
+
+## Licenza
+
+MIT — copyright Alexandru-Ionuț Chiuță (Alexio).
+
+## Sostegno
+
+Se Claritas ti è utile, puoi sostenere il lavoro: [Buy Me a Coffee](https://buymeacoffee.com/echo.of.the.strings).

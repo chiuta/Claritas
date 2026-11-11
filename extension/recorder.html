@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ro"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Claritas — înregistrare ecran</title>
+<style>
+body{margin:0;font:16px/1.5 system-ui,Segoe UI,Arial,sans-serif;background:#111;color:#fff;padding:20px;max-width:760px;margin-inline:auto}
+h1{font-size:22px;margin:0 0 4px} .muted{color:#ddd;margin:0 0 14px}
+fieldset{border:2px solid #ffeb3b;border-radius:10px;margin:0 0 14px;padding:10px 14px}
+legend{font-weight:700;color:#ffeb3b;padding:0 6px}
+label.row{display:flex;gap:10px;align-items:center;padding:6px 0;min-height:36px}
+input[type=checkbox]{width:22px;height:22px;accent-color:#ffeb3b}
+select{font:inherit;padding:6px;background:#000;color:#fff;border:2px solid #ffeb3b;border-radius:6px}
+button{font:700 16px system-ui,Arial,sans-serif;padding:10px 16px;min-height:44px;border-radius:8px;border:2px solid #ffeb3b;background:#000;color:#ffeb3b;cursor:pointer}
+button.primary{background:#ffeb3b;color:#000} button:disabled{opacity:.45;cursor:default}
+button:focus-visible,select:focus-visible,input:focus-visible,a:focus-visible,video:focus-visible{outline:3px solid #fff;outline-offset:2px}
+.btns{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0}
+#status{font-weight:700;min-height:1.5em;padding:8px 0} #timer{font:700 28px ui-monospace,monospace;color:#ff5252}
+video{width:100%;max-height:50vh;background:#000;border:2px solid #ffeb3b;border-radius:8px;margin-top:8px}
+a.dl{display:inline-block;padding:10px 16px;border:2px solid #ffeb3b;border-radius:8px;color:#ffeb3b;text-decoration:none;font-weight:700}
+</style></head><body>
+<h1 id="h"></h1><p class="muted" id="loc"></p>
+<fieldset id="opts"><legend id="lg"></legend>
+  <label class="row"><input type="checkbox" id="mic"><span id="l_mic"></span></label>
+  <label class="row"><input type="checkbox" id="sys" checked><span id="l_sys"></span></label>
+  <label class="row"><input type="checkbox" id="fx" checked><span id="l_fx"></span></label>
+  <label class="row"><input type="checkbox" id="blur" checked><span id="l_blur"></span></label>
+  <label class="row"><input type="checkbox" id="cnt" checked><span id="l_cnt"></span></label>
+  <label class="row"><span id="l_q"></span><select id="q"><option value="2500000" id="q1"></option><option value="5000000" id="q2" selected></option><option value="8000000" id="q3"></option></select></label>
+</fieldset>
+<div class="btns"><button id="start" class="primary"></button><button id="mark" disabled></button><button id="stop" disabled></button></div>
+<div id="timer" aria-hidden="true">00:00</div>
+<p id="status" role="status" aria-live="polite"></p>
+<div id="out" hidden>
+  <video id="vid" controls></video>
+  <div class="btns"><a id="dlv" class="dl"></a><a id="dll" class="dl"></a></div>
+</div>
+<script src="shared.js"></script>
+<script src="recorder.js"></script>
+</body></html>

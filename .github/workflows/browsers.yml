@@ -1,0 +1,170 @@
+name: browsers
+on:
+  push:
+    branches: [main, 'ci/**']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - run: python3 build.py
+      - name: web-ext lint (chromium + firefox)
+        run: |
+          mkdir -p test/results
+          { npx --yes web-ext lint -s dist/firefox 2>&1 | tail -15; } | tee test/results/lint-firefox.txt
+          { npx --yes web-ext lint -s dist/chromium 2>&1 | tail -15; } | tee test/results/lint-chromium.txt || true
+      - uses: actions/upload-artifact@v4
+        with: { name: r-lint, path: test/results }
+
+  chromium-family:
+    name: ${{ matrix.os }} / ${{ matrix.browser }}
+    runs-on: ${{ matrix.os }}
+    continue-on-error: true
+    timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { os: ubuntu-latest,  browser: chrome }
+          - { os: ubuntu-latest,  browser: chrome-beta }
+          - { os: ubuntu-latest,  browser: msedge }
+          - { os: ubuntu-latest,  browser: chromium }
+          - { os: ubuntu-latest,  browser: brave }
+          - { os: ubuntu-latest,  browser: vivaldi }
+          - { os: ubuntu-latest,  browser: opera }
+          - { os: windows-latest, browser: chrome }
+          - { os: windows-latest, browser: msedge }
+          - { os: macos-latest,   browser: chrome }
+          - { os: macos-latest,   browser: msedge }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - run: pip install playwright pillow
+      - run: python build.py
+      - name: Install browser (Playwright channel)
+        if: ${{ !contains('brave vivaldi opera', matrix.browser) }}
+        run: python -m playwright install ${{ matrix.browser == 'chromium' && 'chromium' || matrix.browser }}
+      - name: Install Brave
+        if: matrix.browser == 'brave'
+        run: |
+          sudo curl -fsSLo /usr/share/keyrings/brave-browser-archive-keyring.gpg https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg
+          echo "deb [signed-by=/usr/share/keyrings/brave-browser-archive-keyring.gpg] https://brave-browser-apt-release.s3.brave.com/ stable main" | sudo tee /etc/apt/sources.list.d/brave.list
+          sudo apt-get update && sudo apt-get install -y brave-browser
+          echo "BROWSER_EXE=/usr/bin/brave-browser" >> $GITHUB_ENV
+      - name: Install Vivaldi
+        if: matrix.browser == 'vivaldi'
+        run: |
+          curl -fsSL https://repo.vivaldi.com/archive/linux_signing_key.pub | sudo gpg --dearmor -o /usr/share/keyrings/vivaldi.gpg
+          echo "deb [signed-by=/usr/share/keyrings/vivaldi.gpg] https://repo.vivaldi.com/archive/deb/ stable main" | sudo tee /etc/apt/sources.list.d/vivaldi.list
+          sudo apt-get update && sudo apt-get install -y vivaldi-stable
+          echo "BROWSER_EXE=/usr/bin/vivaldi-stable" >> $GITHUB_ENV
+      - name: Install Opera
+        if: matrix.browser == 'opera'
+        run: |
+          curl -fsSL https://deb.opera.com/archive.key | sudo gpg --dearmor -o /usr/share/keyrings/opera.gpg
+          echo "deb [signed-by=/usr/share/keyrings/opera.gpg] https://deb.opera.com/opera-stable/ stable non-free" | sudo tee /etc/apt/sources.list.d/opera.list
+          echo "opera-stable opera-stable/add-deb-source boolean false" | sudo debconf-set-selections
+          sudo apt-get update && sudo apt-get install -y opera-stable
+          echo "BROWSER_EXE=/usr/bin/opera" >> $GITHUB_ENV
+      - name: Run tests (Linux, xvfb)
+        if: runner.os == 'Linux'
+        shell: bash
+        env:
+          HEADED: '1'
+          BROWSER_CHANNEL: ${{ matrix.browser }}
+        run: |
+          sudo apt-get install -y xvfb ffmpeg >/dev/null 2>&1 || true
+          [ -n "$BROWSER_EXE" ] && unset BROWSER_CHANNEL
+          xvfb-run -a python test/run_matrix.py "${{ matrix.os }}-${{ matrix.browser }}"
+      - name: Run tests (Windows / macOS)
+        if: runner.os != 'Linux'
+        shell: bash
+        env:
+          HEADED: '1'
+          BROWSER_CHANNEL: ${{ matrix.browser }}
+        run: python test/run_matrix.py "${{ matrix.os }}-${{ matrix.browser }}"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: { name: 'r-${{ matrix.os }}-${{ matrix.browser }}', path: test/results }
+
+  firefox:
+    name: ${{ matrix.os }} / firefox-${{ matrix.channel }}
+    runs-on: ${{ matrix.os }}
+    continue-on-error: true
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { os: ubuntu-latest,  channel: latest-release }
+          - { os: ubuntu-latest,  channel: latest-esr }
+          - { os: ubuntu-latest,  channel: latest-beta }
+          - { os: ubuntu-latest,  channel: latest-nightly }
+          - { os: ubuntu-latest,  channel: latest-devedition }
+          - { os: windows-latest, channel: latest-release }
+          - { os: macos-latest,   channel: latest-release }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - run: pip install selenium pillow
+      - run: python build.py
+      - id: ff
+        uses: browser-actions/setup-firefox@v1
+        with: { firefox-version: '${{ matrix.channel }}' }
+      - id: gd
+        uses: browser-actions/setup-geckodriver@latest
+      - name: Selenium test
+        shell: bash
+        env:
+          FIREFOX_BIN: ${{ steps.ff.outputs.firefox-path }}
+          GECKODRIVER: ${{ steps.gd.outputs.path }}
+        run: |
+          mkdir -p test/results
+          cd test
+          [ "$RUNNER_OS" = Linux ] && PRE="xvfb-run -a" || PRE=""
+          $PRE python ff_selenium.py 2>&1 | tee results/${{ matrix.os }}-firefox-${{ matrix.channel }}.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: { name: 'r-${{ matrix.os }}-ff-${{ matrix.channel }}', path: test/results }
+
+  safari-convert:
+    runs-on: macos-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - run: python build.py
+      - name: Convert + build (unsigned)
+        run: |
+          mkdir -p test/results
+          { xcrun safari-web-extension-converter dist/safari --project-location /tmp/safari --app-name Claritas --bundle-identifier tf.trom.claritas --no-open --no-prompt --macos-only --force 2>&1 | tail -30
+            cd /tmp/safari/Claritas && xcodebuild -scheme Claritas -configuration Debug CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" build 2>&1 | tail -25; } | tee test/results/safari-build.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: { name: r-safari, path: test/results }
+
+  publish:
+    needs: [lint, chromium-family, firefox, safari-convert]
+    if: always()
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with: { path: collected }
+      - name: Push results to ci-results
+        run: |
+          mkdir -p /tmp/out && cp -r collected/*/* /tmp/out/ 2>/dev/null || true
+          git config user.name "github-actions"; git config user.email "actions@users.noreply.github.com"
+          git checkout --orphan ci-results && git rm -rf . >/dev/null
+          mkdir -p run-${{ github.run_number }} && cp -r /tmp/out/* run-${{ github.run_number }}/ || true
+          git add -A && git commit -m "results run ${{ github.run_number }} (${{ github.sha }})" && git push -f origin ci-results

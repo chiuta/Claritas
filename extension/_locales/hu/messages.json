@@ -1,0 +1,20 @@
+{
+  "extName": {
+    "message": "Claritas — akadálymentesítés mindent egyben"
+  },
+  "extDesc": {
+    "message": "Automatikus kontrasztjavítás (WCAG), nagy kontrasztú témák, színtévesztés, diszlexia, olvasó mód, felolvasás. Nincs telemetria."
+  },
+  "cmdToggle": {
+    "message": "A Claritas be-/kikapcsolása"
+  },
+  "cmdTheme": {
+    "message": "Kontrasztos téma váltása"
+  },
+  "cmdRead": {
+    "message": "Kijelölés/oldal felolvasása (vagy leállítás)"
+  },
+  "cmdGuide": {
+    "message": "Olvasóvonalzó"
+  }
+}

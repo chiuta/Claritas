@@ -1,0 +1,20 @@
+{
+  "extName": {
+    "message": "Claritas — accesibilidad todo en uno"
+  },
+  "extDesc": {
+    "message": "Contraste corregido automáticamente (WCAG), temas de alto contraste, daltonismo, dislexia, modo lectura. Sin telemetría."
+  },
+  "cmdToggle": {
+    "message": "Activar/desactivar Claritas"
+  },
+  "cmdTheme": {
+    "message": "Cambiar el tema de contraste"
+  },
+  "cmdRead": {
+    "message": "Leer la selección/la página (o detener)"
+  },
+  "cmdGuide": {
+    "message": "Regla de lectura"
+  }
+}

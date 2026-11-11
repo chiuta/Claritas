@@ -1,0 +1,20 @@
+{
+  "type": "object",
+  "properties": {
+    "defaults": {
+      "title": "Valori implicite (JSON)",
+      "description": "Obiect JSON cu set\u0103ri implicite; utilizatorul le poate schimba.",
+      "type": "string"
+    },
+    "enforce": {
+      "title": "Set\u0103ri impuse (JSON)",
+      "description": "Obiect JSON cu set\u0103ri blocate pentru utilizator.",
+      "type": "string"
+    },
+    "sites": {
+      "title": "Set\u0103ri per site (JSON)",
+      "description": "Obiect JSON cu set\u0103ri pe site.",
+      "type": "string"
+    }
+  }
+}

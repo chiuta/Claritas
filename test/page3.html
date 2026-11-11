@@ -1,0 +1,22 @@
+<!doctype html><html><head><meta charset="utf-8"><title>v1.4</title>
+<style>body{font:16px Arial;margin:0}main{margin-top:10px}
+#hdr{position:sticky;top:0;height:60px;background:#222;color:#fff;z-index:50}
+#cookie{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:2px solid #000;padding:16px;z-index:9999}
+#clip{height:24px;overflow:hidden;width:150px;white-space:nowrap}
+</style></head><body>
+<div id="hdr"><a href="#x" id="l1">Acasă</a> <a href="#y">Contact</a></div>
+<main><h1>Titlu</h1>
+<p id="p1">Aceasta este o propoziție suficient de lungă pentru testul de simulare dislexie și restaurare.</p>
+<img id="noalt" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" width="40" height="40">
+<img id="withalt" alt="Un logo" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" width="40" height="40">
+<input id="pw" type="password" autocomplete="off">
+<input id="txt" type="text" aria-label="t">
+<button id="b1" onclick="window.__clicked='b1'">Buton unu</button>
+<button id="b2" onclick="window.__clicked='b2'">Buton doi</button>
+<div id="clip">Text de test aici ok</div>
+<video id="vid" src="" muted></video>
+</main>
+<div id="cookie" role="dialog">Folosim cookie-uri. <button>Accept toate</button></div>
+<script>document.addEventListener('paste',()=>{window.__paste=(window.__paste||0)+1},true);
+window.addEventListener('paste',()=>{window.__pasteW=(window.__pasteW||0)+1});</script>
+</body></html>

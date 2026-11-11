@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Claritas</title>
+<link rel="stylesheet" href="popup.css">
+</head>
+<body>
+<header>
+  <h1><span class="logo" aria-hidden="true"></span>Claritas</h1>
+  <p id="fixedInfo" class="muted" role="status"></p>
+</header>
+
+<section class="switches" aria-label="Activare">
+  <label class="row"><input type="checkbox" id="enabled"><span data-i18n="on_all"></span></label>
+  <label class="row"><input type="checkbox" id="siteOn"><span data-i18n="on_site"></span></label>
+  <label class="row"><input type="checkbox" id="siteOnly"><span data-i18n="site_only"></span></label>
+  <label class="row"><input type="checkbox" data-k="onlyListed"><span data-i18n="site_listed"></span></label>
+</section>
+<p id="unsupported" class="warn" hidden data-i18n="unsupported"></p>
+
+<div class="tabs" role="tablist">
+  <button role="tab" aria-selected="true" aria-controls="p-contrast" id="t-contrast" data-i18n="tab_contrast"></button>
+  <button role="tab" aria-selected="false" aria-controls="p-color" id="t-color" data-i18n="tab_color"></button>
+  <button role="tab" aria-selected="false" aria-controls="p-text" id="t-text" data-i18n="tab_text"></button>
+  <button role="tab" aria-selected="false" aria-controls="p-read" id="t-read" data-i18n="tab_read"></button>
+  <button role="tab" aria-selected="false" aria-controls="p-tools" id="t-tools" data-i18n="tab_tools"></button>
+  <button role="tab" aria-selected="false" aria-controls="p-more" id="t-more" data-i18n="tab_more"></button>
+  <button role="tab" aria-selected="false" aria-controls="p-prof" id="t-prof" data-i18n="tab_prof"></button>
+</div>
+
+<main>
+<!-- CONTRAST -->
+<section id="p-contrast" role="tabpanel" aria-labelledby="t-contrast">
+  <label class="row"><input type="checkbox" data-k="autoFix"><span data-i18n="autofix"></span></label>
+  <p class="hint" data-i18n="autofix_hint"></p>
+  <label class="field"><span data-i18n="target"></span>
+    <select data-k="target" data-num="1"><option value="4.5" data-i18n="aa"></option><option value="7" data-i18n="aaa"></option></select></label>
+  <label class="row"><input type="checkbox" data-k="outline"><span data-i18n="outline"></span></label>
+  <fieldset>
+    <legend data-i18n="theme"></legend>
+    <div class="themes" id="themes"></div>
+  </fieldset>
+  <div class="custom" id="customBox" hidden>
+    <label><span data-i18n="c_bg"></span><input type="color" data-ck="bg"></label>
+    <label><span data-i18n="c_fg"></span><input type="color" data-ck="fg"></label>
+    <label><span data-i18n="c_link"></span><input type="color" data-ck="link"></label>
+  </div>
+</section>
+
+<!-- CULOARE -->
+<section id="p-color" role="tabpanel" aria-labelledby="t-color" hidden>
+  <label class="slider"><span data-i18n="brightness"></span><input type="range" data-k="brightness" min="50" max="150" step="5"><output></output></label>
+  <label class="slider"><span data-i18n="contrast"></span><input type="range" data-k="contrast" min="50" max="200" step="5"><output></output></label>
+  <label class="slider"><span data-i18n="saturate"></span><input type="range" data-k="saturate" min="0" max="200" step="5"><output></output></label>
+  <label class="slider"><span data-i18n="sepia"></span><input type="range" data-k="sepia" min="0" max="100" step="5"><output></output></label>
+  <label class="slider"><span data-i18n="warm"></span><input type="range" data-k="warm" min="0" max="60" step="5"><output></output></label>
+  <label class="slider"><span data-i18n="hue"></span><input type="range" data-k="hue" min="0" max="360" step="10"><output></output></label>
+  <label class="row"><input type="checkbox" data-k="gray"><span data-i18n="gray"></span></label>
+  <label class="field"><span data-i18n="tint"></span>
+    <select data-k="tint"><option value="none" data-i18n="th_tint_none"></option><option value="blue" data-i18n="th_tint_blue"></option><option value="yellow" data-i18n="th_tint_yellow"></option><option value="green" data-i18n="th_tint_green"></option><option value="pink" data-i18n="th_tint_pink"></option><option value="peach" data-i18n="th_tint_peach"></option><option value="gray" data-i18n="th_tint_gray"></option></select></label>
+  <label class="slider"><span data-i18n="tintStrength"></span><input type="range" data-k="tintStrength" min="0" max="60" step="2"><output></output></label>
+  <fieldset><legend data-i18n="auto_title"></legend>
+    <label class="field"><span data-i18n="autoMode"></span>
+      <select data-k="autoMode"><option value="off" data-i18n="auto_off"></option><option value="system" data-i18n="auto_system"></option><option value="time" data-i18n="auto_time"></option></select></label>
+    <div class="timeRow"><label><span data-i18n="autoFrom"></span><input type="time" data-k="autoFrom"></label><label><span data-i18n="autoTo"></span><input type="time" data-k="autoTo"></label></div>
+    <label class="field"><span data-i18n="autoTheme"></span><select data-k="autoTheme" id="autoTheme"></select></label>
+  </fieldset>
+  <label class="field"><span data-i18n="cb"></span>
+    <select data-k="cb">
+      <option value="none" data-i18n="cb_none"></option>
+      <option value="prot-fix" data-i18n="cb_prot_fix"></option>
+      <option value="deut-fix" data-i18n="cb_deut_fix"></option>
+      <option value="trit-fix" data-i18n="cb_trit_fix"></option>
+      <option value="sim-prot" data-i18n="cb_sim_prot"></option>
+      <option value="sim-deut" data-i18n="cb_sim_deut"></option>
+      <option value="sim-trit" data-i18n="cb_sim_trit"></option>
+      <option value="sim-achro" data-i18n="cb_sim_achro"></option>
+    </select></label>
+  <label class="field"><span data-i18n="sim"></span>
+    <select data-k="sim"><option value="none" data-i18n="sim_none"></option><option value="blur" data-i18n="sim_blur"></option><option value="cataract" data-i18n="sim_cataract"></option><option value="tunnel" data-i18n="sim_tunnel"></option><option value="central" data-i18n="sim_central"></option><option value="glare" data-i18n="sim_glare"></option><option value="astig" data-i18n="sim_astig"></option><option value="dyslexia" data-i18n="sim_dyslexia"></option></select></label>
+</section>
+
+<!-- TEXT -->
+<section id="p-text" role="tabpanel" aria-labelledby="t-text" hidden>
+  <div class="field"><span data-i18n="zoom"></span>
+    <div class="zoom">
+      <button type="button" id="zoomOut" aria-label="−">−</button>
+      <output id="zoomVal">100%</output>
+      <button type="button" id="zoomIn" aria-label="+">+</button>
+      <button type="button" id="zoomReset" data-i18n="zoom_reset"></button>
+    </div></div>
+  <label class="slider"><span data-i18n="textScale"></span><input type="range" data-k="textScale" min="80" max="250" step="5"><output></output></label>
+  <label class="slider"><span data-i18n="lineHeight"></span><input type="range" data-k="lineHeight" min="0" max="2.4" step="0.1"><output></output></label>
+  <label class="slider"><span data-i18n="letter"></span><input type="range" data-k="letter" min="0" max="0.3" step="0.01"><output></output></label>
+  <label class="slider"><span data-i18n="word"></span><input type="range" data-k="word" min="0" max="0.6" step="0.02"><output></output></label>
+  <label class="field"><span data-i18n="font"></span>
+    <select data-k="font">
+      <option value="default" data-i18n="f_default"></option>
+      <option value="sans" data-i18n="f_sans"></option>
+      <option value="serif" data-i18n="f_serif"></option>
+      <option value="mono" data-i18n="f_mono"></option>
+      <option value="dyslexic" data-i18n="f_dyslexic"></option>
+      <option value="lexend" data-i18n="f_lexend"></option>
+      <option value="atkinson" data-i18n="f_atkinson"></option>
+    </select></label>
+  <label class="row"><input type="checkbox" data-k="alignLeft"><span data-i18n="alignLeft"></span></label>
+  <label class="slider"><span data-i18n="maxWidth"></span><input type="range" data-k="maxWidth" min="0" max="120" step="5"><output></output></label>
+  <label class="row"><input type="checkbox" data-k="noTransform"><span data-i18n="noTransform"></span></label>
+  <label class="row"><input type="checkbox" data-k="bigTargets"><span data-i18n="bigTargets"></span></label>
+</section>
+
+<!-- CITIRE -->
+<section id="p-read" role="tabpanel" aria-labelledby="t-read" hidden>
+  <label class="row"><input type="checkbox" data-k="guide"><span data-i18n="guide"></span></label>
+  <label class="row"><input type="checkbox" data-k="mask"><span data-i18n="mask"></span></label>
+  <label class="row"><input type="checkbox" data-k="magnifier"><span data-i18n="magnifier"></span></label>
+  <label class="row"><input type="checkbox" data-k="focus"><span data-i18n="focus"></span></label>
+  <label class="row"><input type="checkbox" data-k="links"><span data-i18n="links"></span></label>
+  <label class="row"><input type="checkbox" data-k="cursor"><span data-i18n="cursor"></span></label>
+  <label class="row"><input type="checkbox" data-k="noMotion"><span data-i18n="noMotion"></span></label>
+  <label class="row"><input type="checkbox" data-k="hideImages"><span data-i18n="hideImages"></span></label>
+  <label class="row"><input type="checkbox" data-k="muteMedia"><span data-i18n="muteMedia"></span></label>
+  <label class="row"><input type="checkbox" data-k="pointerRing"><span data-i18n="pointerRing"></span></label>
+  <label class="row"><input type="checkbox" data-k="selBar"><span data-i18n="selBar"></span></label>
+  <label class="row"><input type="checkbox" data-k="hoverSpeech"><span data-i18n="hoverSpeech"></span></label>
+  <label class="row"><input type="checkbox" data-k="dwell"><span data-i18n="dwell"></span></label>
+  <label class="slider"><span data-i18n="dwellMs"></span><input type="range" data-k="dwellMs" min="600" max="3000" step="100"><output></output></label>
+  <fieldset>
+    <legend data-i18n="tts"></legend>
+    <div class="btns">
+      <button type="button" data-tts="selection" data-i18n="tts_sel"></button>
+      <button type="button" data-tts="page" data-i18n="tts_page"></button>
+      <button type="button" data-tts="stop" data-i18n="tts_stop"></button>
+    </div>
+    <div class="btns">
+      <button type="button" data-tts="prev" aria-label="⏮" data-i18n-title="tts_prev">⏮</button>
+      <button type="button" data-tts="pause" aria-label="⏯" data-i18n-title="tts_pause">⏯</button>
+      <button type="button" data-tts="next" aria-label="⏭" data-i18n-title="tts_next">⏭</button>
+    </div>
+    <label class="slider"><span data-i18n="tts_rate"></span><input type="range" data-k="ttsRate" min="0.5" max="2" step="0.1"><output></output></label>
+    <label class="slider"><span data-i18n="ttsPitch"></span><input type="range" data-k="ttsPitch" min="0.5" max="2" step="0.1"><output></output></label>
+    <label class="field"><span data-i18n="ttsVoice"></span><select data-k="ttsVoice" id="voiceSel"></select></label>
+  </fieldset>
+</section>
+
+<!-- INSTRUMENTE -->
+<section id="p-tools" role="tabpanel" aria-labelledby="t-tools" hidden>
+  <p class="hint" data-i18n="tools_hint"></p>
+  <fieldset><legend data-i18n="cap_title"></legend>
+    <div class="profiles">
+      <button type="button" data-cap="visible" data-i18n="cap_visible"></button>
+      <button type="button" data-cap="region" data-i18n="cap_region"></button>
+      <button type="button" data-cap="full" data-i18n="cap_full"></button>
+      <button type="button" data-cap="element" data-i18n="cap_element"></button>
+      <button type="button" data-cap="delay" data-i18n="cap_delay"></button>
+      <button type="button" id="recBtn" data-i18n="rec_open"></button>
+    </div>
+  </fieldset>
+  <div class="profiles">
+    <button type="button" data-feat="reader" data-i18n="t_reader"></button>
+    <button type="button" data-feat="rsvp" data-i18n="t_rsvp"></button>
+    <button type="button" data-feat="autoscroll" data-i18n="t_autoscroll"></button>
+    <button type="button" data-feat="picker" data-i18n="t_picker"></button>
+    <button type="button" data-feat="hiddenClear" data-i18n="t_hidden_clear"></button>
+  </div>
+  <label class="slider"><span data-i18n="scrollSpeed"></span><input type="range" data-k="scrollSpeed" min="10" max="300" step="10"><output></output></label>
+  <fieldset><legend data-i18n="t_hl"></legend>
+    <ul id="hlList" class="list"></ul>
+    <div class="btns"><button type="button" id="hlExport" data-i18n="t_hl_export"></button><button type="button" id="hlClear" class="danger" data-i18n="t_hl_clear"></button></div>
+  </fieldset>
+  <div class="btns"><button type="button" id="auditBtn" data-i18n="t_audit"></button><button type="button" id="outlineBtn" data-i18n="t_outline"></button></div>
+  <p id="auditStats" class="hint" role="status"></p>
+  <ul id="auditList" class="list" aria-live="polite"></ul>
+</section>
+
+<!-- MAI MULT -->
+<section id="p-more" role="tabpanel" aria-labelledby="t-more" hidden>
+  <p id="managedNote" class="warn" hidden role="status" data-i18n="managed_note"></p>
+  <fieldset><legend data-i18n="m_sys"></legend>
+  <label class="row"><input type="checkbox" data-k="osPrefs"><span data-i18n="osPrefs"></span></label>
+  <label class="row"><input type="checkbox" data-k="aiLocal"><span data-i18n="aiLocal"></span></label>
+  <label class="row"><input type="checkbox" data-k="liveAudit"><span data-i18n="liveAudit"></span></label>
+  </fieldset>
+  <fieldset><legend data-i18n="m_calm"></legend>
+  <label class="row"><input type="checkbox" data-k="calm"><span data-i18n="calm"></span></label>
+  <label class="row"><input type="checkbox" data-k="unstick"><span data-i18n="unstick"></span></label>
+  <label class="row"><input type="checkbox" data-k="reflow"><span data-i18n="reflow"></span></label>
+  <label class="row"><input type="checkbox" data-k="noFlash"><span data-i18n="noFlash"></span></label>
+  <label class="row"><input type="checkbox" data-k="focusGuard"><span data-i18n="focusGuard"></span></label>
+  </fieldset>
+  <fieldset><legend data-i18n="m_motor"></legend>
+  <label class="row"><input type="checkbox" data-k="hints"><span data-i18n="hints"></span></label>
+  <label class="row"><input type="checkbox" data-k="scan"><span data-i18n="scan"></span></label>
+  <label class="slider"><span data-i18n="scanMs"></span><input type="range" data-k="scanMs" min="600" max="4000" step="100"><output></output></label>
+  <label class="row"><input type="checkbox" data-k="unblockPaste"><span data-i18n="unblockPaste"></span></label>
+  <label class="row"><input type="checkbox" data-k="fab"><span data-i18n="fab"></span></label>
+  <label class="row"><input type="checkbox" data-k="linkInfo"><span data-i18n="linkInfo"></span></label>
+  </fieldset>
+  <fieldset><legend data-i18n="m_media"></legend>
+  <label class="row"><input type="checkbox" data-k="capStyle"><span data-i18n="capStyle"></span></label>
+  <label class="row"><input type="checkbox" data-k="altReveal"><span data-i18n="altReveal"></span></label>
+  <label class="slider"><span data-i18n="cueSize"></span><input type="range" data-k="cueSize" min="50" max="300" step="10"><output></output></label>
+  <label class="slider"><span data-i18n="playRate"></span><input type="range" data-k="playRate" min="0.5" max="3" step="0.25"><output></output></label>
+  <label class="row"><input type="checkbox" data-k="localVoices"><span data-i18n="localVoices"></span></label>
+  <label class="row"><input type="checkbox" data-k="autoLang"><span data-i18n="autoLang"></span></label>
+  </fieldset>
+  <details id="chk"><summary data-i18n="chk_title"></summary>
+    <ul class="list">
+      <li><label><input type="checkbox" data-chk="help"> <span data-i18n="chk_help"></span></label></li>
+      <li><label><input type="checkbox" data-chk="redundant"> <span data-i18n="chk_redundant"></span></label></li>
+      <li><label><input type="checkbox" data-chk="drag"> <span data-i18n="chk_drag"></span></label></li>
+      <li><label><input type="checkbox" data-chk="auth"> <span data-i18n="chk_auth"></span></label></li>
+      <li><label><input type="checkbox" data-chk="focus"> <span data-i18n="chk_focus"></span></label></li>
+    </ul>
+  </details>
+</section>
+
+<!-- PROFILE -->
+<section id="p-prof" role="tabpanel" aria-labelledby="t-prof" hidden>
+  <p class="hint" data-i18n="p_hint"></p>
+  <div class="profiles">
+    <button type="button" data-profile="lowvision" data-i18n="p_lowvision"></button>
+    <button type="button" data-profile="darkcomfort" data-i18n="p_darkcomfort"></button>
+    <button type="button" data-profile="dyslexia" data-i18n="p_dyslexia"></button>
+    <button type="button" data-profile="colorblind" data-i18n="p_colorblind"></button>
+    <button type="button" data-profile="sensitive" data-i18n="p_sensitive"></button>
+    <button type="button" data-profile="focus" data-i18n="p_focus"></button>
+    <button type="button" data-profile="motor" data-i18n="p_motor"></button>
+    <button type="button" data-profile="reading" data-i18n="p_reading"></button>
+    <button type="button" data-profile="calm" data-i18n="p_calm"></button>
+    <button type="button" data-profile="reset" class="danger" data-i18n="p_reset"></button>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="btns">
+    <button type="button" id="exportBtn" data-i18n="export"></button>
+    <button type="button" id="importBtn" data-i18n="import"></button>
+    <input type="file" id="importFile" accept="application/json" hidden>
+    <label class="inline"><span data-i18n="lang"></span>
+      <select data-k="lang"><option value="auto" data-i18n="auto"></option><option value="en">English</option><option value="ro">Română</option><option value="fr">Français</option><option value="it">Italiano</option><option value="es">Español</option><option value="pt">Português</option><option value="de">Deutsch</option><option value="hu">Magyar</option></select></label>
+  </div>
+  <p class="hint" data-i18n="shortcuts"></p>
+</footer>
+<script src="shared.js"></script>
+<script src="popup.js"></script>
+</body>
+</html>
