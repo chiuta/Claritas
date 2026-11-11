@@ -1,7 +1,7 @@
 name: browsers
 on:
   push:
-    branches: [main, 'ci/**']
+    branches: [main, 'ci/browser-matrix']
   workflow_dispatch:
 permissions:
   contents: read
