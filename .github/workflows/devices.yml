@@ -1,0 +1,104 @@
+name: real-devices
+on:
+  push:
+    branches: ['ci/devices']
+  workflow_dispatch:
+permissions:
+  contents: read
+env:
+  PYTHONUTF8: '1'
+  PYTHONIOENCODING: utf-8
+jobs:
+  android:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - run: python build.py
+      - name: KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules && sudo udevadm trigger --name-match=kvm
+      - run: python test/fetch_fenix.py && ls -l /tmp/fenix.apk
+      - run: bash test/fetch_samsung.sh
+      - uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 34
+          arch: x86_64
+          target: google_apis
+          force-avd-creation: false
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim
+          disable-animations: true
+          script: bash test/android_devices.sh
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: { name: r-android, path: test/results }
+  safari-macos:
+    runs-on: macos-latest
+    continue-on-error: true
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - name: Safari real macOS (pagina încarcă scripturile extensiei cu API simulat)
+        run: |
+          mkdir -p test/results
+          defaults read /Applications/Safari.app/Contents/Info CFBundleShortVersionString | tee test/results/safari-version.txt
+          python3 -I test/devsrv.py 8790 safari-macos test/results/safari-macos.json 150 > test/results/safari-macos.log 2>&1 &
+          SP=$!; sleep 2
+          open -a Safari "http://127.0.0.1:8790/?s=on"
+          sleep 25; screencapture -x test/results/safari-macos-1.png || true
+          wait $SP; echo "exit=$?"; cat test/results/safari-macos.log
+          screencapture -x test/results/safari-macos-end.png || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: { name: r-safari-macos, path: test/results }
+  ios:
+    runs-on: macos-latest
+    continue-on-error: true
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - name: Mobile Safari în iPhone și iPad Simulator
+        run: |
+          mkdir -p test/results
+          xcrun simctl list devices available | grep -E "iPhone|iPad" | head -8
+          for kind in iPhone iPad; do
+            DEV=$(xcrun simctl list devices available | grep -E "^\s+$kind" | head -1 | sed -E 's/.*\(([0-9A-F-]{36})\).*/\1/')
+            echo "==== $kind $DEV"; [ -z "$DEV" ] && continue
+            xcrun simctl boot "$DEV" || true
+            xcrun simctl bootstatus "$DEV" -b >/dev/null 2>&1 || true
+            python3 -I test/devsrv.py 8790 ios-$kind test/results/ios-$kind.json 150 > test/results/ios-$kind.log 2>&1 &
+            SP=$!; sleep 2
+            xcrun simctl openurl "$DEV" "http://localhost:8790/?s=on"
+            sleep 25; xcrun simctl io "$DEV" screenshot test/results/ios-$kind-1.png || true
+            wait $SP; echo "exit=$?"; cat test/results/ios-$kind.log
+            xcrun simctl io "$DEV" screenshot test/results/ios-$kind-end.png || true
+            xcrun simctl shutdown "$DEV" || true
+          done
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: { name: r-ios-real, path: test/results }
+  publish:
+    needs: [android, safari-macos, ios]
+    if: always()
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with: { path: collected }
+      - name: Push results to ci-results-devices
+        run: |
+          mkdir -p /tmp/out && cp -r collected /tmp/out/
+          git config user.name "github-actions"; git config user.email "actions@users.noreply.github.com"
+          git checkout --orphan ci-results-devices && git rm -rf . >/dev/null
+          mkdir -p run-${{ github.run_number }} && cp -r /tmp/out/collected/* run-${{ github.run_number }}/ || true
+          git add -A && git commit -m "devices results run ${{ github.run_number }}" && git push -f origin ci-results-devices
