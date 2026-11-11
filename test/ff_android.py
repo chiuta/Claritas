@@ -28,7 +28,7 @@ opts.set_preference('xpinstall.signatures.required', False); opts.set_preference
 opts.set_preference('extensions.webextensions.uuids', json.dumps({'claritas@trom.tf': '7a1c4a3e-5b22-4e0d-9f10-c1a2b3c4d5e6'}))
 opts.set_capability('moz:firefoxOptions', {'androidPackage': os.environ.get('ANDROID_PKG', 'org.mozilla.fenix'), 'androidDeviceSerial': os.environ.get('ANDROID_SERIAL', 'emulator-5554'),
     'prefs': {'xpinstall.signatures.required': False, 'extensions.autoDisableScopes': 0, 'extensions.webextensions.uuids': json.dumps({'claritas@trom.tf': '7a1c4a3e-5b22-4e0d-9f10-c1a2b3c4d5e6'})}})
-d = webdriver.Firefox(options=opts, service=Service(os.environ['GECKODRIVER']))
+d = webdriver.Firefox(options=opts, service=Service(os.environ['GECKODRIVER'], service_args=['-vv', '--android-storage', 'app'], log_output=sys.stdout))
 URL = 'http://10.0.2.2:8771/'
 try:
     print('UA:', d.execute_script('return navigator.userAgent'))
