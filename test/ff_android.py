@@ -45,7 +45,15 @@ try:
     before = rgb(d.execute_script("return getComputedStyle(document.getElementById('p')).color"))
     ok(before == (187, 187, 187), f'înainte: text pal neschimbat {before}')
     d.install_addon(os.environ.get('XPI', 'dist/claritas-firefox.zip'), temporary=True); ok(True, 'extensia instalată temporar pe Android')
-    d.get(URL); time.sleep(3)
+    UU = '7a1c4a3e-5b22-4e0d-9f10-c1a2b3c4d5e6'
+    try:
+        d.get(f'moz-extension://{UU}/popup.html'); time.sleep(2)
+        d.execute_async_script("const [s,cb]=[arguments[0],arguments[arguments.length-1]];browser.storage.local.clear().then(()=>browser.storage.local.set({settings:s})).then(()=>cb(1))", {'enabled': True, 'autoFix': True, 'target': 7})
+        ok(True, 'setări extensie scrise (pagina extensiei accesibilă pe Android)')
+    except Exception as e:
+        ok(False, 'pagina extensiei inaccesibilă: ' + str(e)[:160])
+    d.get(URL); time.sleep(4)
+    print('INFO claritas in DOM:', d.execute_script("return [document.documentElement.outerHTML.length, !!document.querySelector('[id*=clr],[class*=clr]'), typeof window.CLR]"))
     p = d.execute_script("const s=getComputedStyle(document.getElementById('p'));return [s.color,s.backgroundColor]")
     ok(ratio(rgb(p[0]), rgb(p[1])) >= 4.5, f'contrast text pal corectat pe Android ({ratio(rgb(p[0]), rgb(p[1])):.1f}:1)')
     q = d.execute_script("const s=getComputedStyle(document.getElementById('d'));return [s.color,s.backgroundColor]")
