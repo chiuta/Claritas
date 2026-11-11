@@ -2,7 +2,7 @@
 
 [English](README.md) · [Română](README.ro.md) · [Français](README.fr.md) · **Italiano** · [Español](README.es.md) · [Português](README.pt.md) · [Deutsch](README.de.md) · [Magyar](README.hu.md)
 
-**Versione: 1.6.0 · Ultimo aggiornamento: 12/11/2026**
+**Versione: 1.7.0 · Ultimo aggiornamento: 12/11/2026**
 
 Estensione di accessibilità tutto-in-uno, gratuita. Nessuna telemetria, nessuna rete, nessun account: tutto resta nel tuo browser.
 
@@ -57,6 +57,19 @@ MIT — copyright Alexandru-Ionuț Chiuță (Alexio).
 Se Claritas ti è utile, puoi sostenere il lavoro: [Buy Me a Coffee](https://buymeacoffee.com/echo.of.the.strings).
 
 Stato di verifica (v1.6.0): testato automaticamente in CI su Chromium, Edge, Brave, Firefox (più canali), Safari 27.2 reale su macOS, Safari 26.2 nel simulatore iPhone/iPad, Chrome 113 e Firefox 162 su Android 14 (emulatore). Non verificato: Opera, Vivaldi, Samsung Internet reale, l’estensione attivata in Safari/iOS reali, Chrome di marca. Alt+Shift+O/D/L/G sono modificabili nel browser; P/H/S/M sono fissi. Il pulsante di definizione apre dexonline.ro o Wiktionary solo al clic.
+
+## Moduli opzionali (v1.7)
+Tutti sono disattivati di default (popup → «Altro» → «Moduli opzionali (v1.7)»). Nessuna telemetria; il pulsante «Cosa lascia il browser?» legge il codice dell’estensione ed elenca gli indirizzi e le chiamate di rete trovati.
+- **Navigazione rapida**: Alt+Maiusc+J/K titolo successivo/precedente, M/N regione successiva/precedente, L elenco filtrabile di regioni, titoli e link, G spotlight sul paragrafo; focus ingrandito e visibile.
+- **Controllo vocale** (Alt+Maiusc+V): comandi come «next heading», «zoom in», «read», «help». In Chrome l’audio è elaborato dal servizio vocale del browser; Firefox non lo ha.
+- **Riassunto, testo semplificato, glossario** (Alt+Maiusc+Y): riassunto con selezione statistica delle frasi (non IA; usa il modello locale di Chrome solo se «IA locale» è attiva e disponibile), semplificazione che divide solo le frasi lunghe, glossario delle abbreviazioni definite nella pagina e delle parole lunghe (con il dizionario locale, se importato).
+- **Descrizioni per immagini senza alt**: da didascalia, titolo, testo del link o nome file; contrassegnate «generato automaticamente». L’immagine non viene analizzata.
+- **Sottotitoli dal vivo** (Alt+Maiusc+C): solo il parlato captato dal microfono, non l’audio di video o pagina.
+- **Nuovi profili**: anziani, tremore/motricità, fotosensibilità, ADHD/concentrazione.
+- **Regole per sito**: esporta/importa JSON o elenco di domini da disattivare.
+- **Rapporto di audit**: HTML, CSV o JSON con corrispondenza WCAG 2.2 / EN 301 549, correzioni suggerite e confronto con un riferimento salvato.
+- **Modalità CI**: `python tools/claritas_ci.py https://example.com --format all --max-errors 0` (codice di uscita 1 oltre la soglia). Copre solo le regole automatiche di Claritas.
+- **Verificato (Chromium, estensione reale)**: 36 controlli in `test/t14_v17.py`. **Non verificato**: riconoscimento vocale con voce reale (solo avvio/arresto e parser dei comandi), sottotitoli dal vivo con voce reale, i moduli su Firefox/Safari.
 
 ## Moduli opzionali (v1.6)
 Tutti disattivati di default (popup → «Moduli opzionali»); nulla esce dal browser. Parti del discorso nel Lettore (rumeno/inglese, euristico), regole di audit aggiuntive (ARIA, moduli, main, zoom, sottotitoli), dizionario locale (tuo JSON/TSV, max 4 MB), sincronizzazione delle impostazioni con `storage.sync` del browser (senza dizionario né registrazioni) e OCR locale nel pacchetto separato `claritas-*-ocr.zip` (~20 MB; verificato automaticamente solo in Chromium, Firefox/Safari non verificati).

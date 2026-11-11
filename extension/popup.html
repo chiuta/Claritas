@@ -171,6 +171,10 @@
     <div class="btns"><button type="button" id="hlExport" data-i18n="t_hl_export"></button><button type="button" id="hlClear" class="danger" data-i18n="t_hl_clear"></button></div>
   </fieldset>
   <div class="btns"><button type="button" id="auditBtn" data-i18n="t_audit"></button><button type="button" id="outlineBtn" data-i18n="t_outline"></button></div>
+  <div class="btns" id="repBtns" hidden>
+    <button type="button" data-rep="html" data-i18n="rep_html"></button><button type="button" data-rep="csv" data-i18n="rep_csv"></button><button type="button" data-rep="json" data-i18n="rep_json"></button>
+    <button type="button" id="repBase" data-i18n="rep_base"></button><button type="button" id="repDiff" data-i18n="rep_diff"></button>
+  </div>
   <p id="auditStats" class="hint" role="status"></p>
   <ul id="auditList" class="list" aria-live="polite"></ul>
 </section>
@@ -196,6 +200,28 @@
   <label class="row"><input type="checkbox" data-k="syncProfiles"><span data-i18n="syncProfiles"></span></label>
   <p class="hint" id="syncInfo" role="status"></p>
   <div class="profiles"><button type="button" id="ocrOpen" data-i18n="ocr_open" hidden></button></div>
+  </fieldset>
+  <fieldset id="mod2Fs"><legend data-i18n="m_modules2"></legend>
+  <label class="row"><input type="checkbox" data-k="modKeys"><span data-i18n="modKeys"></span></label>
+  <label class="row"><input type="checkbox" data-k="modVoice"><span data-i18n="modVoice"></span></label>
+  <label class="row"><input type="checkbox" data-k="modSimplify"><span data-i18n="modSimplify"></span></label>
+  <label class="row"><input type="checkbox" data-k="modImgAlt"><span data-i18n="modImgAlt"></span></label>
+  <label class="row"><input type="checkbox" data-k="modCaps"><span data-i18n="modCaps"></span></label>
+  <div class="profiles">
+    <button type="button" data-m2="list" data-i18n="m2_list"></button>
+    <button type="button" data-m2="spot" data-i18n="m2_spot"></button>
+    <button type="button" data-m2="panel" data-i18n="m2_panel"></button>
+    <button type="button" data-m2="voice" data-i18n="m2_voice"></button>
+    <button type="button" data-m2="caps" data-i18n="m2_caps"></button>
+  </div>
+  <div class="profiles">
+    <button type="button" id="sitesExport" data-i18n="sites_export"></button>
+    <button type="button" id="sitesImport" data-i18n="sites_import"></button>
+    <input type="file" id="sitesFile" accept=".json,.txt" hidden>
+    <button type="button" id="privBtn" data-i18n="priv_btn"></button>
+  </div>
+  <p class="hint" id="sitesInfo" role="status"></p>
+  <ul id="privList" class="list" aria-live="polite"></ul>
   </fieldset>
   <fieldset><legend data-i18n="m_calm"></legend>
   <label class="row"><input type="checkbox" data-k="calm"><span data-i18n="calm"></span></label>
@@ -243,6 +269,10 @@
     <button type="button" data-profile="focus" data-i18n="p_focus"></button>
     <button type="button" data-profile="motor" data-i18n="p_motor"></button>
     <button type="button" data-profile="reading" data-i18n="p_reading"></button>
+    <button type="button" data-profile="elderly" data-i18n="p_elderly"></button>
+    <button type="button" data-profile="tremor" data-i18n="p_tremor"></button>
+    <button type="button" data-profile="photosens" data-i18n="p_photosens"></button>
+    <button type="button" data-profile="adhd" data-i18n="p_adhd"></button>
     <button type="button" data-profile="calm" data-i18n="p_calm"></button>
     <button type="button" data-profile="reset" class="danger" data-i18n="p_reset"></button>
   </div>
@@ -261,6 +291,7 @@
 </footer>
 <script src="shared.js"></script>
 <script src="modules.js"></script>
+<script src="report.js"></script>
 <script src="popup.js"></script>
 </body>
 </html>

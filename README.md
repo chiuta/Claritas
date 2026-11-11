@@ -2,7 +2,7 @@
 
 **English** · [Română](README.ro.md) · [Français](README.fr.md) · [Italiano](README.it.md) · [Español](README.es.md) · [Português](README.pt.md) · [Deutsch](README.de.md) · [Magyar](README.hu.md)
 
-**Version: 1.6.0 · Last updated: 12 Nov 2026**
+**Version: 1.7.0 · Last updated: 12 Nov 2026**
 
 Free all-in-one accessibility extension. No telemetry, no network, no accounts: everything stays in your browser.
 
@@ -56,6 +56,19 @@ MIT — copyright Alexandru-Ionuț Chiuță (Alexio).
 If Claritas helps you, you can support the work: [Buy Me a Coffee](https://buymeacoffee.com/echo.of.the.strings).
 
 Verification status (v1.5.5): tested automatically in CI on Chromium, Edge, Brave, Firefox (several channels), real Safari 27.2 on macOS, Safari 26.2 in iPhone/iPad Simulator, Chrome 113 and Firefox 162 on Android 14 (emulator). Not verified: Opera, Vivaldi, real Samsung Internet, the extension activated inside real Safari/iOS, branded Chrome. Shortcuts Alt+Shift+O/D/L/G can be remapped in the browser; P/H/S/M are fixed. The definition button opens dexonline.ro or Wiktionary only when you click it.
+
+## Optional modules (v1.7)
+All are off by default (popup → “More” → “Optional modules (v1.7)”). There is no telemetry; the “What leaves the browser?” button reads the extension’s own code and lists the addresses and network calls it finds.
+- **Quick navigation**: Alt+Shift+J/K next/previous heading, M/N next/previous landmark, L filterable list of landmarks, headings and links, G paragraph spotlight; larger visible focus.
+- **Voice control** (Alt+Shift+V): commands such as “next heading”, “zoom in”, “read”, “help” (Romanian equivalents too). In Chrome the audio is processed by the browser’s speech service; Firefox does not have it.
+- **Summary, simplified text, glossary** (Alt+Shift+Y): summary by statistical sentence selection (not AI; uses Chrome’s local model only if “Local AI” is on and available), simplification that only splits long sentences, glossary of abbreviations defined on the page plus long words (with the local dictionary if imported).
+- **Descriptions for images without alt**: from caption, title, link text or file name; marked “auto-generated”. It does not analyse the image.
+- **Live captions** (Alt+Shift+C): speech picked up by the microphone only, not audio playing in videos or the page.
+- **New profiles**: older adults, tremor/motor, photosensitivity, ADHD/focus.
+- **Site rules**: export/import as JSON or a list of domains to disable.
+- **Audit report**: HTML, CSV or JSON with WCAG 2.2 / EN 301 549 mapping, fix suggestions and comparison with a saved baseline.
+- **CI mode**: `python tools/claritas_ci.py https://example.com --format all --max-errors 0` (exit code 1 above the threshold). Covers only Claritas’s automatic rules.
+- **Verified (Chromium, real extension)**: 36 checks in `test/t14_v17.py` (navigation, list, spotlight, voice-command parser, alt, summary/glossary, reports, profiles, rule import, privacy panel, cleanup on disable). **Not verified**: speech recognition with real speech (only start/stop and the command parser), live captions with real speech, the modules on Firefox/Safari.
 
 ## Optional modules (v1.6)
 All are off by default; switch them on in the popup → “Optional modules”. Nothing sends data outside the browser.

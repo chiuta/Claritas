@@ -819,6 +819,7 @@
       case 'hlClear': delete HLS[pageKey()]; saveHL(); renderHL(); return { ok: true };
       case 'hiddenList': return { ok: true, items: cleanHidden(HIDDEN[location.hostname]) };
       case 'hiddenClear': delete HIDDEN[location.hostname]; try { api.storage.local.set({ hidden: HIDDEN }); } catch (e) { } renderHidden(); return { ok: true };
+      case 'm2': return CLR.m2 ? CLR.m2.run(msg) : { ok: false };
       case 'ttsState': return { ok: true, on: tts.on, paused: tts.paused };
     }
     return { ok: false };

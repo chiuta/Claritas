@@ -2,7 +2,7 @@
 
 [English](README.md) · **Română** · [Français](README.fr.md) · [Italiano](README.it.md) · [Español](README.es.md) · [Português](README.pt.md) · [Deutsch](README.de.md) · [Magyar](README.hu.md)
 
-**Versiune: 1.6.0 · Ultima actualizare: 12.11.2026**
+**Versiune: 1.7.0 · Ultima actualizare: 12.11.2026**
 
 Extensie gratuită de accesibilitate all-in-one. Fără telemetrie, fără rețea, fără conturi: totul rămâne în browserul tău.
 
@@ -55,6 +55,19 @@ MIT — drepturi de autor Alexandru-Ionuț Chiuță (Alexio).
 ## Susținere
 
 Dacă Claritas te ajută, poți sprijini munca: [Buy Me a Coffee](https://buymeacoffee.com/echo.of.the.strings).
+
+## Module opționale (v1.7)
+Toate sunt oprite implicit (popup → «Mai mult» → «Module opționale (v1.7)»). Nu există telemetrie; butonul «Ce părăsește browserul?» citește codul extensiei și listează adresele și apelurile de rețea găsite.
+- **Navigare rapidă**: Alt+Shift+J/K titlu următor/anterior, M/N reper următor/anterior, L listă filtrabilă de repere, titluri și linkuri, G spotlight pe paragraf; focus mărit și vizibil.
+- **Control vocal** (Alt+Shift+V): comenzi precum „next heading”, „titlul anterior”, „zoom in”, „citește”, „ajutor”. În Chrome, sunetul este prelucrat de serviciul de recunoaștere vocală al browserului; Firefox nu are această funcție.
+- **Rezumat, text simplificat, glosar** (Alt+Shift+Y): rezumat prin selecția statistică a propozițiilor (nu AI; folosește modelul local din Chrome doar dacă «AI local» e pornit și disponibil), simplificare care doar împarte propozițiile lungi, glosar de abrevieri definite în pagină și cuvinte lungi (cu dicționarul local, dacă e importat).
+- **Descrieri pentru imagini fără alt**: din legendă, titlu, textul linkului sau numele fișierului; marcate „generat automat”. Nu analizează imaginea.
+- **Subtitrări live** (Alt+Shift+C): doar vorbirea captată de microfon, nu sunetul din filme sau din pagină.
+- **Profiluri noi**: vârstnici, tremor/mobilitate, fotosensibilitate, ADHD/concentrare.
+- **Reguli pe site**: export/import JSON sau listă de domenii de dezactivat.
+- **Raport de audit**: HTML, CSV sau JSON cu corespondență WCAG 2.2 / EN 301 549, sugestii de reparare și comparare cu o referință salvată.
+- **Mod CI**: `python tools/claritas_ci.py https://exemplu.ro --format all --max-errors 0` (cod de ieșire 1 dacă pragul e depășit). Acoperă doar regulile automate Claritas.
+- **Verificat (Chromium, extensia reală)**: 36 de verificări în `test/t14_v17.py` (navigare, listă, spotlight, parser de comenzi vocale, alt, rezumat/glosar, rapoarte, profiluri, import de reguli, panou de confidențialitate, curățare la dezactivare). **Neverificat**: recunoașterea vocală cu voce reală (doar pornirea/oprirea și parserul de comenzi), subtitrările live cu voce reală, modulele pe Firefox/Safari.
 
 ## Module opționale (v1.6)
 Toate sunt oprite implicit și se pornesc din popup → «Module opționale». Nimic nu trimite date în afara browserului.

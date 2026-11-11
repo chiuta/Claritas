@@ -483,8 +483,36 @@ jobs:
         if: always()
         with: { name: r-ocr-module, path: test/results }
 
+  ci-mode:
+    name: mod CI (tools/claritas_ci.py)
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - run: pip install playwright && python -m playwright install --with-deps chromium
+      - name: pagină bună → cod 0, pagină proastă → cod 1, rapoarte scrise
+        run: |
+          mkdir -p test/results
+          python tools/claritas_ci.py test/ci_good.html --format all --out /tmp/rep-good --max-errors 0 | tee test/results/ci-good.txt
+          set +e; python tools/claritas_ci.py test/ci_bad.html --format all --out /tmp/rep-bad --max-errors 0 | tee test/results/ci-bad.txt; RC=$?; set -e
+          [ "$RC" = 1 ] || { echo "FAIL: pagina proastă trebuia să dea cod 1, a dat $RC"; echo "FAIL ci-mode rc=$RC" > test/results/ci-mode-FAIL.txt; exit 1; }
+          for f in /tmp/rep-good/*.json /tmp/rep-bad/*.html /tmp/rep-bad/*.csv; do test -s "$f" || { echo "FAIL: lipsește $f"; exit 1; }; done
+          python - <<'PY'
+          import json,glob
+          g=json.load(open(glob.glob('/tmp/rep-good/*.json')[0])); b=json.load(open(glob.glob('/tmp/rep-bad/*.json')[0]))
+          assert g['summary']['errors']==0, g['summary']
+          assert b['summary']['errors']>=4 and any(i['wcag']=='1.1.1' for i in b['issues']), b['summary']
+          print('OK ci-mode: bun 0 erori, prost', b['summary']['errors'])
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: { name: r-ci-mode, path: test/results }
+
   publish:
-    needs: [ocr-module, lint, chromium-family, firefox, engines, safari-convert, samsung-emulation, chrome-for-testing, browser-profiles, firefox-android, ios-ipados, safari-real]
+    needs: [ci-mode, ocr-module, lint, chromium-family, firefox, engines, safari-convert, samsung-emulation, chrome-for-testing, browser-profiles, firefox-android, ios-ipados, safari-real]
     if: always()
     runs-on: ubuntu-latest
     permissions:

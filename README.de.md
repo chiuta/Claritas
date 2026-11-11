@@ -2,7 +2,7 @@
 
 [English](README.md) · [Română](README.ro.md) · [Français](README.fr.md) · [Italiano](README.it.md) · [Español](README.es.md) · [Português](README.pt.md) · **Deutsch** · [Magyar](README.hu.md)
 
-**Version: 1.6.0 · Letzte Aktualisierung: 12.11.2026**
+**Version: 1.7.0 · Letzte Aktualisierung: 12.11.2026**
 
 Kostenlose Barrierefreiheits-Erweiterung „Alles in einem“. Keine Telemetrie, kein Netzwerk, keine Konten: Alles bleibt in Ihrem Browser.
 
@@ -57,6 +57,19 @@ MIT — Copyright Alexandru-Ionuț Chiuță (Alexio).
 Wenn Claritas Ihnen hilft, können Sie die Arbeit unterstützen: [Buy Me a Coffee](https://buymeacoffee.com/echo.of.the.strings).
 
 Prüfstatus (v1.6.0): automatisch in CI getestet auf Chromium, Edge, Brave, Firefox (mehrere Kanäle), echtem Safari 27.2 (macOS), Safari 26.2 im iPhone/iPad-Simulator, Chrome 113 und Firefox 162 auf Android 14 (Emulator). Nicht verifiziert: Opera, Vivaldi, echtes Samsung Internet, die in echtem Safari/iOS aktivierte Erweiterung, Chrome-Markenversion. Alt+Shift+O/D/L/G sind im Browser änderbar; P/H/S/M sind fest. Die Definitionsschaltfläche öffnet dexonline.ro oder Wiktionary nur auf Klick.
+
+## Optionale Module (v1.7)
+Alle sind standardmäßig aus (Popup → „Mehr“ → „Optionale Module (v1.7)“). Es gibt keine Telemetrie; die Schaltfläche „Was verlässt den Browser?“ liest den Code der Erweiterung und listet gefundene Adressen und Netzwerkaufrufe.
+- **Schnellnavigation**: Alt+Umschalt+J/K nächste/vorherige Überschrift, M/N nächster/vorheriger Bereich, L filterbare Liste von Bereichen, Überschriften und Links, G Absatz-Spotlight; größerer sichtbarer Fokus.
+- **Sprachsteuerung** (Alt+Umschalt+V): Befehle wie „next heading“, „zoom in“, „read“, „help“. In Chrome verarbeitet der Spracherkennungsdienst des Browsers das Audio; Firefox hat ihn nicht.
+- **Zusammenfassung, vereinfachter Text, Glossar** (Alt+Umschalt+Y): Zusammenfassung durch statistische Satzauswahl (keine KI; nutzt Chromes lokales Modell nur, wenn „Lokale KI“ an und verfügbar ist), Vereinfachung teilt nur lange Sätze, Glossar der auf der Seite definierten Abkürzungen und langer Wörter (mit dem lokalen Wörterbuch, falls importiert).
+- **Beschreibungen für Bilder ohne Alt**: aus Bildunterschrift, Titel, Linktext oder Dateiname; als „automatisch erzeugt“ markiert. Das Bild wird nicht analysiert.
+- **Live-Untertitel** (Alt+Umschalt+C): nur vom Mikrofon aufgenommene Sprache, nicht Ton aus Videos oder der Seite.
+- **Neue Profile**: Ältere, Tremor/Motorik, Lichtempfindlichkeit, ADHS/Konzentration.
+- **Website-Regeln**: Export/Import als JSON oder Liste zu deaktivierender Domains.
+- **Audit-Bericht**: HTML, CSV oder JSON mit Zuordnung zu WCAG 2.2 / EN 301 549, Korrekturvorschlägen und Vergleich mit einer gespeicherten Referenz.
+- **CI-Modus**: `python tools/claritas_ci.py https://example.com --format all --max-errors 0` (Exit-Code 1 bei Überschreitung). Deckt nur die automatischen Regeln von Claritas ab.
+- **Geprüft (Chromium, echte Erweiterung)**: 36 Prüfungen in `test/t14_v17.py`. **Nicht geprüft**: Spracherkennung mit echter Sprache (nur Start/Stopp und Befehlsparser), Live-Untertitel mit echter Sprache, die Module in Firefox/Safari.
 
 ## Optionale Module (v1.6)
 Alle sind standardmäßig aus (Popup → „Optionale Module“); nichts verlässt den Browser. Wortarten im Leser (Rumänisch/Englisch, heuristisch), zusätzliche Prüfregeln (ARIA, Formulare, main, Zoom, Untertitel), lokales Wörterbuch (eigene JSON-/TSV-Datei, max. 4 MB), Einstellungs-Sync über `storage.sync` des Browsers (ohne Wörterbuch und Aufnahmen) und lokale OCR im separaten Paket `claritas-*-ocr.zip` (~20 MB; nur in Chromium automatisch geprüft, Firefox/Safari nicht geprüft).

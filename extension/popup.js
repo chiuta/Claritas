@@ -142,7 +142,9 @@
       else { const e = li('', sp((it.kind === 'h' ? 'H' + it.level : '◆'), 'sev'), sp(it.text)); e.style.paddingLeft = (it.kind === 'h' ? (it.level - 1) * 8 : 0) + 6 + 'px'; e.append(locBtn(it.id)); ul.appendChild(e); }
     });
   }
+  let lastAudit = null;
   function bindTools() {
+    bindReport();
     $$('[data-feat]').forEach((b) => b.addEventListener('click', async () => {
       const r = await feat(b.dataset.feat);
       if (!r || r.inactive) { $('#auditStats').textContent = t(lang(), 'inactive'); return; }
@@ -152,6 +154,7 @@
       const r = await feat('audit');
       if (!r || !r.ok) { $('#auditStats').textContent = t(lang(), 'inactive'); return; }
       const s = r.stats; $('#auditStats').textContent = t(lang(), 'stats_line', { w: s.words, m: s.minutes, l: s.longSentences, s: s.sentences }) + (s.lix != null ? ' · ' + t(lang(), 'lix_line', { n: s.lix, lvl: t(lang(), 'lvl_' + s.level) }) : '');
+      lastAudit = r.items; $('#repBtns').hidden = false;
       const ec = r.items.filter((i) => i.sev === 'err').length, wc = r.items.filter((i) => i.sev === 'warn').length;
       $('#auditStats').textContent += ' · ' + t(lang(), 'summary_line', { e: ec, w: wc });
       renderIssues(r.items, 'audit');
@@ -210,7 +213,7 @@
     fillVoices();
     bind();
     bindTools();
-    bindModules();
+    bindModules(); bindModules2();
     render();
     refreshStats(); refreshZoom();
     setTimeout(refreshStats, 900);
@@ -241,6 +244,84 @@
     try { const mf = api.runtime.getManifest(), csp = mf.content_security_policy; if (csp && /wasm-unsafe-eval/.test(typeof csp === 'string' ? csp : (csp.extension_pages || ''))) { const b = $('#ocrOpen'); b.hidden = false; b.addEventListener('click', () => api.tabs.create({ url: api.runtime.getURL('ocr.html') })); } } catch (e) { }
     try { api.storage.onChanged.addListener((ch, a) => { if (a === 'local' && (ch.syncStatus || ch.dictLocal)) refresh(); }); } catch (e) { }
     refresh();
+  }
+
+  /* ---------- v1.7: raport de audit, module noi, reguli pe site, panou confidențialitate ---------- */
+  const tl = (k, v) => t(lang() === 'auto' ? (navigator.language || 'en').slice(0, 2) : lang(), k, v);
+  function download(name, mime, text) {
+    const a = document.createElement('a'), u = URL.createObjectURL(new Blob([text], { type: mime + ';charset=utf-8' }));
+    a.href = u; a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 4000);
+  }
+  async function pageInfo() {
+    let url = '', title = '';
+    try { const [tb] = await api.tabs.query({ active: true, currentWindow: true }); if (tb) { url = tb.url || ''; title = tb.title || ''; } } catch (e) { }
+    return { url, title };
+  }
+  const baseKey = (url) => { try { const u = new URL(url); return u.origin + u.pathname; } catch (e) { return url || 'page'; } };
+  function bindReport() {
+    const R = CLR.report; if (!R) return;
+    const names = () => { const o = {}; Object.keys(R.MAP).forEach((k) => { o[k] = tl('a_' + k); }); return o; };
+    $$('[data-rep]').forEach((b) => b.addEventListener('click', async () => {
+      if (!lastAudit) return; const fmt = b.dataset.rep, pi = await pageInfo(), L = {};
+      ['title', 'errors', 'warnings', 'issues', 'sev', 'rule', 'target', 'fix', 'note'].forEach((k) => { L[k] = tl('rep_' + k); });
+      const meta = { url: pi.url, title: pi.title, date: new Date().toISOString().slice(0, 16).replace('T', ' '), version: api.runtime.getManifest().version, names: names(), labels: L, lang: CLR.langCode(lang()) };
+      download('claritas-audit.' + fmt, fmt === 'html' ? 'text/html' : fmt === 'csv' ? 'text/csv' : 'application/json', R.build(lastAudit, meta, fmt));
+    }));
+    $('#repBase').addEventListener('click', async () => {
+      if (!lastAudit) return; const pi = await pageInfo(), r = await api.storage.local.get('auditBase'), all = (r && r.auditBase && typeof r.auditBase === 'object') ? r.auditBase : {};
+      const keys = Object.keys(all); if (keys.length > 60) delete all[keys[0]];
+      all[baseKey(pi.url)] = R.keys(lastAudit); await api.storage.local.set({ auditBase: all });
+      $('#auditStats').textContent = tl('rep_base_ok', { n: all[baseKey(pi.url)].length });
+    });
+    $('#repDiff').addEventListener('click', async () => {
+      if (!lastAudit) return; const pi = await pageInfo(), r = await api.storage.local.get('auditBase'), prev = r && r.auditBase && r.auditBase[baseKey(pi.url)];
+      if (!prev) { $('#auditStats').textContent = tl('rep_base_none'); return; }
+      const d = R.diff(prev, lastAudit); $('#auditStats').textContent = tl('rep_diff_line', { a: d.added.length, f: d.fixed.length, k: d.kept.length });
+    });
+  }
+  function bindModules2() {
+    $$('[data-m2]').forEach((b) => b.addEventListener('click', async () => {
+      const r = await feat('m2', { what: b.dataset.m2 });
+      if (!r || r.inactive) { const i = $('#sitesInfo'); if (i) i.textContent = tl('inactive'); return; }
+      if (r.off) { const i = $('#sitesInfo'); if (i) i.textContent = tl('m_modules2'); return; }
+      setTimeout(() => window.close(), 60);
+    }));
+    $('#sitesExport').addEventListener('click', () => download('claritas-sites.json', 'application/json', JSON.stringify({ claritas: 'sites', v: 1, sites: SITES }, null, 2)));
+    $('#sitesImport').addEventListener('click', () => $('#sitesFile').click());
+    $('#sitesFile').addEventListener('change', async (e) => {
+      const f = e.target.files && e.target.files[0]; if (!f) return; const info = $('#sitesInfo');
+      if (f.size > 512 * 1024) { info.textContent = tl('sites_bad'); return; }
+      const txt = await f.text(); let add = null;
+      try { const j = JSON.parse(txt); add = CLR.sanitizeSites(j && j.sites ? j.sites : j); } catch (x) { }
+      if (!add || !Object.keys(add).length) {
+        const hosts = txt.split(/\r?\n/).map((l) => l.replace(/#.*/, '').trim().toLowerCase()).filter((l) => /^(\*\.)?[a-z0-9]([a-z0-9.-]*[a-z0-9])?$/.test(l) && l.length < 254);
+        if (hosts.length) { add = {}; hosts.forEach((h) => { add[h] = { off: true }; }); add = CLR.sanitizeSites(add); }
+      }
+      if (!add || !Object.keys(add).length) { info.textContent = tl('sites_bad'); return; }
+      const sites = Object.assign({}, SITES); Object.keys(add).forEach((k) => { sites[k] = add[k]; });
+      save({ sites }); info.textContent = tl('sites_ok', { n: Object.keys(add).length }); e.target.value = '';
+    });
+    $('#privBtn').addEventListener('click', privacyReport);
+  }
+  async function privacyReport() {
+    const ul = $('#privList'); ul.textContent = ''; const mf = api.runtime.getManifest();
+    const add = (s) => { const l = document.createElement('li'); l.textContent = s; ul.appendChild(l); };
+    const files = new Set(['popup.js', 'report.js']);
+    (mf.content_scripts || []).forEach((c) => (c.js || []).forEach((f) => files.add(f)));
+    if (mf.background) { if (mf.background.service_worker) files.add(mf.background.service_worker); (mf.background.scripts || []).forEach((f) => files.add(f)); }
+    const F = 'fet' + 'ch', hosts = {}, ext = [], loc = [];
+    for (const f of files) {
+      let src = ''; try { src = await (await self[F](api.runtime.getURL(f))).text(); } catch (e) { continue; }
+      (src.match(/https?:\/\/[a-z0-9.-]+\.[a-z]{2,}/gi) || []).forEach((u) => { const h = u.replace(/^https?:\/\//i, '').toLowerCase(); if (!/(^|\.)w3\.org$|^example\.|^claude\.|^github\.com|buymeacoffee|patreon|trom\.tf/.test(h)) (hosts[h] = hosts[h] || new Set()).add(f); });
+      const re = new RegExp('(?:\\b' + F + '|sendBeacon|new\\s+WebSocket|new\\s+EventSource|new\\s+XMLHttpRequest|importScripts)\\s*\\(([^)]{0,90})', 'g'); let m;
+      while ((m = re.exec(src))) { if (/getURL/.test(m[1]) || /getURL|data:image/.test(src.slice(Math.max(0, m.index - 420), m.index + m[0].length))) loc.push(f); else ext.push(f + ': ' + m[0].slice(0, 70).replace(/\s+/g, ' ')); }
+    }
+    add(tl('priv_perm', { p: (mf.permissions || []).concat(mf.host_permissions || []).join(', ') || '—' }));
+    add(tl('priv_urls', { u: Object.keys(hosts).map((h) => h + ' (' + Array.from(hosts[h]).join(', ') + ')').join('; ') || '0' }));
+    add(tl('priv_net', { n: ext.length }));
+    ext.slice(0, 8).forEach((x) => add('  · ' + x));
+    add(tl('priv_local', { n: loc.length }));
+    add(tl('priv_note'));
   }
 
   function bind() {
