@@ -2,6 +2,30 @@
 Env: BROWSER_EXE (path) | BROWSER_CHANNEL (chrome, msedge, ...), HEADED=1 (use with xvfb-run)."""
 import os, tempfile
 from playwright.async_api import BrowserType
+CH = 'Chrome/131.0.0.0'
+MOB = dict(viewport={'width': 412, 'height': 915}, is_mobile=True, has_touch=True, device_scale_factor=2.625)
+PROFILES = {
+  'samsung':        dict(user_agent='Mozilla/5.0 (Linux; Android 14; SM-S918B) AppleWebKit/537.36 (KHTML, like Gecko) SamsungBrowser/26.0 Chrome/122.0.0.0 Mobile Safari/537.36', **MOB),
+  'chrome-android': dict(user_agent='Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Mobile Safari/537.36', **MOB),
+  'edge-android':   dict(user_agent='Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Mobile Safari/537.36 EdgA/131.0.0.0', **MOB),
+  'kiwi':           dict(user_agent='Mozilla/5.0 (Linux; Android 13; SM-A536B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Mobile Safari/537.36', **MOB),
+  'opera-android':  dict(user_agent='Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Mobile Safari/537.36 OPR/85.0.0.0', **MOB),
+  'chrome-win':     dict(user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) ' + CH + ' Safari/537.36'),
+  'chrome-mac':     dict(user_agent='Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) ' + CH + ' Safari/537.36'),
+  'chrome-linux':   dict(user_agent='Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) ' + CH + ' Safari/537.36'),
+  'chromeos':       dict(user_agent='Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) ' + CH + ' Safari/537.36'),
+  'opera':          dict(user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) ' + CH + ' Safari/537.36 OPR/115.0.0.0'),
+  'opera-gx':       dict(user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) ' + CH + ' Safari/537.36 OPR/115.0.0.0 (Edition Yx GX)'),
+  'vivaldi':        dict(user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) ' + CH + ' Safari/537.36 Vivaldi/7.0'),
+  'yandex':         dict(user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) ' + CH + ' YaBrowser/24.12.0 Yowser/2.5 Safari/537.36'),
+  'brave':          dict(user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) ' + CH + ' Safari/537.36'),
+  'arc':            dict(user_agent='Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) ' + CH + ' Safari/537.36'),
+  'whale':          dict(user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) ' + CH + ' Whale/3.28.0.0 Safari/537.36'),
+  'dark-scheme':    dict(color_scheme='dark'),
+  'forced-colors':  dict(forced_colors='active'),
+  'reduced-motion': dict(reduced_motion='reduce'),
+  'zoom-200':       dict(viewport={'width': 640, 'height': 480}, device_scale_factor=2),
+}
 _orig = BrowserType.launch_persistent_context
 async def _cdp_launch(self, kw):
     import subprocess, socket, time, urllib.request
@@ -42,8 +66,8 @@ async def _patched(self, user_data_dir, **kw):
     args = [a for a in kw.get('args', []) if not (a == '--headless=new' and headed)]
     args.append('--disable-features=DisableLoadExtensionCommandLineSwitch')
     kw['args'] = args
-    if os.environ.get('EMULATE') == 'samsung':
-        kw.update(user_agent='Mozilla/5.0 (Linux; Android 14; SM-S918B) AppleWebKit/537.36 (KHTML, like Gecko) SamsungBrowser/26.0 Chrome/122.0.0.0 Mobile Safari/537.36',
-                  viewport={'width': 412, 'height': 915}, is_mobile=True, has_touch=True, device_scale_factor=2.625)
+    prof = PROFILES.get(os.environ.get('EMULATE', ''))
+    if prof:
+        kw.update(prof)
     return await _orig(self, tempfile.mkdtemp(prefix='clr-prof-'), **kw)
 BrowserType.launch_persistent_context = _patched

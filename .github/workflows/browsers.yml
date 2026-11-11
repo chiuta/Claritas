@@ -184,6 +184,59 @@ jobs:
         if: always()
         with: { name: r-safari, path: test/results }
 
+  chrome-for-testing:
+    name: ${{ matrix.os }} / chrome-${{ matrix.ch }} (Chrome for Testing)
+    runs-on: ${{ matrix.os }}
+    continue-on-error: true
+    timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        ch: [stable, beta, dev, canary]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - run: pip install playwright pillow imageio-ffmpeg && python build.py
+      - name: Install Chrome for Testing (real Chrome builds that accept --load-extension)
+        shell: bash
+        run: |
+          npx --yes @puppeteer/browsers install chrome@${{ matrix.ch }} --path /tmp/cft | tee /tmp/cft.txt
+          EXE=$(tail -1 /tmp/cft.txt | sed -E 's/^[^ ]+ //'); echo "exe: $EXE"
+          echo "BROWSER_EXE=$EXE" >> $GITHUB_ENV
+      - name: Run tests
+        shell: bash
+        env: { HEADED: '1' }
+        run: |
+          if [ "$RUNNER_OS" = Linux ]; then unset HEADED; fi
+          python -c "import os;os.makedirs('/tmp',exist_ok=True)"
+          python test/run_matrix.py "cft-${{ matrix.os }}-${{ matrix.ch }}"
+
+  browser-profiles:
+    name: profile / ${{ matrix.profile }}
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        profile: [chrome-win, chrome-mac, chrome-linux, chromeos, chrome-android, edge-android, kiwi, opera, opera-gx, opera-android, vivaldi, yandex, brave, arc, whale, dark-scheme, forced-colors, reduced-motion, zoom-200]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - run: pip install playwright pillow imageio-ffmpeg && python build.py && python -m playwright install chromium ffmpeg
+      - name: Chromium cu profilul ${{ matrix.profile }} (UA, viewport, preferințe media)
+        env: { BROWSER_CHANNEL: chromium, EMULATE: '${{ matrix.profile }}' }
+        run: |
+          T="t5_features.py t6_popup_tools.py t7_v14.py t11_lang.py t12_audit3.py"
+          # în forced-colors extensia dezactivează intenționat culorile/temele (respectă contrastul impus de OS)
+          [ "${{ matrix.profile }}" = forced-colors ] && T="t6_popup_tools.py t11_lang.py t12_audit3.py"
+          python test/run_matrix.py "profile-${{ matrix.profile }}" $T
+
   samsung-emulation:
     runs-on: ubuntu-latest
     continue-on-error: true
@@ -337,7 +390,7 @@ jobs:
           python /tmp/saf.py 2>&1 | tail -12
 
   publish:
-    needs: [lint, chromium-family, firefox, engines, safari-convert, samsung-emulation, firefox-android, ios-ipados, safari-real]
+    needs: [lint, chromium-family, firefox, engines, safari-convert, samsung-emulation, chrome-for-testing, browser-profiles, firefox-android, ios-ipados, safari-real]
     if: always()
     runs-on: ubuntu-latest
     permissions:
