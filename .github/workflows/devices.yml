@@ -52,7 +52,7 @@ jobs:
           SP=$!; sleep 2
           open -a Safari "http://127.0.0.1:8790/?s=on"
           sleep 25; screencapture -x test/results/safari-macos-1.png || true
-          wait $SP; echo "exit=$?"; cat test/results/safari-macos.log
+          wait $SP || true; echo "exit=$?"; cat test/results/safari-macos.log
           screencapture -x test/results/safari-macos-end.png || true
       - uses: actions/upload-artifact@v4
         if: always()
@@ -78,7 +78,7 @@ jobs:
             SP=$!; sleep 2
             xcrun simctl openurl "$DEV" "http://localhost:8790/?s=on"
             sleep 25; xcrun simctl io "$DEV" screenshot test/results/ios-$kind-1.png || true
-            wait $SP; echo "exit=$?"; cat test/results/ios-$kind.log
+            wait $SP || true; echo "exit=$?"; cat test/results/ios-$kind.log
             xcrun simctl io "$DEV" screenshot test/results/ios-$kind-end.png || true
             xcrun simctl shutdown "$DEV" || true
           done
