@@ -28,7 +28,10 @@ setTimeout(async()=>{const R=[];const ok=(n,c,d)=>R.push({name:n,ok:!!c,detail:d
     ok('contrast câmp dezactivat corectat',ratio(d.color,d.backgroundColor)>=4.5,d.color+' pe '+d.backgroundColor+' = '+ratio(d.color,d.backgroundColor).toFixed(1));}
   if(sc==='yb'){const bg=getComputedStyle(document.body).backgroundColor;ok('temă galben pe negru',/rgba?\\(0, 0, 0(, 1)?\\)/.test(bg),bg);}
   if(sc==='off'){const c=cs('p').color;ok('extensie oprită: pagină neschimbată',c==='rgb(187, 187, 187)',c);}
-  ok('probă CSS de autor (control)',(()=>{const st=document.createElement('style');st.textContent='#ctl{color:rgb(1,2,3)!important}';document.head.appendChild(st);const v=getComputedStyle(document.getElementById('ctl')).color;st.remove();return v==='rgb(1, 2, 3)'})(),'');
+  let cv='';ok('probă CSS de autor (control)',(()=>{const st=document.createElement('style');st.textContent='#ctl{color:rgb(1,2,3)!important}';document.head.appendChild(st);cv=getComputedStyle(document.getElementById('ctl')).color;st.remove();return cv==='rgb(1, 2, 3)'})(),cv);
+  const cl=document.getElementById('clr-style');
+  ok('diagnostic (informativ)',true,JSON.stringify({vis:document.visibilityState,hidden:document.hidden,focus:document.hasFocus(),clrStyleLen:cl?cl.textContent.length:null,fixed:document.querySelectorAll('[data-clr-c]').length,pAttrs:[...document.getElementById('p').attributes].map(a=>a.name+'='+a.value).join(';'),ctlAttrs:[...document.getElementById('ctl').attributes].map(a=>a.name+'='+a.value).join(';'),sheets:document.styleSheets.length,tr:cs('p').transition,anim:cs('p').animationName}));
+  if(sc==='on'){await new Promise(r=>setTimeout(r,8000));const p2=cs('p');ok('contrast text pal după încă 8 s (informativ)',true,p2.color+' = '+ratio(p2.color,p2.backgroundColor).toFixed(1)+' vis='+document.visibilityState);}
  }catch(e){ok('excepție',false,e&&e.message)}
  await fetch('/report',{method:'POST',body:JSON.stringify({scenario:sc,ua:navigator.userAgent,dpr:devicePixelRatio,w:innerWidth,results:R,done:!next})});
  if(next)location.href='/?s='+next;
