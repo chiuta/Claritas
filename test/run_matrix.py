@@ -9,7 +9,7 @@ for f in sorted(glob.glob('t*.py')):
     code = "import bt,runpy,sys;sys.argv=['%s'];runpy.run_path('%s',run_name='__main__')" % (f, f)
     t = time.time()
     try:
-        r = subprocess.run([sys.executable, '-c', code], capture_output=True, text=True, timeout=420)
+        r = subprocess.run([sys.executable, '-c', code], capture_output=True, text=True, timeout=170)
         out, rc = r.stdout + r.stderr, r.returncode
     except subprocess.TimeoutExpired as e:
         o = e.stdout or ''
