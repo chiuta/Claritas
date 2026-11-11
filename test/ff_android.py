@@ -23,7 +23,7 @@ def lum(c):
 def ratio(a, b):
     x, y = sorted([lum(a), lum(b)], reverse=True); return (x+0.05)/(y+0.05)
 def rgb(s): return tuple(int(x) for x in re.findall(r'\d+', s)[:3])
-PREFS = {'xpinstall.signatures.required': False, 'extensions.autoDisableScopes': 0, 'extensions.webextensions.uuids': json.dumps({'claritas@trom.tf': '7a1c4a3e-5b22-4e0d-9f10-c1a2b3c4d5e6'})}
+PREFS = {'extensions.originControls.grantByDefault': True, 'extensions.webextensions.originControls.enabled': False, 'xpinstall.signatures.required': False, 'extensions.autoDisableScopes': 0, 'extensions.webextensions.uuids': json.dumps({'claritas@trom.tf': '7a1c4a3e-5b22-4e0d-9f10-c1a2b3c4d5e6'})}
 class AO(Options):
     """Selenium suprascrie moz:firefoxOptions; aici capabilitățile Android sunt trimise exact."""
     def to_capabilities(self):
@@ -45,15 +45,12 @@ try:
     before = rgb(d.execute_script("return getComputedStyle(document.getElementById('p')).color"))
     ok(before == (187, 187, 187), f'înainte: text pal neschimbat {before}')
     d.install_addon(os.environ.get('XPI', 'dist/claritas-firefox.zip'), temporary=True); ok(True, 'extensia instalată temporar pe Android')
-    UU = '7a1c4a3e-5b22-4e0d-9f10-c1a2b3c4d5e6'
-    try:
-        d.get(f'moz-extension://{UU}/popup.html'); time.sleep(2)
-        d.execute_async_script("const [s,cb]=[arguments[0],arguments[arguments.length-1]];browser.storage.local.clear().then(()=>browser.storage.local.set({settings:s})).then(()=>cb(1))", {'enabled': True, 'autoFix': True, 'target': 7})
-        ok(True, 'setări extensie scrise (pagina extensiei accesibilă pe Android)')
-    except Exception as e:
-        ok(False, 'pagina extensiei inaccesibilă: ' + str(e)[:160])
     d.get(URL); time.sleep(4)
-    print('INFO claritas in DOM:', d.execute_script("return [document.documentElement.outerHTML.length, !!document.querySelector('[id*=clr],[class*=clr]'), typeof window.CLR]"))
+    print('INFO clr-style:', d.execute_script("return !!document.getElementById('clr-style')"))
+    for _ in range(6):
+        if d.execute_script("return !!document.getElementById('clr-style')"): break
+        time.sleep(2)
+    ok(bool(d.execute_script("return !!document.getElementById('clr-style')")), 'content script injectat pe Android (clr-style)')
     p = d.execute_script("const s=getComputedStyle(document.getElementById('p'));return [s.color,s.backgroundColor]")
     ok(ratio(rgb(p[0]), rgb(p[1])) >= 4.5, f'contrast text pal corectat pe Android ({ratio(rgb(p[0]), rgb(p[1])):.1f}:1)')
     q = d.execute_script("const s=getComputedStyle(document.getElementById('d'));return [s.color,s.backgroundColor]")
