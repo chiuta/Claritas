@@ -146,9 +146,9 @@ jobs:
               end try
               log "settings window: " & (name of sw)
               try
-                click button "Advanced" of toolbar 1 of sw
+                click button "Advanced" of toolbar 1 of window 1
                 delay 2
-                set els to entire contents of sw
+                set els to entire contents of window 1
                 set out to ""
                 repeat with e in els
                   try
