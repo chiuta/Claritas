@@ -23,12 +23,19 @@ def lum(c):
 def ratio(a, b):
     x, y = sorted([lum(a), lum(b)], reverse=True); return (x+0.05)/(y+0.05)
 def rgb(s): return tuple(int(x) for x in re.findall(r'\d+', s)[:3])
-opts = Options()
-opts.set_preference('xpinstall.signatures.required', False); opts.set_preference('extensions.autoDisableScopes', 0)
-opts.set_preference('extensions.webextensions.uuids', json.dumps({'claritas@trom.tf': '7a1c4a3e-5b22-4e0d-9f10-c1a2b3c4d5e6'}))
-opts.set_capability('moz:firefoxOptions', {'androidPackage': os.environ.get('ANDROID_PKG', 'org.mozilla.fenix'), 'androidDeviceSerial': os.environ.get('ANDROID_SERIAL', 'emulator-5554'),
-    'prefs': {'xpinstall.signatures.required': False, 'extensions.autoDisableScopes': 0, 'extensions.webextensions.uuids': json.dumps({'claritas@trom.tf': '7a1c4a3e-5b22-4e0d-9f10-c1a2b3c4d5e6'})}})
-d = webdriver.Firefox(options=opts, service=Service(os.environ['GECKODRIVER'], service_args=['-vv', '--android-storage', 'app'], log_output=sys.stdout))
+PREFS = {'xpinstall.signatures.required': False, 'extensions.autoDisableScopes': 0, 'extensions.webextensions.uuids': json.dumps({'claritas@trom.tf': '7a1c4a3e-5b22-4e0d-9f10-c1a2b3c4d5e6'})}
+class AO(Options):
+    """Selenium suprascrie moz:firefoxOptions; aici capabilitățile Android sunt trimise exact."""
+    def to_capabilities(self):
+        return {'browserName': 'firefox', 'moz:firefoxOptions': {'androidPackage': os.environ.get('ANDROID_PKG', 'org.mozilla.fenix'),
+                'androidDeviceSerial': os.environ.get('ANDROID_SERIAL', 'emulator-5554'), 'prefs': PREFS}}
+svc = Service(os.environ['GECKODRIVER'], service_args=['-vv', '--android-storage', 'app'], log_output=sys.stdout); svc.start()
+from selenium.webdriver.remote.webdriver import WebDriver as Remote
+d = Remote(command_executor=svc.service_url, options=AO())
+d.command_executor._commands['INSTALL_ADDON'] = ('POST', '/session/$sessionId/moz/addon/install')
+def install_addon(path, temporary=True):
+    return d.execute('INSTALL_ADDON', {'path': path, 'temporary': temporary})['value']
+d.install_addon = install_addon
 URL = 'http://10.0.2.2:8771/'
 try:
     print('UA:', d.execute_script('return navigator.userAgent'))
@@ -47,5 +54,7 @@ except Exception as e:
     import traceback; traceback.print_exc(); ok(False, 'excepție: ' + str(e)[:200])
 finally:
     try: d.quit()
+    except Exception: pass
+    try: svc.stop()
     except Exception: pass
 print('ERORI:', fails or 'niciuna'); sys.exit(1 if fails else 0)
