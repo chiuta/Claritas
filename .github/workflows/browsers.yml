@@ -213,10 +213,7 @@ jobs:
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
           sudo udevadm control --reload-rules && sudo udevadm trigger --name-match=kvm
       - name: Download Firefox Nightly for Android (x86_64)
-        run: |
-          curl -fsSL -o /tmp/fenix.apk "https://firefox-ci-tc.services.mozilla.com/api/index/v1/task/gecko.v2.mozilla-central.latest.mobile.android-x86_64-opt/artifacts/public/build/target.apk" || \
-          curl -fsSL -o /tmp/fenix.apk "https://archive.mozilla.org/pub/fenix/nightly/latest-mozilla-central-android-x86_64/fenix-latest.multi.android-x86_64.apk"
-          ls -l /tmp/fenix.apk
+        run: python test/fetch_fenix.py && ls -l /tmp/fenix.apk
       - uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 34
