@@ -154,8 +154,11 @@ jobs:
       - name: Convert + build (unsigned)
         run: |
           mkdir -p test/results
-          { xcrun safari-web-extension-converter dist/safari --project-location /tmp/safari --app-name Claritas --bundle-identifier tf.trom.claritas --no-open --no-prompt --macos-only --force 2>&1 | tail -30
-            cd /tmp/safari/Claritas && xcodebuild -scheme Claritas -configuration Debug CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" build 2>&1 | tail -25; } | tee test/results/safari-build.txt
+          xcrun safari-web-extension-converter dist/safari --project-location /tmp/safari --app-name Claritas --bundle-identifier tf.trom.claritas --no-open --no-prompt --macos-only --force 2>&1 | tail -30 | tee test/results/safari-convert.txt
+          cd /tmp/safari/Claritas
+          xcodebuild -scheme Claritas -configuration Debug CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" build > /tmp/xb.log 2>&1 || true
+          echo "--- ERRORS"; grep -E "error:|\*\* BUILD|Signing|requires" /tmp/xb.log | sort -u | head -20 
+          echo "--- fail list"; grep -A6 "following build commands failed" /tmp/xb.log | head -12
       - uses: actions/upload-artifact@v4
         if: always()
         with: { name: r-safari, path: test/results }
