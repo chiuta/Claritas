@@ -80,7 +80,7 @@
 "export": "Esporta",
 "import": "Importa",
 "lang": "Lingua",
-"shortcuts": "Scorciatoie: Alt+Shift+C (attiva/disattiva), T (tema), R (lettura), G (righello). Modificabili nelle impostazioni delle scorciatoie delle estensioni del browser.",
+"shortcuts": "Scorciatoie: Alt+Shift+O (attiva/disattiva), D (tema), L (lettura), G (righello). Modificabili nelle impostazioni delle scorciatoie delle estensioni del browser.",
 "zoom_reset": "Ripristina zoom",
 "show": "Mostra nella pagina",
 "tts_prev": "Frase precedente",

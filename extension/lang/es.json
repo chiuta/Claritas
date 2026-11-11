@@ -80,7 +80,7 @@
 "export": "Exportar",
 "import": "Importar",
 "lang": "Idioma",
-"shortcuts": "Atajos: Alt+Shift+C (activar/desactivar), T (tema), R (lectura), G (regla). Se pueden cambiar en los ajustes de atajos de extensiones del navegador.",
+"shortcuts": "Atajos: Alt+Shift+O (activar/desactivar), D (tema), L (lectura), G (regla). Se pueden cambiar en los ajustes de atajos de extensiones del navegador.",
 "zoom_reset": "Restablecer zoom",
 "show": "Mostrar en la página",
 "tts_prev": "Frase anterior",

@@ -80,7 +80,7 @@
 "export": "Exportálás",
 "import": "Importálás",
 "lang": "Nyelv",
-"shortcuts": "Billentyűparancsok: Alt+Shift+C (be/ki), T (téma), R (felolvasás), G (vonalzó). A böngésző bővítmény-billentyűparancs beállításaiban módosíthatók.",
+"shortcuts": "Billentyűparancsok: Alt+Shift+O (be/ki), D (téma), L (felolvasás), G (vonalzó). A böngésző bővítmény-billentyűparancs beállításaiban módosíthatók.",
 "zoom_reset": "Nagyítás visszaállítása",
 "show": "Megjelenítés az oldalon",
 "tts_prev": "Előző mondat",

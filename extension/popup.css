@@ -13,7 +13,7 @@ h1{font-size:20px;margin:0 0 2px;display:flex;align-items:center;gap:8px}
 select,input[type=color],button{font:inherit;color:var(--fg);background:var(--card);border:2px solid var(--line);border-radius:6px;padding:7px 10px}
 select{width:100%}
 input[type=color]{padding:2px;height:36px;width:100%}
-button{cursor:pointer;font-weight:600}
+button{cursor:pointer;font-weight:600;overflow-wrap:anywhere;hyphens:auto}
 button:hover{border-color:var(--fg)}
 :focus-visible{outline:3px solid var(--acc);outline-offset:2px}
 .tabs{display:flex;gap:4px;margin:6px 0 10px;flex-wrap:wrap}

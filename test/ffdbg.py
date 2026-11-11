@@ -1,0 +1,7 @@
+exec(open('ff_selenium.py').read().split("try:\n    try:\n        aid")[0])
+d.install_addon(EXT, temporary=True)
+ext_set({'enabled': True}); d.get('http://127.0.0.1:8771/contrast.html'); time.sleep(2)
+ext_tab()
+print(d.execute_async_script("const cb=arguments[arguments.length-1];browser.tabs.query({}).then(t=>cb(JSON.stringify(t.map(x=>[x.id,x.url,x.active,x.windowId]))))"))
+print(d.execute_async_script("const cb=arguments[arguments.length-1];browser.permissions.getAll().then(p=>cb(JSON.stringify(p)))"))
+d.quit()

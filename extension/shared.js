@@ -88,7 +88,19 @@ var CLR = (function () {
       if (p.length < 3) return null;
       return { r: p[0] * 255, g: p[1] * 255, b: p[2] * 255, a: p.length > 3 ? p[3] : 1 };
     }
+    if (/^(oklch|oklab|lab|lch|color)\(/i.test(str) && typeof document !== 'undefined') return canvasColor(str);
     return null;
+  }
+  let _cvx = null; const _cvc = new Map();
+  function canvasColor(str) {
+    if (_cvc.has(str)) return _cvc.get(str);
+    let r = null;
+    try {
+      if (!_cvx) { const cv = document.createElement('canvas'); cv.width = cv.height = 1; _cvx = cv.getContext('2d', { willReadFrequently: true }); }
+      _cvx.clearRect(0, 0, 1, 1); _cvx.globalCompositeOperation = 'copy'; _cvx.fillStyle = '#010203'; _cvx.fillStyle = str; _cvx.fillRect(0, 0, 1, 1);
+      const d = _cvx.getImageData(0, 0, 1, 1).data; r = { r: d[0], g: d[1], b: d[2], a: d[3] / 255 };
+    } catch (e) { }
+    if (_cvc.size > 500) _cvc.clear(); _cvc.set(str, r); return r;
   }
   const HEX_RE = /^#([0-9a-f]{3}|[0-9a-f]{6})$/i;
   const isHex = (h) => typeof h === 'string' && HEX_RE.test(h);
@@ -406,7 +418,7 @@ var CLR = (function () {
       p_lowvision: 'Vedere slabă', p_darkcomfort: 'Confort la lumină slabă', p_dyslexia: 'Dislexie', p_colorblind: 'Daltonism',
       p_sensitive: 'Sensibilitate la lumină / mișcare', p_focus: 'Concentrare / ADHD', p_reset: 'Resetează tot',
       p_hint: 'Un profil aplică un set de setări peste cele curente.',
-      export: 'Exportă', import: 'Importă', lang: 'Limbă', shortcuts: 'Scurtături: Alt+Shift+C (pornit/oprit), T (temă), R (citește), G (riglă). Se pot schimba din setările de scurtături ale browserului.',
+      export: 'Exportă', import: 'Importă', lang: 'Limbă', shortcuts: 'Scurtături: Alt+Shift+O (pornit/oprit), D (temă), L (citește), G (riglă). Se pot schimba din setările de scurtături ale browserului.',
       zoom_reset: 'Resetează zoom',
       show: 'Arată în pagină', tts_prev: 'Propoziția anterioară',
       tts_pause: 'Pauză / continuă',
@@ -664,7 +676,7 @@ var CLR = (function () {
       p_lowvision: 'Low vision', p_darkcomfort: 'Low-light comfort', p_dyslexia: 'Dyslexia', p_colorblind: 'Color blindness',
       p_sensitive: 'Light / motion sensitivity', p_focus: 'Focus / ADHD', p_reset: 'Reset everything',
       p_hint: 'A profile applies a bundle of settings on top of the current ones.',
-      export: 'Export', import: 'Import', lang: 'Language', shortcuts: 'Shortcuts: Alt+Shift+C (on/off), T (theme), R (read aloud), G (ruler). Editable in the browser’s extension shortcut settings.',
+      export: 'Export', import: 'Import', lang: 'Language', shortcuts: 'Shortcuts: Alt+Shift+O (on/off), D (theme), L (read aloud), G (ruler). Editable in the browser’s extension shortcut settings.',
       zoom_reset: 'Reset zoom',
       show: 'Show on page', tts_prev: 'Previous sentence',
       tts_pause: 'Pause / resume',
@@ -910,7 +922,7 @@ var CLR = (function () {
     if (langPending[c]) return langPending[c];
     const api = typeof browser !== 'undefined' ? browser : chrome;
     /* la eșec punem un dicționar gol (cade pe engleză) ca să nu reîncercăm la nesfârșit */
-    langPending[c] = Promise.resolve().then(() => api.runtime.sendMessage({ type: 'lang', code: c })).then((r) => { I18N[c] = (r && r.dict && typeof r.dict === 'object') ? r.dict : {}; delete langPending[c]; return c; }, () => { I18N[c] = {}; delete langPending[c]; return c; });
+    langPending[c] = Promise.resolve().then(() => api.runtime.sendMessage({ type: 'lang', code: c })).then((r) => { I18N[c] = (r && r.dict && typeof r.dict === 'object') ? r.dict : {}; if (!Object.keys(I18N[c]).length) setTimeout(() => { if (I18N[c] && !Object.keys(I18N[c]).length) delete I18N[c]; }, 4000); delete langPending[c]; return c; }, () => { I18N[c] = {}; setTimeout(() => { if (I18N[c] && !Object.keys(I18N[c]).length) delete I18N[c]; }, 4000); delete langPending[c]; return c; });
     return langPending[c];
   }
   function t(lang, key, vars) {

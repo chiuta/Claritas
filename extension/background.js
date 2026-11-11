@@ -15,7 +15,9 @@ api.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   if (!msg) return;
   if (msg.type === 'cap-visible') {
     const wid = sender && sender.tab ? sender.tab.windowId : undefined;
-    api.tabs.captureVisibleTab(wid, { format: 'png' }).then((url) => sendResponse({ url }), (e) => sendResponse({ err: String(e && e.message || e) }));
+    const go = () => api.tabs.captureVisibleTab(wid, { format: 'png' });
+    /* captureVisibleTab fotografiază fila ACTIVĂ a ferestrei: refuză dacă fila care cere captura nu mai e activă */
+    (sender && sender.tab && sender.tab.id != null ? api.tabs.get(sender.tab.id).then((t) => { if (!t.active) throw new Error('hidden-tab'); return go(); }) : go()).then((url) => sendResponse({ url }), (e) => sendResponse({ err: String(e && e.message || e) }));
     return true;
   }
   if (msg.type === 'lang') {

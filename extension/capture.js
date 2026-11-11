@@ -67,7 +67,9 @@
   let lastCap = 0, masked = false;
   const unmask = () => { if (masked) { masked = false; try { api.runtime.sendMessage({ type: 'cap-mask', on: false }); } catch (e) { } } };
   async function grab() {
-    const wait = 620 - (Date.now() - lastCap); if (wait > 0) await sleep(wait);   // Chrome: max. 2 capturi/s
+    if (doc.visibilityState && doc.visibilityState !== 'visible') throw new Error('hidden-tab');   // captureVisibleTab ar fotografia altă filă
+    const wait = 620 - (Date.now() - lastCap); if (wait > 0) await sleep(wait);
+    if (doc.visibilityState && doc.visibilityState !== 'visible') throw new Error('hidden-tab');   // Chrome: max. 2 capturi/s
     /* masca cadrelor rămâne pornită pe toată durata fluxului (o singură dată), oprită în finally-ul fluxului */
     if (!masked) { masked = true; try { await api.runtime.sendMessage({ type: 'cap-mask', on: true }); } catch (e) { } await sleep(160); }
     let r; try { r = await api.runtime.sendMessage({ type: 'cap-visible' }); } finally { lastCap = Date.now(); }
@@ -141,10 +143,13 @@
   const PATS = [
     { re: /[\w.+-]{1,64}@[\w-]{1,63}(?:\.[\w-]{1,63}){1,8}/g },
     { re: /(?:\+?40|\b0)[\s.-]?7\d{2}[\s.-]?\d{3}[\s.-]?\d{3}\b/g },
+    { re: /\b0[23]\d[\s.-]?\d{3}[\s.-]?\d{3,4}\b/g },
+    { re: /(?:\+|\b00)[1-9]\d{0,2}(?:[\s.-]?\d){8,12}\b/g },
     { re: /\b[1-8]\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])\d{6}\b/g },
-    { re: /\b[A-Z]{2}\d{2}(?:\s?[A-Z0-9]{4}){3,7}(?:\s?[A-Z0-9]{1,4})?\b/g, test: (s) => /\d/.test(s) && s.replace(/\s/g, '').length >= 15 },
+    { re: /\b[A-Za-z]{2}\d{2}(?:\s?[A-Za-z0-9]{4}){3,7}(?:\s?[A-Za-z0-9]{1,4})?\b/g, test: (s) => /\d/.test(s) && s.replace(/\s/g, '').length >= 15 },
     { re: /\b(?:\d[ -]?){13,19}\b/g, test: luhn }
   ];
+  const maskTxt = (t) => { let o = String(t == null ? '' : t); for (const p of PATS) o = o.replace(p.re, (m) => (p.test && !p.test(m) ? m : '•••')); return o; };
   const SENS = /(cnp|iban|card|cvv|cvc|parol|password|pass|secret|token|api[-_]?key)/i;
   function findSensitive(sc) {
     const out = [], rt = sc ? sc.rect : { left: 0, top: 0 }, root = !sc || sc.root;
@@ -164,7 +169,7 @@
       const root = roots[ri];
       const tw = doc.createTreeWalker(root, NodeFilter.SHOW_TEXT, { acceptNode: (n) => (OK_EL(n.parentElement) && n.nodeValue.length > 5 ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT) });
       let n;
-      while ((n = tw.nextNode()) && guard++ < 6000) {
+      while ((n = tw.nextNode()) && guard++ < 60000) {
         scanText(n.nodeValue, (i, len) => { try { const r = doc.createRange(); r.setStart(n, i); r.setEnd(n, i + len); Array.from(r.getClientRects()).forEach(push); } catch (e) { } });
       }
       /* shadow DOM deschis: adaugă rădăcinile și câmpurile lor */
@@ -328,7 +333,7 @@
   function onUp(x, y) {
     const a = ED.cur; if (!a) return; a.x1 = x; a.y1 = y; ED.cur = null;
     const small = Math.abs(a.x1 - a.x0) < 4 && Math.abs(a.y1 - a.y0) < 4 && a.t !== 'pen';
-    if (small) ED.ann.splice(ED.ann.indexOf(a), 1);
+    if (small) { const ix = ED.ann.indexOf(a); if (ix >= 0) ED.ann.splice(ix, 1); }
     render();
   }
   function drawAnn(ctx, a, base) {
@@ -376,13 +381,14 @@
   function blobOf(canvas) { return new Promise((res) => canvas.toBlob((b) => res(b), 'image/png')); }
   function download(blob, name) { const a = doc.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; a.rel = 'noopener'; a.style.display = 'none'; doc.documentElement.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 4000); }
   const vis = (e) => { try { const r = e.getBoundingClientRect(); return r.width > 0 && r.height > 0 && (!e.checkVisibility || e.checkVisibility()); } catch (x) { return false; } };
+  const mdEsc = (t) => String(t).replace(/[\\`*_{}\[\]<>#|~]/g, '\\$&');
   function sidecar(name) {
-    const hs = Array.from(doc.querySelectorAll('h1,h2,h3')).filter((h) => vis(h) && !h.closest('#clr-cap,#clr-f')).slice(0, 25).map((h) => '- ' + h.localName.toUpperCase() + ': ' + (h.textContent || '').trim().replace(/\s+/g, ' ').slice(0, 140));
-    const im = Array.from(doc.images).filter((i) => vis(i) && i.getAttribute('alt')).slice(0, 25).map((i) => '- ' + i.getAttribute('alt').trim().slice(0, 140));
-    const steps = ED.ann.filter((a) => a.t === 'step').map((a) => a.n + '. ' + (a.label || '(fără etichetă)'));
-    const notes = ED.ann.filter((a) => a.t === 'text').map((a) => '- ' + a.s);
-    return ['# ' + (doc.title || location.hostname), '', '- Imagine: ' + name + '.png (' + ED.base.width + '×' + ED.base.height + ' px)', '- Pagină: ' + location.origin + location.pathname, '- Data: ' + new Date().toLocaleString(), '- Creat local cu Claritas; nimic nu a fost trimis în rețea.', '',
-      '## Descriere alternativă', '', (ED.alt.value.trim() || '(necompletată)'), '', ...(steps.length ? ['## Pași adnotați', '', ...steps, ''] : []), ...(notes.length ? ['## Note din imagine', '', ...notes, ''] : []),
+    const hs = Array.from(doc.querySelectorAll('h1,h2,h3')).filter((h) => vis(h) && !h.closest('#clr-cap,#clr-f')).slice(0, 25).map((h) => '- ' + h.localName.toUpperCase() + ': ' + maskTxt((h.textContent || '').trim().replace(/\s+/g, ' ').slice(0, 140)));
+    const im = Array.from(doc.images).filter((i) => vis(i) && i.getAttribute('alt')).slice(0, 25).map((i) => '- ' + maskTxt(i.getAttribute('alt').trim().slice(0, 140)));
+    const steps = ED.ann.filter((a) => a.t === 'step').map((a) => a.n + '. ' + mdEsc(a.label || '(fără etichetă)'));
+    const notes = ED.ann.filter((a) => a.t === 'text').map((a) => '- ' + mdEsc(a.s));
+    return ['# ' + maskTxt(doc.title || location.hostname).replace(/[\r\n]+/g, ' '), '', '- Imagine: ' + name + '.png (' + ED.base.width + '×' + ED.base.height + ' px)', '- Pagină: ' + location.origin + maskTxt(location.pathname), '- Data: ' + new Date().toLocaleString(), '- Creat local cu Claritas; nimic nu a fost trimis în rețea.', '',
+      '## Descriere alternativă', '', mdEsc(ED.alt.value.trim() || '(necompletată)'), '', ...(steps.length ? ['## Pași adnotați', '', ...steps, ''] : []), ...(notes.length ? ['## Note din imagine', '', ...notes, ''] : []),
       ...(ED.auto && ED.suggest.length ? ['## Confidențialitate', '', ED.suggest.length + ' zone cu date personale acoperite automat (e-mail, telefon, CNP, IBAN, card, parole).', ''] : []),
       ...(hs.length ? ['## Titluri vizibile în pagină', '', ...hs, ''] : []), ...(im.length ? ['## Text alternativ al imaginilor vizibile', '', ...im, ''] : [])].join('\n');
   }
@@ -427,21 +433,24 @@
 
   /* ---------------- partea din pagină pentru înregistrare ---------------- */
   let rec = null, recStyle = null;
-  const send = (ev) => { try { api.runtime.sendMessage({ type: 'rec-ev', ev: Object.assign({ t: Date.now(), url: location.origin + location.pathname }, ev) }); } catch (e) { } };
-  const nameOf = (el) => { if (!el || !el.closest) return ''; const b = el.closest('a,button,input,select,textarea,[role=button],[role=link],[role=tab],[role=menuitem],label') || el; const t = (b.getAttribute('aria-label') || b.getAttribute('title') || b.value && b.type !== 'password' && b.type !== 'text' && b.value || b.textContent || b.placeholder || '').trim().replace(/\s+/g, ' '); return (b.localName + (t ? ' „' + t.slice(0, 50) + '”' : '')); };
+  const send = (ev) => { try { api.runtime.sendMessage({ type: 'rec-ev', ev: Object.assign({ t: Date.now(), url: location.origin + location.pathname }, ev, ev.text != null ? { text: maskTxt(String(ev.text).replace(/[\r\n\u2028\u2029]+/g, ' ')) } : {}) }); } catch (e) { } };
+  const FIELD = /^(input|textarea|select)$/i;
+  const nameOf = (el) => { if (!el || !el.closest) return ''; const b = el.closest('a,button,input,select,textarea,[role=button],[role=link],[role=tab],[role=menuitem],label') || el; const fld = FIELD.test(b.localName || ''); let t = b.getAttribute('aria-label') || b.getAttribute('title') || b.getAttribute('placeholder') || (b.labels && b.labels[0] ? b.labels[0].textContent : '') || (fld ? '' : b.textContent) || ''; t = t.trim().replace(/\s+/g, ' '); return b.localName + (t ? ' „' + maskTxt(t.slice(0, 50)) + '”' : ''); };
   let keysT = null;
   function showKey(txt) { const u = ui(); u.keys.textContent = txt; u.keys.style.display = 'block'; clearTimeout(keysT); keysT = setTimeout(() => { u.keys.style.display = 'none'; }, 1400); }
   const combo = (e) => { const p = []; if (e.ctrlKey) p.push('Ctrl'); if (e.altKey) p.push('Alt'); if (e.shiftKey && (e.key.length > 1 || e.ctrlKey || e.altKey)) p.push('Shift'); if (e.metaKey) p.push('Meta'); if (!/^(Control|Alt|Shift|Meta)$/.test(e.key)) p.push(e.key === ' ' ? 'Space' : (e.key.length === 1 ? e.key.toUpperCase() : e.key)); return p.join('+'); };
   const onRecClick = (e) => {
+    if (!e.isTrusted) return;
     if (!rec || !rec.fx) { if (rec) send({ k: 'click', text: nameOf(e.target) }); return; }
     const u = ui(), r = doc.createElement('div'); r.className = 'ring'; r.style.left = e.clientX + 'px'; r.style.top = e.clientY + 'px'; u.keys.after(r); setTimeout(() => r.remove(), 800);
     send({ k: 'click', text: nameOf(e.target) });
   };
   const onRecKey = (e) => {
-    if (!rec) return;
+    if (!rec || !e.isTrusted) return;
     if (e.altKey && e.shiftKey && e.code === 'KeyM') { e.preventDefault(); send({ k: 'mark', text: '' }); showKey('★ ' + T('rec_mark_ev')); return; }
     const t = e.target, typing = t && (t.isContentEditable || /^(input|textarea|select)$/i.test(t.localName || ''));
-    if (e.key.length === 1 && !e.ctrlKey && !e.altKey && !e.metaKey) return;   // niciodată caractere simple (parole în câmpuri personalizate, text tastat)
+    if (e.key.length === 1 && (!e.ctrlKey && !e.altKey && !e.metaKey || (e.getModifierState && e.getModifierState('AltGraph')) || (e.ctrlKey && e.altKey && !e.metaKey))) return;
+    if (typing && /^(input|textarea)$/i.test(t.localName || '') && /^(password|text|email|tel|search|url|number)$/i.test(t.type || 'text') && e.key.length === 1) return;   // niciodată caractere simple (parole în câmpuri personalizate, text tastat)
     if (/^(Control|Alt|Shift|Meta)$/.test(e.key)) return;
     const c = combo(e); send({ k: 'key', text: c }); if (rec.keys) showKey(c);
   };
@@ -477,6 +486,6 @@
     if (msg.cmd === 'hub') openHub(); else setTimeout(() => flow(msg.cmd), 250);
   });
   if (!IS_TOP) return;
-  doc.addEventListener('keydown', (e) => { if (e.altKey && e.shiftKey && !e.ctrlKey && !e.metaKey && e.code === 'KeyP' && !ED) { e.preventDefault(); openHub(); } }, true);
+  doc.addEventListener('keydown', (e) => { if (e.isTrusted && e.altKey && e.shiftKey && !e.ctrlKey && !e.metaKey && e.code === 'KeyP' && !ED) { e.preventDefault(); openHub(); } }, true);
   CLR.cap = { flow, hub: openHub };
 })();

@@ -80,7 +80,7 @@
 "export": "Exportieren",
 "import": "Importieren",
 "lang": "Sprache",
-"shortcuts": "Tastenkürzel: Alt+Shift+C (an/aus), T (Design), R (Vorlesen), G (Lineal). Änderbar in den Tastenkürzel-Einstellungen der Browser-Erweiterungen.",
+"shortcuts": "Tastenkürzel: Alt+Shift+O (an/aus), D (Design), L (Vorlesen), G (Lineal). Änderbar in den Tastenkürzel-Einstellungen der Browser-Erweiterungen.",
 "zoom_reset": "Zoom zurücksetzen",
 "show": "Auf der Seite anzeigen",
 "tts_prev": "Vorheriger Satz",

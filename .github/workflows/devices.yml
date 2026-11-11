@@ -76,7 +76,7 @@ jobs:
             xcrun simctl bootstatus "$DEV" -b >/dev/null 2>&1 || true
             python3 -I test/devsrv.py 8790 ios-$kind test/results/ios-$kind.json 150 > test/results/ios-$kind.log 2>&1 &
             SP=$!; sleep 2
-            xcrun simctl openurl "$DEV" "http://localhost:8790/?s=on"
+            for try in 1 2 3 4; do xcrun simctl openurl "$DEV" "http://localhost:8790/?s=on" && break; echo "openurl încercarea $try eșuată"; sleep 10; done
             sleep 25; xcrun simctl io "$DEV" screenshot test/results/ios-$kind-1.png || true
             wait $SP || true; echo "exit=$?"; cat test/results/ios-$kind.log
             xcrun simctl io "$DEV" screenshot test/results/ios-$kind-end.png || true

@@ -21,7 +21,7 @@
   let styleEl = null, svgEl = null, ov = null, mo = null;
   const shadowStyles = [];
   let walkers = [], scheduled = false, bgCache = new WeakMap(), origFs = new WeakMap();
-  let engineSig = '', fixOn = false, tsOn = false, outlineOn = false;
+  let engineSig = '', fixOn = false, tsOn = false, outlineOn = false, themeOn = false;
 
   /* ================= CSS ================= */
   const CURSOR = (fill) => 'url("data:image/svg+xml,' + encodeURIComponent(
@@ -176,9 +176,22 @@
   const CONTROL = new Set(['input', 'textarea', 'select', 'button']);
   const NOTEXT_INPUT = new Set(['checkbox', 'radio', 'range', 'color', 'file', 'hidden', 'image']);
 
+  let cvProbe = null, cvKey = '', cvVal = null;
   function canvasBase() {
+    const dark = !!(window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches);
     const cs = getComputedStyle(doc.documentElement).colorScheme || '';
-    return /dark/.test(cs) && !/light/.test(cs) ? { r: 18, g: 18, b: 18, a: 1 } : { r: 255, g: 255, b: 255, a: 1 };
+    const key = cs + '|' + dark;
+    if (cvVal && key === cvKey) return cvVal;
+    let v = null;
+    try {
+      if (!cvProbe) { cvProbe = doc.createElement('div'); cvProbe.id = 'clr-probe'; cvProbe.style.cssText = 'display:none!important;background-color:Canvas'; }
+      doc.documentElement.appendChild(cvProbe);
+      const c2 = parseColor(getComputedStyle(cvProbe).backgroundColor);
+      cvProbe.remove();
+      if (c2 && c2.a > 0) v = { r: c2.r, g: c2.g, b: c2.b, a: 1 };
+    } catch (e) { }
+    if (!v) v = /dark/.test(cs) && !/light/.test(cs) ? { r: 18, g: 18, b: 18, a: 1 } : { r: 255, g: 255, b: 255, a: 1 };
+    cvKey = key; cvVal = v; return v;
   }
   function gradientStops(img) {
     if (/url\(/.test(img) || !/gradient/.test(img)) return null;
@@ -222,9 +235,15 @@
 
   function fixText(el, control) {
     if (el.hasAttribute('data-clr-c')) el.removeAttribute('data-clr-c'); // citim culoarea originală
+    if (el.hasAttribute('data-clr-o')) el.removeAttribute('data-clr-o');   // și opacitatea originală (altfel decizia alternează la fiecare trecere)
     const cs = getComputedStyle(el);
+    /* tranziții CSS (color/opacity): după scoaterea atributului, valoarea calculată rămâne la cea corectată până la prima cadră → decizia ar fi greșită și corecția pierdută */
+    try { if (el.getAnimations) el.getAnimations().forEach((an) => { if (an.transitionProperty === 'color' || an.transitionProperty === 'opacity') { try { an.finish(); } catch (e) {} } }); } catch (e) {}
     const fg = parseColor(cs.color);
     if (!fg) return;
+    /* text transparent intenționat (gradient cu background-clip:text, straturi de editor, înlocuire cu imagine): nu se atinge */
+    const fill = parseColor(cs.webkitTextFillColor);
+    if (fg.a === 0 || (fill && fill.a === 0) || /text/.test(cs.webkitBackgroundClip || cs.backgroundClip || '')) { clearFix(el); return; }
     const bi = effBg(el);
     if (bi.img) { clearFix(el); return; }
     const op = parseFloat(cs.opacity);
@@ -311,7 +330,7 @@
 
   const later = (fn) => (window.requestIdleCallback ? window.requestIdleCallback(fn, { timeout: 250 }) : setTimeout(fn, 30));
   function enqueue(root) {
-    if (!root || !(fixOn || tsOn || outlineOn)) return;
+    if (!root || !(fixOn || tsOn || outlineOn || themeOn)) return;
     if (root.nodeType === 3) root = root.parentElement;
     if (!root) return;
     if (nodeCount > MAX_NODES) return;
@@ -327,7 +346,7 @@
   }
   function run() {
     scheduled = false;
-    if (!active || !(fixOn || tsOn || outlineOn)) { walkers = []; return; }
+    if (!active || !(fixOn || tsOn || outlineOn || themeOn)) { walkers = []; return; }
     if (!alive()) { teardown(); return; }
     bgCache = new WeakMap();
     const t0 = performance.now();
@@ -359,7 +378,7 @@
   function startObserver() {
     if (mo) return;
     mo = new MutationObserver(onMutations);
-    mo.observe(doc.documentElement, { childList: true, subtree: true, attributes: true, attributeFilter: ['class', 'disabled', 'hidden', 'aria-disabled', 'open'] });
+    mo.observe(doc.documentElement, { childList: true, subtree: true, attributes: true, attributeFilter: ['class', 'disabled', 'hidden', 'aria-disabled', 'open', 'data-theme', 'data-bs-theme', 'data-color-mode', 'data-mode'] });
   }
   function stopObserver() { if (mo) { mo.disconnect(); mo = null; } }
 
@@ -485,7 +504,7 @@
     if (svgEl) { svgEl.remove(); svgEl = null; }
     if (ov) { ov.host.remove(); ov = null; }
     unbindMove(); stopObserver(); resetEngine(); stopSpeak();
-    shadowStyles.forEach((s) => s.remove()); shadowStyles.length = 0;
+    shadowStyles.forEach((s) => { try { const r = s.getRootNode(); if (r) r.__clr = false; } catch (e) { } s.remove(); }); shadowStyles.length = 0;
     engineSig = '';
   }
 
@@ -526,11 +545,12 @@
     fixOn = !!S.autoFix && (S.theme === 'none' || S.theme === 'dark');
     tsOn = S.textScale !== 100;
     outlineOn = !!S.outline && (S.theme === 'none' || S.theme === 'dark');
-    const sig = [fixOn, S.target, tsOn, S.textScale, outlineOn].join();
+    themeOn = S.theme !== 'none';   // temele fixe au nevoie de parcurgere ca să ajungă și în shadow DOM
+    const sig = [fixOn, S.target, tsOn, S.textScale, outlineOn, themeOn].join();
     if (sig !== engineSig) {
       engineSig = sig;
       resetEngine();
-      if (fixOn || tsOn || outlineOn) { startObserver(); enqueue(doc.documentElement); } else stopObserver();
+      if (fixOn || tsOn || outlineOn || themeOn) { startObserver(); enqueue(doc.documentElement); } else stopObserver();
     }
   }
 
@@ -556,6 +576,7 @@
   api.storage.onChanged.addListener((ch, area) => {
     if (area !== 'local') return;
     if (!alive()) { teardown(); return; }
+    if (!ch.settings && !ch.sites) return;   // recSession, chk:*, highlights etc. nu schimbă aspectul paginii
     if (ch.settings) RAW.settings = ch.settings.newValue;
     if (ch.sites) RAW.sites = ch.sites.newValue;
     mergeAll();
@@ -587,9 +608,9 @@
     } else if (msg.type === 'command') command(msg.cmd);
   });
 
-  doc.addEventListener('DOMContentLoaded', () => { if (active && (fixOn || tsOn || outlineOn)) enqueue(doc.documentElement); });
+  doc.addEventListener('DOMContentLoaded', () => { if (active && (fixOn || tsOn || outlineOn || themeOn)) enqueue(doc.documentElement); });
   window.addEventListener('load', () => {
-    if (active && (fixOn || tsOn || outlineOn)) { enqueue(doc.documentElement); setTimeout(() => active && enqueue(doc.documentElement), 1500); }
+    if (active && (fixOn || tsOn || outlineOn || themeOn)) { enqueue(doc.documentElement); setTimeout(() => active && enqueue(doc.documentElement), 1500); }
   });
 
   load();

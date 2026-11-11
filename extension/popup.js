@@ -62,8 +62,8 @@
     const L = lang();
     if (!CLR.I18N[CLR.langCode(L)]) CLR.loadLang(L).then(() => translate());
     $$('[data-i18n]').forEach((el) => { el.textContent = t(L, el.dataset.i18n); });
-    $$('[data-i18n-title]').forEach((el) => { el.title = t(L, el.dataset.i18nTitle); });
-    document.documentElement.lang = L === 'auto' ? (navigator.language || 'en').slice(0, 2) : L;
+    $$('[data-i18n-title]').forEach((el) => { el.title = t(L, el.dataset.i18nTitle); if (el.matches("button[data-tts]")) el.setAttribute("aria-label", el.title); });
+    document.documentElement.lang = (window.CLR && CLR.langCode) ? CLR.langCode(L) : (L === 'auto' ? (navigator.language || 'en').slice(0, 2) : L);
   }
 
   function render() {
@@ -182,7 +182,7 @@
       }, () => { });
       const sc = document.createElement('button'); sc.type = 'button'; sc.textContent = t(lang(), 'sc_open');
       sc.addEventListener('click', () => { try { if (api.commands && api.commands.openShortcutSettings) api.commands.openShortcutSettings(); else api.tabs.create({ url: typeof browser !== 'undefined' ? 'about:addons' : 'chrome://extensions/shortcuts' }); } catch (e) { } });
-      box.appendChild(sc);
+      if ((api.commands && api.commands.openShortcutSettings) || /Firefox\//.test(navigator.userAgent) && !/Android|Mobile/.test(navigator.userAgent) || /Chrome\//.test(navigator.userAgent) && !/Safari\/[\d.]+ Version|Mobile/.test(navigator.userAgent)) box.appendChild(sc);
       if (!(navigator.mediaDevices && navigator.mediaDevices.getDisplayMedia && window.MediaRecorder)) { const rb = document.querySelector('#recBtn'); rb.disabled = true; rb.title = t(lang(), 'rec_unsupported'); }
     } catch (e) { }
     /* verificări manuale WCAG 2.2, memorate per site */

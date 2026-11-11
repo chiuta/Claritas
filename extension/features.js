@@ -131,9 +131,10 @@
     if (S && S.ttsVoice) { const v = vs.find((x) => x.voiceURI === S.ttsVoice || x.name === S.ttsVoice); if (v) return v; }
     if (S && S.autoLang && tts.lang) {
       const pool = vs.filter((x) => (x.lang || '').toLowerCase().startsWith(tts.lang));
-      const pick = (S.localVoices ? pool.find((x) => x.localService) : null) || pool[0]; if (pick) return pick;
+      const anyLocal = vs.some((x) => x.localService);
+      const pick = S.localVoices ? (pool.find((x) => x.localService) || (anyLocal ? null : pool[0])) : pool[0]; if (pick) return pick;
     }
-    if (S && S.localVoices) { const l = pageLang().toLowerCase().slice(0, 2); const v = vs.find((x) => x.localService && (x.lang || '').toLowerCase().startsWith(l)); if (v) return v; }
+    if (S && S.localVoices) { const l = pageLang().toLowerCase().slice(0, 2); const v = vs.find((x) => x.localService && (x.lang || '').toLowerCase().startsWith(l)) || vs.find((x) => x.localService); if (v) return v; }
     return null;
   }
   function pageLang() { const l = doc.documentElement.lang; return /^[a-z]{2,3}(-[a-z0-9]{2,8})*$/i.test(l || '') ? l : (navigator.language || 'en'); }

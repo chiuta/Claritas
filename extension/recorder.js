@@ -27,7 +27,13 @@
   const warnLeave = (e) => { e.preventDefault(); e.returnValue = ''; };
   const setRec = (on, beat) => { try { if (on) api.storage.local.set({ recSession: { on: true, beat: Date.now(), t0, fx: $('fx').checked, keys: $('fx').checked, blur: $('blur').checked } }); else api.storage.local.remove('recSession'); } catch (e) { } };
 
+  let starting = false;
   async function start() {
+    if (starting || (mr && mr.state !== 'inactive')) return;
+    starting = true;
+    try { await start0(); } finally { starting = false; }
+  }
+  async function start0() {
     if (!navigator.mediaDevices || !navigator.mediaDevices.getDisplayMedia || !window.MediaRecorder) return status(T('rec_unsupported'));
     $('out').hidden = true; urls.forEach((u) => URL.revokeObjectURL(u)); urls = []; chunks = []; events = [];
     let disp, mic = null;
