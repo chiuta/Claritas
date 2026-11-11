@@ -50,7 +50,10 @@ def wait_dl(ext, secs=25):
     t = time.time()
     while time.time() - t < secs:
         fs = [f for f in glob.glob(dl + '/*') if f.endswith(ext) and not f.endswith('.part')]
-        if fs: return fs[0]
+        if fs:
+            a = os.path.getsize(fs[0]); time.sleep(0.8)
+            if os.path.getsize(fs[0]) == a and a > 0: return fs[0]
+            continue
         time.sleep(0.4)
     return None
 PAGE_H = d.current_window_handle; EXT_H = None
