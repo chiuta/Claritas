@@ -76,6 +76,16 @@ jobs:
           for i in 1 2 3 4; do sudo apt-get update && sudo apt-get install -y -o Acquire::Retries=5 opera-stable && break; sleep 20; done
           echo "BROWSER_EXE=/usr/bin/opera" >> $GITHUB_ENV
           echo "BROWSER_CDP=1" >> $GITHUB_ENV
+      - name: Diagnostic pornire browser (CDP)
+        if: runner.os == 'Linux' && (matrix.browser == 'opera' || matrix.browser == 'vivaldi')
+        continue-on-error: true
+        shell: bash
+        run: |
+          sudo apt-get install -y xvfb >/dev/null 2>&1 || true
+          mkdir -p test/results
+          { echo "exe=$BROWSER_EXE"; file "$BROWSER_EXE"; head -c 600 "$BROWSER_EXE" | strings | head -5
+            xvfb-run -a bash -c "timeout 25 \"$BROWSER_EXE\" --user-data-dir=/tmp/diag-prof --remote-debugging-port=9444 --no-first-run --no-sandbox --disable-gpu about:blank > /tmp/diag.log 2>&1 & sleep 12; curl -s -m 3 http://127.0.0.1:9444/json/version || echo CURL_FAIL; echo; ps aux | grep -iE 'opera|vivaldi' | grep -v grep | head -5 | cut -c1-200; sleep 3"
+            echo '--- log'; head -40 /tmp/diag.log; } 2>&1 | tee test/results/diag-${{ matrix.browser }}.txt
       - name: Run tests (Linux, xvfb)
         if: runner.os == 'Linux'
         shell: bash
