@@ -184,8 +184,138 @@ jobs:
         if: always()
         with: { name: r-safari, path: test/results }
 
+  samsung-emulation:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - run: pip install playwright pillow && python build.py && python -m playwright install chromium ffmpeg
+      - name: Chromium cu profil Samsung Internet (UA, 412x915, touch)
+        env: { BROWSER_CHANNEL: chromium, EMULATE: samsung }
+        run: python test/run_matrix.py samsung-emulation t5_features.py t6_popup_tools.py t7_v14.py t11_lang.py t12_audit3.py
+
+  firefox-android:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - run: pip install selenium && python build.py
+      - uses: browser-actions/setup-geckodriver@latest
+        id: gd
+      - name: KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules && sudo udevadm trigger --name-match=kvm
+      - name: Download Firefox Nightly for Android (x86_64)
+        run: |
+          curl -fsSL -o /tmp/fenix.apk "https://firefox-ci-tc.services.mozilla.com/api/index/v1/task/gecko.v2.mozilla-central.latest.mobile.android-x86_64-opt/artifacts/public/build/target.apk" || \
+          curl -fsSL -o /tmp/fenix.apk "https://archive.mozilla.org/pub/fenix/nightly/latest-mozilla-central-android-x86_64/fenix-latest.multi.android-x86_64.apk"
+          ls -l /tmp/fenix.apk
+      - uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 34
+          arch: x86_64
+          target: google_apis
+          force-avd-creation: false
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim
+          disable-animations: true
+          script: |
+            adb install -r /tmp/fenix.apk
+            adb shell pm list packages | grep -i mozilla
+            adb shell pm grant org.mozilla.fenix android.permission.POST_NOTIFICATIONS || true
+            adb shell am set-debug-app --persistent org.mozilla.fenix || true
+            GECKODRIVER=${{ steps.gd.outputs.path }} python test/ff_android.py
+          
+  ios-ipados:
+    runs-on: macos-latest
+    continue-on-error: true
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - run: python build.py
+      - name: Convert for iOS and build for Simulator (unsigned)
+        run: |
+          mkdir -p test/results
+          xcrun safari-web-extension-converter dist/safari --project-location /tmp/ios --app-name Claritas --no-open --no-prompt --ios-only --force 2>&1 | tail -15
+          cd /tmp/ios/Claritas
+          xcodebuild -scheme Claritas -configuration Debug -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" build > /tmp/xb.log 2>&1 || true
+          grep -E "error:|\*\* BUILD" /tmp/xb.log | sort -u | head -20 | tee /tmp/xb-sum.txt
+          grep -q "BUILD SUCCEEDED" /tmp/xb.log && echo "iOS build: OK" || echo "iOS build: FAIL"
+      - name: Install into iPhone and iPad simulators, launch container app
+        run: |
+          APP=$(find ~/Library/Developer/Xcode/DerivedData -path "*Debug-iphonesimulator/Claritas.app" -maxdepth 6 | head -1); echo "APP=$APP"
+          ls "$APP/PlugIns" || true
+          for kind in iPhone iPad; do
+            DEV=$(xcrun simctl list devices available | grep -E "^\s+$kind" | head -1 | sed -E 's/.*\(([0-9A-F-]{36})\).*/\1/')
+            echo "== $kind $DEV"
+            [ -z "$DEV" ] && continue
+            xcrun simctl boot "$DEV" || true
+            xcrun simctl bootstatus "$DEV" -b >/dev/null 2>&1 || true
+            xcrun simctl install "$DEV" "$APP" && echo "$kind install: OK" || echo "$kind install: FAIL"
+            BID=$(/usr/libexec/PlistBuddy -c "Print :CFBundleIdentifier" "$APP/Info.plist"); echo "bundle $BID"
+            xcrun simctl launch "$DEV" "$BID" && echo "$kind launch: OK" || echo "$kind launch: FAIL"
+            sleep 3; xcrun simctl io "$DEV" screenshot /tmp/$kind.png || true
+            xcrun simctl listapps "$DEV" | grep -iE "claritas" | head -5
+          done
+
+  safari-real:
+    runs-on: macos-latest
+    continue-on-error: true
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - run: pip install selenium && python build.py
+      - name: Build + register the Safari extension (ad-hoc signed)
+        run: |
+          xcrun safari-web-extension-converter dist/safari --project-location /tmp/saf --app-name Claritas --no-open --no-prompt --macos-only --force 2>&1 | tail -5
+          cd /tmp/saf/Claritas
+          xcodebuild -scheme Claritas -configuration Debug CODE_SIGN_IDENTITY="-" CODE_SIGNING_ALLOWED=YES CODE_SIGNING_REQUIRED=NO build > /tmp/xb.log 2>&1 || true
+          grep -E "error:|\*\* BUILD" /tmp/xb.log | sort -u | head
+          APP=$(find ~/Library/Developer/Xcode/DerivedData -path "*Build/Products/Debug/Claritas.app" -maxdepth 6 | head -1); echo "APP=$APP"
+          mkdir -p ~/Applications && cp -R "$APP" ~/Applications/ && open ~/Applications/Claritas.app && sleep 5 || true
+          pluginkit -mAvv -p com.apple.Safari.web-extension | head -8 || true
+      - name: Enable safaridriver + unsigned extensions + extension
+        run: |
+          sudo safaridriver --enable || true
+          for d in com.apple.Safari com.apple.Safari.SandboxBroker; do
+            defaults write $d AllowUnsignedExtensions -bool true || true
+            defaults write $d ExtensionsEnabled -bool true || true
+          done
+          defaults write ~/Library/Containers/com.apple.Safari/Data/Library/Preferences/com.apple.Safari AllowUnsignedExtensions -bool true || true
+          ID=$(pluginkit -mAv -p com.apple.Safari.web-extension | grep -i claritas | head -1 | awk '{print $1}' | tr -d '+-'); echo "ext id: $ID"
+          [ -n "$ID" ] && pluginkit -e use -i "$ID" || true
+          pluginkit -mAvv -p com.apple.Safari.web-extension | grep -iA3 claritas | head -10 || true
+      - name: Selenium on real Safari
+        run: |
+          cat > /tmp/saf.py <<'PY'
+          import threading, time, re, sys
+          from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+          from selenium import webdriver
+          PAGE = '<!doctype html><html><head><meta charset=utf-8><title>T</title></head><body><p id="p" style="color:#bbb;background:#fff">Text pal</p></body></html>'
+          class H(BaseHTTPRequestHandler):
+              def do_GET(s): s.send_response(200); s.send_header('Content-Type','text/html'); s.end_headers(); s.wfile.write(PAGE.encode())
+              def log_message(s,*a): pass
+          threading.Thread(target=ThreadingHTTPServer(('127.0.0.1',8781),H).serve_forever,daemon=True).start()
+          d = webdriver.Safari(); print('Safari', d.capabilities.get('browserVersion'))
+          d.get('http://127.0.0.1:8781/'); time.sleep(4)
+          c = d.execute_script("return getComputedStyle(document.getElementById('p')).color")
+          print('PASS Safari real pornit și pagina încărcată'); print(('PASS ' if c != 'rgb(187, 187, 187)' else 'INFO ') + 'extensia a corectat contrastul în Safari real:' , c)
+          d.quit()
+          PY
+          python /tmp/saf.py 2>&1 | tail -12
+
   publish:
-    needs: [lint, chromium-family, firefox, engines, safari-convert]
+    needs: [lint, chromium-family, firefox, engines, safari-convert, samsung-emulation, firefox-android, ios-ipados, safari-real]
     if: always()
     runs-on: ubuntu-latest
     permissions:

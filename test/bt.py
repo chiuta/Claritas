@@ -42,5 +42,8 @@ async def _patched(self, user_data_dir, **kw):
     args = [a for a in kw.get('args', []) if not (a == '--headless=new' and headed)]
     args.append('--disable-features=DisableLoadExtensionCommandLineSwitch')
     kw['args'] = args
+    if os.environ.get('EMULATE') == 'samsung':
+        kw.update(user_agent='Mozilla/5.0 (Linux; Android 14; SM-S918B) AppleWebKit/537.36 (KHTML, like Gecko) SamsungBrowser/26.0 Chrome/122.0.0.0 Mobile Safari/537.36',
+                  viewport={'width': 412, 'height': 915}, is_mobile=True, has_touch=True, device_scale_factor=2.625)
     return await _orig(self, tempfile.mkdtemp(prefix='clr-prof-'), **kw)
 BrowserType.launch_persistent_context = _patched
