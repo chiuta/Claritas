@@ -43,7 +43,7 @@ try:
     d.get(URL); time.sleep(1)
     before = rgb(d.execute_script("return getComputedStyle(document.getElementById('p')).color"))
     ok(before == (187, 187, 187), f'înainte: text pal neschimbat {before}')
-    d.install_addon(EXT, temporary=True); ok(True, 'extensia instalată temporar pe Android')
+    d.install_addon('/sdcard/Download/claritas.xpi', temporary=True); ok(True, 'extensia instalată temporar pe Android')
     d.get(URL); time.sleep(3)
     p = d.execute_script("const s=getComputedStyle(document.getElementById('p'));return [s.color,s.backgroundColor]")
     ok(ratio(rgb(p[0]), rgb(p[1])) >= 4.5, f'contrast text pal corectat pe Android ({ratio(rgb(p[0]), rgb(p[1])):.1f}:1)')

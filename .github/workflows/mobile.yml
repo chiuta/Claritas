@@ -41,6 +41,9 @@ jobs:
             adb shell pm list packages | grep -i mozilla
             adb shell pm grant org.mozilla.fenix android.permission.POST_NOTIFICATIONS || true
             adb shell am set-debug-app --persistent org.mozilla.fenix || true
+            adb shell appops set org.mozilla.fenix MANAGE_EXTERNAL_STORAGE allow || true
+            adb push dist/claritas-firefox.zip /sdcard/Download/claritas.xpi
+            adb shell ls -l /sdcard/Download/
             python test/ff_android.py
           
   ios-ipados:
