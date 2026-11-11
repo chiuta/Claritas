@@ -122,7 +122,6 @@ async def main():
         yel = sum(1 for x in range(600, 900, 6) for y in range(0, 300, 6) if sh.getpixel((x, y))[0] > 200 and sh.getpixel((x, y))[1] > 200 and sh.getpixel((x, y))[2] < 90)
         ok(yel == 0, f'eveniment sintetic de la pagină NU deschide meniul de captură ({yel} pixeli galbeni)')
         # L) jurnal VTT: evenimente din alte file
-        ok(True, 'L) vezi t11 pentru jurnalul VTT')
         ok(len(errs) == 0, f'fără erori de pagină {errs[:2]}')
         await ctx.close()
     print('DEFECTE:', fails or 'niciunul')

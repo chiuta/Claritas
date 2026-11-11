@@ -22,7 +22,7 @@ async def main():
         await page.bring_to_front(); await page.click('#b1'); await page.keyboard.press('Tab'); await page.keyboard.press('Alt+Shift+M'); await page.wait_for_timeout(800)
         await rec.bring_to_front(); await rec.wait_for_timeout(500); await rec.click('#stop'); await rec.wait_for_timeout(2500)
         print('out visible', await rec.evaluate("!document.getElementById('out').hidden"))
-        vtt = await rec.evaluate("fetch(document.getElementById('dll').href).then(r=>r.text())"); print(vtt)
+        vtt = await rec.evaluate("fetch(document.getElementById('dll').href).then(r=>r.text())"); print(vtt); ok_vtt = vtt.startswith('WEBVTT') and ('-->' in vtt); print(('PASS ' if ok_vtt else 'FAIL ') + 'jurnal VTT valid (antet WEBVTT și cel puțin o înregistrare)')
         size = await rec.evaluate("fetch(document.getElementById('dlv').href).then(r=>r.blob()).then(b=>b.size)"); print('video bytes', size)
         b64 = await rec.evaluate("fetch(document.getElementById('dlv').href).then(r=>r.arrayBuffer()).then(b=>{let s='';const u=new Uint8Array(b);for(let i=0;i<u.length;i+=8192)s+=String.fromCharCode.apply(null,u.subarray(i,i+8192));return btoa(s)})")
         import base64, subprocess

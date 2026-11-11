@@ -22,7 +22,7 @@ async def main():
             return await sw.evaluate("""async ([cmd,kw]) => { const [t]=await chrome.tabs.query({url:'file:///*'}); return await chrome.tabs.sendMessage(t.id, Object.assign({type:'feat',cmd}, kw)); }""", [cmd, kw])
         r = await feat('ping'); ok(r and r['ok'], f'features încărcat {r}')
         a = await feat('audit'); rules = {i['rule'] for i in a['items']}
-        for need in ['lang', 'img_alt', 'name', 'vague', 'label', 'h_skip', 'target_small'][:6]:
+        for need in ['lang', 'img_alt', 'name', 'vague', 'label', 'h_skip', 'target_small']:
             ok(need in rules, f'audit detectează {need}')
         ok(a['stats']['words'] > 40, f"statistici cuvinte={a['stats']['words']}")
         o = await feat('outline'); ok(any(x['kind']=='h' and x['level']==1 for x in o['items']) and any(x['kind']=='lm' for x in o['items']), 'structură: titluri + zone')

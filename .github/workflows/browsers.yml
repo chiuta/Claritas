@@ -66,6 +66,7 @@ jobs:
           echo "deb [signed-by=/usr/share/keyrings/vivaldi.gpg] https://repo.vivaldi.com/archive/deb/ stable main" | sudo tee /etc/apt/sources.list.d/vivaldi.list
           for i in 1 2 3 4; do sudo apt-get update && sudo apt-get install -y -o Acquire::Retries=5 vivaldi-stable && break; sleep 20; done
           echo "BROWSER_EXE=/usr/bin/vivaldi-stable" >> $GITHUB_ENV
+          echo "BROWSER_CDP=1" >> $GITHUB_ENV
       - name: Install Opera
         if: matrix.browser == 'opera'
         run: |
@@ -82,9 +83,14 @@ jobs:
         env:
           BROWSER_CHANNEL: ${{ matrix.browser }}
         run: |
-          true
+          sudo apt-get install -y xvfb >/dev/null 2>&1 || true
           [ -n "$BROWSER_EXE" ] && unset BROWSER_CHANNEL
-          python test/run_matrix.py "${{ matrix.os }}-${{ matrix.browser }}"
+          if [ -n "$BROWSER_CDP" ]; then
+            export HEADED=1
+            xvfb-run -a python test/run_matrix.py "${{ matrix.os }}-${{ matrix.browser }}"
+          else
+            python test/run_matrix.py "${{ matrix.os }}-${{ matrix.browser }}"
+          fi
       - name: Prepare tools (Windows / macOS)
         if: runner.os != 'Linux'
         shell: bash
@@ -214,6 +220,9 @@ jobs:
           if [ "$RUNNER_OS" = Linux ]; then unset HEADED; fi
           python -c "import os;os.makedirs('/tmp',exist_ok=True)"
           python test/run_matrix.py "cft-${{ matrix.os }}-${{ matrix.ch }}"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: { name: 'r-cft-${{ matrix.os }}-${{ matrix.ch }}', path: test/results }
 
   browser-profiles:
     name: profile / ${{ matrix.profile }}
@@ -236,6 +245,9 @@ jobs:
           # în forced-colors extensia dezactivează intenționat culorile/temele (respectă contrastul impus de OS)
           [ "${{ matrix.profile }}" = forced-colors ] && T="t6_popup_tools.py t11_lang.py t12_audit3.py"
           python test/run_matrix.py "profile-${{ matrix.profile }}" $T
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: { name: 'r-profile-${{ matrix.profile }}', path: test/results }
 
   samsung-emulation:
     runs-on: ubuntu-latest
@@ -249,6 +261,9 @@ jobs:
       - name: Chromium cu profil Samsung Internet (UA, 412x915, touch)
         env: { BROWSER_CHANNEL: chromium, EMULATE: samsung }
         run: python test/run_matrix.py samsung-emulation t5_features.py t6_popup_tools.py t7_v14.py t11_lang.py t12_audit3.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: { name: r-samsung-emulation, path: test/results }
 
   firefox-android:
     runs-on: ubuntu-latest
@@ -464,3 +479,19 @@ jobs:
           git checkout --orphan ci-results && git rm -rf . >/dev/null
           mkdir -p run-${{ github.run_number }} && cp -r /tmp/out/* run-${{ github.run_number }}/ || true
           git add -A && git commit -m "results run ${{ github.run_number }} (${{ github.sha }})" && git push -f origin ci-results
+      - name: Verdict (eșuează dacă un test a picat sau nu a rulat)
+        if: always()
+        run: |
+          python - <<'PY'
+          import json, glob, sys
+          bad = []
+          for f in sorted(glob.glob('collected/*/*.json')):
+              try: d = json.load(open(f))
+              except Exception: continue
+              if not isinstance(d, dict): continue
+              for k, v in d.items():
+                  if isinstance(v, dict) and 'rc' in v and (v.get('fail') or v.get('rc') != 0):
+                      bad.append(f"{f.split('/')[-1]}:{k} fail={v.get('fail')} rc={v.get('rc')}")
+          print('\n'.join(bad) or 'toate verificările au trecut')
+          sys.exit(1 if bad else 0)
+          PY
