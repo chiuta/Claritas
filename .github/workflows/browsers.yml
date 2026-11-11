@@ -40,9 +40,9 @@ jobs:
           - { os: ubuntu-latest,  browser: brave }
           - { os: ubuntu-latest,  browser: vivaldi }
           - { os: ubuntu-latest,  browser: opera }
-          - { os: windows-latest, browser: chrome }
+          - { os: windows-latest, browser: chromium }
           - { os: windows-latest, browser: msedge }
-          - { os: macos-latest,   browser: chrome }
+          - { os: macos-latest,   browser: chromium }
           - { os: macos-latest,   browser: msedge }
     steps:
       - uses: actions/checkout@v4

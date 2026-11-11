@@ -15,7 +15,7 @@ HTML = """<!doctype html><html><body style="background:#fff">
 <script>const sr=document.getElementById('host').attachShadow({mode:'open'});sr.innerHTML='<p id=sp style="color:#ddd">umbra</p>';
 let d=document.body;for(let i=0;i<1500;i++){const x=document.createElement('div');d.appendChild(x);d=x}
 d.id='deep';d.textContent='adanc';d.style.color='#ddd';</script></body></html>"""
-open('/tmp/h.html','w').write(HTML)
+open('/tmp/h.html','w',encoding='utf-8').write(HTML)
 
 async def main():
     async with async_playwright() as p:
@@ -27,7 +27,7 @@ async def main():
         async def setst(st, sites=None):
             await sw.evaluate("([s,t]) => chrome.storage.local.set({settings: s, sites: t})", [st, sites or {}])
             await page.wait_for_timeout(700)
-        await setst({'enabled': True}); await page.goto('file:///tmp/h.html'); await page.wait_for_timeout(2500)
+        await setst({'enabled': True}); await page.goto(__import__('pathlib').Path('/tmp/h.html').resolve().as_uri()); await page.wait_for_timeout(2500)
         col = lambda sel: page.evaluate("s=>getComputedStyle(document.querySelector(s)).color", sel)
         ok(await col('#p') != 'rgb(221, 221, 221)', 'text slab corectat')
         ok(await page.evaluate("getComputedStyle(document.getElementById('deep')).color") != 'rgb(221, 221, 221)', 'DOM adânc (1500 niveluri) fără crash și corectat')
