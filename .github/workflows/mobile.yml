@@ -136,7 +136,11 @@ jobs:
             tell process "Safari"
               set frontmost to true
               delay 1
+              try
               click (first menu item of menu "Safari" of menu bar item "Safari" of menu bar 1 whose name starts with "Settings")
+            on error
+              keystroke "," using command down
+            end try
               delay 3
               log "windows: " & (name of every window as string)
               try
@@ -180,20 +184,28 @@ jobs:
             tell process "Safari"
               set frontmost to true
               try
-                log "develop items: " & (name of every menu item of menu "Develop" of menu bar item "Develop" of menu bar 1 as string)
+                try
+                  set its to ""
+                  repeat with mi in (menu items of menu "Develop" of menu bar item "Develop" of menu bar 1)
+                    try
+                      set its to its & (name of mi) & " | "
+                    end try
+                  end repeat
+                  log "develop items: " & its
+                end try
                 click menu item "Allow Unsigned Extensions" of menu "Develop" of menu bar item "Develop" of menu bar 1
                 delay 4
-                log "windows after unsigned: " & (name of every window as string)
+                log "windows after unsigned: " & (count of windows)
                 repeat with w in windows
                   try
-                    log "win " & (name of w) & " buttons: " & (name of every button of w as string)
+                    log "win " & (name of w)
                   end try
                 end repeat
                 try
                   keystroke return
                   delay 2
                 end try
-                log "windows after return: " & (name of every window as string)
+                log "windows after return: " & (count of windows)
               on error e
                 log "ERR unsigned: " & e
               end try
