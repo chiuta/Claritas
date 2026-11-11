@@ -2,7 +2,7 @@
 
 [English](README.md) · [Română](README.ro.md) · [Français](README.fr.md) · **Italiano** · [Español](README.es.md) · [Português](README.pt.md) · [Deutsch](README.de.md) · [Magyar](README.hu.md)
 
-**Versione: 1.5.5 · Ultimo aggiornamento: 11/11/2026**
+**Versione: 1.6.0 · Ultimo aggiornamento: 12/11/2026**
 
 Estensione di accessibilità tutto-in-uno, gratuita. Nessuna telemetria, nessuna rete, nessun account: tutto resta nel tuo browser.
 
@@ -56,4 +56,7 @@ MIT — copyright Alexandru-Ionuț Chiuță (Alexio).
 
 Se Claritas ti è utile, puoi sostenere il lavoro: [Buy Me a Coffee](https://buymeacoffee.com/echo.of.the.strings).
 
-Stato di verifica (v1.5.5): testato automaticamente in CI su Chromium, Edge, Brave, Firefox (più canali), Safari 27.2 reale su macOS, Safari 26.2 nel simulatore iPhone/iPad, Chrome 113 e Firefox 162 su Android 14 (emulatore). Non verificato: Opera, Vivaldi, Samsung Internet reale, l’estensione attivata in Safari/iOS reali, Chrome di marca. Alt+Shift+O/D/L/G sono modificabili nel browser; P/H/S/M sono fissi. Il pulsante di definizione apre dexonline.ro o Wiktionary solo al clic.
+Stato di verifica (v1.6.0): testato automaticamente in CI su Chromium, Edge, Brave, Firefox (più canali), Safari 27.2 reale su macOS, Safari 26.2 nel simulatore iPhone/iPad, Chrome 113 e Firefox 162 su Android 14 (emulatore). Non verificato: Opera, Vivaldi, Samsung Internet reale, l’estensione attivata in Safari/iOS reali, Chrome di marca. Alt+Shift+O/D/L/G sono modificabili nel browser; P/H/S/M sono fissi. Il pulsante di definizione apre dexonline.ro o Wiktionary solo al clic.
+
+## Moduli opzionali (v1.6)
+Tutti disattivati di default (popup → «Moduli opzionali»); nulla esce dal browser. Parti del discorso nel Lettore (rumeno/inglese, euristico), regole di audit aggiuntive (ARIA, moduli, main, zoom, sottotitoli), dizionario locale (tuo JSON/TSV, max 4 MB), sincronizzazione delle impostazioni con `storage.sync` del browser (senza dizionario né registrazioni) e OCR locale nel pacchetto separato `claritas-*-ocr.zip` (~20 MB; verificato automaticamente solo in Chromium, Firefox/Safari non verificati).

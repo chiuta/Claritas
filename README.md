@@ -2,7 +2,7 @@
 
 **English** · [Română](README.ro.md) · [Français](README.fr.md) · [Italiano](README.it.md) · [Español](README.es.md) · [Português](README.pt.md) · [Deutsch](README.de.md) · [Magyar](README.hu.md)
 
-**Version: 1.5.5 · Last updated: 11 Nov 2026**
+**Version: 1.6.0 · Last updated: 12 Nov 2026**
 
 Free all-in-one accessibility extension. No telemetry, no network, no accounts: everything stays in your browser.
 
@@ -56,3 +56,11 @@ MIT — copyright Alexandru-Ionuț Chiuță (Alexio).
 If Claritas helps you, you can support the work: [Buy Me a Coffee](https://buymeacoffee.com/echo.of.the.strings).
 
 Verification status (v1.5.5): tested automatically in CI on Chromium, Edge, Brave, Firefox (several channels), real Safari 27.2 on macOS, Safari 26.2 in iPhone/iPad Simulator, Chrome 113 and Firefox 162 on Android 14 (emulator). Not verified: Opera, Vivaldi, real Samsung Internet, the extension activated inside real Safari/iOS, branded Chrome. Shortcuts Alt+Shift+O/D/L/G can be remapped in the browser; P/H/S/M are fixed. The definition button opens dexonline.ro or Wiktionary only when you click it.
+
+## Optional modules (v1.6)
+All are off by default; switch them on in the popup → “Optional modules”. Nothing sends data outside the browser.
+- **Parts of speech in Reader** (Romanian and English): noun ─, verb ╌, adjective ┈, adverb ═ (different underline styles, not colour alone). Heuristic, approximate.
+- **Extra audit rules**: invalid ARIA role, broken ARIA references, unlabeled form fields, missing/duplicate `main`, focusable element inside `aria-hidden`, blocked zoom, video without captions, unnamed SVG, nested interactive elements, no skip link.
+- **Local dictionary**: you import a JSON `{"word":"definition"}` or TSV file (max 4 MB); the 📖 button on the selection bar looks there first, then opens the online dictionary.
+- **Settings sync** through the browser’s `storage.sync` (settings and per-site rules only; not the dictionary, captures or recordings). The most recent change wins.
+- **Local OCR** (separate `claritas-chromium-ocr.zip` / `claritas-firefox-ocr.zip`, ~20 MB): bundled Tesseract.js with language data for all 8 languages; `ocr.html` page (button in the popup). Automatically verified in Chromium only; Firefox and Safari: not verified (Safari does not get the OCR pack).

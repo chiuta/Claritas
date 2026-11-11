@@ -359,6 +359,7 @@
   }
   function liveSchedule() { if (!liveT) liveT = setTimeout(liveRun, 1500); }
   function auditExtra(add) {
+    if (S && S.modAuditPlus && CLR.mod && CLR.mod.auditPlus) { try { CLR.mod.auditPlus(add, doc); } catch (e) { } }
     liveIssues.forEach((v) => { if (v.el && v.el.isConnected) add(v.rule, v.sev, v.el); });
     doc.querySelectorAll('input[type=password]').forEach((el) => {
       const ac = (el.getAttribute('autocomplete') || '').toLowerCase(), op = el.getAttribute('onpaste') || '';

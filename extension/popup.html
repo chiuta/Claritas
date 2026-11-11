@@ -183,6 +183,20 @@
   <label class="row"><input type="checkbox" data-k="aiLocal"><span data-i18n="aiLocal"></span></label>
   <label class="row"><input type="checkbox" data-k="liveAudit"><span data-i18n="liveAudit"></span></label>
   </fieldset>
+  <fieldset id="modFs"><legend data-i18n="m_modules"></legend>
+  <label class="row"><input type="checkbox" data-k="modPos"><span data-i18n="modPos"></span></label>
+  <label class="row"><input type="checkbox" data-k="modAuditPlus"><span data-i18n="modAuditPlus"></span></label>
+  <label class="row"><input type="checkbox" data-k="modDict"><span data-i18n="modDict"></span></label>
+  <div class="profiles">
+    <button type="button" id="dictImport" data-i18n="dict_import"></button>
+    <button type="button" id="dictClear" data-i18n="dict_clear"></button>
+    <input type="file" id="dictFile" accept=".json,.tsv,.txt,.csv" hidden>
+  </div>
+  <p class="hint" id="dictInfo" role="status"></p>
+  <label class="row"><input type="checkbox" data-k="syncProfiles"><span data-i18n="syncProfiles"></span></label>
+  <p class="hint" id="syncInfo" role="status"></p>
+  <div class="profiles"><button type="button" id="ocrOpen" data-i18n="ocr_open" hidden></button></div>
+  </fieldset>
   <fieldset><legend data-i18n="m_calm"></legend>
   <label class="row"><input type="checkbox" data-k="calm"><span data-i18n="calm"></span></label>
   <label class="row"><input type="checkbox" data-k="unstick"><span data-i18n="unstick"></span></label>
@@ -246,6 +260,7 @@
   <p class="hint" data-i18n="shortcuts"></p>
 </footer>
 <script src="shared.js"></script>
+<script src="modules.js"></script>
 <script src="popup.js"></script>
 </body>
 </html>

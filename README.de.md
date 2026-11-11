@@ -2,7 +2,7 @@
 
 [English](README.md) · [Română](README.ro.md) · [Français](README.fr.md) · [Italiano](README.it.md) · [Español](README.es.md) · [Português](README.pt.md) · **Deutsch** · [Magyar](README.hu.md)
 
-**Version: 1.5.5 · Letzte Aktualisierung: 11.11.2026**
+**Version: 1.6.0 · Letzte Aktualisierung: 12.11.2026**
 
 Kostenlose Barrierefreiheits-Erweiterung „Alles in einem“. Keine Telemetrie, kein Netzwerk, keine Konten: Alles bleibt in Ihrem Browser.
 
@@ -56,4 +56,7 @@ MIT — Copyright Alexandru-Ionuț Chiuță (Alexio).
 
 Wenn Claritas Ihnen hilft, können Sie die Arbeit unterstützen: [Buy Me a Coffee](https://buymeacoffee.com/echo.of.the.strings).
 
-Prüfstatus (v1.5.5): automatisch in CI getestet auf Chromium, Edge, Brave, Firefox (mehrere Kanäle), echtem Safari 27.2 (macOS), Safari 26.2 im iPhone/iPad-Simulator, Chrome 113 und Firefox 162 auf Android 14 (Emulator). Nicht verifiziert: Opera, Vivaldi, echtes Samsung Internet, die in echtem Safari/iOS aktivierte Erweiterung, Chrome-Markenversion. Alt+Shift+O/D/L/G sind im Browser änderbar; P/H/S/M sind fest. Die Definitionsschaltfläche öffnet dexonline.ro oder Wiktionary nur auf Klick.
+Prüfstatus (v1.6.0): automatisch in CI getestet auf Chromium, Edge, Brave, Firefox (mehrere Kanäle), echtem Safari 27.2 (macOS), Safari 26.2 im iPhone/iPad-Simulator, Chrome 113 und Firefox 162 auf Android 14 (Emulator). Nicht verifiziert: Opera, Vivaldi, echtes Samsung Internet, die in echtem Safari/iOS aktivierte Erweiterung, Chrome-Markenversion. Alt+Shift+O/D/L/G sind im Browser änderbar; P/H/S/M sind fest. Die Definitionsschaltfläche öffnet dexonline.ro oder Wiktionary nur auf Klick.
+
+## Optionale Module (v1.6)
+Alle sind standardmäßig aus (Popup → „Optionale Module“); nichts verlässt den Browser. Wortarten im Leser (Rumänisch/Englisch, heuristisch), zusätzliche Prüfregeln (ARIA, Formulare, main, Zoom, Untertitel), lokales Wörterbuch (eigene JSON-/TSV-Datei, max. 4 MB), Einstellungs-Sync über `storage.sync` des Browsers (ohne Wörterbuch und Aufnahmen) und lokale OCR im separaten Paket `claritas-*-ocr.zip` (~20 MB; nur in Chromium automatisch geprüft, Firefox/Safari nicht geprüft).

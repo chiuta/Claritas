@@ -210,9 +210,37 @@
     fillVoices();
     bind();
     bindTools();
+    bindModules();
     render();
     refreshStats(); refreshZoom();
     setTimeout(refreshStats, 900);
+  }
+
+  async function bindModules() {
+    const tr = (k) => t(lang() === 'auto' ? (navigator.language || 'en').slice(0, 2) : lang(), k);
+    const info = $('#dictInfo'), M = CLR.mod;
+    const refresh = async () => {
+      const n = await M.dictCount().catch(() => 0);
+      info.textContent = n ? n + ' ' + tr('dict_words') : '';
+      try {
+        const r = await api.storage.local.get('syncStatus'), s = r && r.syncStatus;
+        $('#syncInfo').textContent = s ? (s.ok ? tr('sync_ok') : tr('sync_err')) : '';
+      } catch (e) { }
+    };
+    $('#dictImport').addEventListener('click', () => $('#dictFile').click());
+    $('#dictFile').addEventListener('change', async (e) => {
+      const f = e.target.files && e.target.files[0]; if (!f) return;
+      if (f.size > 4 * 1024 * 1024) { info.textContent = tr('dict_big'); return; }
+      const txt = await f.text(), p = M.dictParse(txt);
+      if (!p.n) { info.textContent = tr('dict_bad'); return; }
+      const r = await M.dictSave(p.dict);
+      info.textContent = r.ok ? r.n + ' ' + tr('dict_words') : tr('dict_big');
+      e.target.value = '';
+    });
+    $('#dictClear').addEventListener('click', async () => { await M.dictClear(); refresh(); });
+    try { const mf = api.runtime.getManifest(), csp = mf.content_security_policy; if (csp && /wasm-unsafe-eval/.test(typeof csp === 'string' ? csp : (csp.extension_pages || ''))) { const b = $('#ocrOpen'); b.hidden = false; b.addEventListener('click', () => api.tabs.create({ url: api.runtime.getURL('ocr.html') })); } } catch (e) { }
+    try { api.storage.onChanged.addListener((ch, a) => { if (a === 'local' && (ch.syncStatus || ch.dictLocal)) refresh(); }); } catch (e) { }
+    refresh();
   }
 
   function bind() {

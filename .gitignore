@@ -2,3 +2,4 @@ test/results/
 test/__pycache__/
 *.png
 dist/
+modules-src/ocr/vendor/

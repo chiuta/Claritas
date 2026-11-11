@@ -2,7 +2,7 @@
 
 [English](README.md) · **Română** · [Français](README.fr.md) · [Italiano](README.it.md) · [Español](README.es.md) · [Português](README.pt.md) · [Deutsch](README.de.md) · [Magyar](README.hu.md)
 
-**Versiune: 1.5.5 · Ultima actualizare: 11.11.2026**
+**Versiune: 1.6.0 · Ultima actualizare: 12.11.2026**
 
 Extensie gratuită de accesibilitate all-in-one. Fără telemetrie, fără rețea, fără conturi: totul rămâne în browserul tău.
 
@@ -55,6 +55,14 @@ MIT — drepturi de autor Alexandru-Ionuț Chiuță (Alexio).
 ## Susținere
 
 Dacă Claritas te ajută, poți sprijini munca: [Buy Me a Coffee](https://buymeacoffee.com/echo.of.the.strings).
+
+## Module opționale (v1.6)
+Toate sunt oprite implicit și se pornesc din popup → «Module opționale». Nimic nu trimite date în afara browserului.
+- **Părți de vorbire în Cititor** (română și engleză): substantiv ─, verb ╌, adjectiv ┈, adverb ═ (subliniere diferită, nu doar culoare). Euristic, aproximativ.
+- **Reguli suplimentare de audit**: rol ARIA invalid, referințe ARIA rupte, câmpuri fără etichetă, lipsă/duplicare `main`, element focalizabil în `aria-hidden`, zoom blocat, video fără subtitrări, SVG fără nume, elemente interactive imbricate, lipsă link „sari la conținut”.
+- **Dicționar local**: importi tu un fișier JSON `{"cuvânt":"definiție"}` sau TSV (max. 4 MB); butonul 📖 din bara de selecție caută întâi acolo, apoi deschide dicționarul online.
+- **Sincronizare setări** prin `storage.sync` al browserului (doar setările și regulile per site; nu dicționarul, capturile sau înregistrările). Câștigă modificarea cea mai recentă.
+- **OCR local** (pachet separat `claritas-chromium-ocr.zip` / `claritas-firefox-ocr.zip`, ~20 MB): Tesseract.js împachetat, cu date de limbă pentru cele 8 limbi; pagina `ocr.html` (buton în popup). Verificat automat doar în Chromium; Firefox și Safari: neverificat (Safari nu primește pachetul OCR).
 
 ## Verificare v1.5.5 — browsere reale (CI)
 - Testat automat în GitHub Actions (Playwright/Selenium): Chromium, Edge și Brave pe Linux cu toate cele 10 fișiere de test trecute; Opera și Vivaldi au fost încercate, dar testele lor nu au rulat (conectare CDP refuzată / timeout) — deci **nu sunt verificate**; Chromium/Edge pe Windows și macOS; Firefox (latest, ESR, beta, nightly, developer edition; Linux/Windows/macOS) cu 17 verificări trecute pe fiecare. Profilurile emulate (Samsung/Chrome/Edge/Opera Android, Yandex, Whale, Arc, High Contrast, mod întunecat, mișcare redusă, zoom 200 %) sunt doar emulări de engine, nu browsere reale. Rezultatele rulărilor Chrome for Testing/profiluri nu sunt arhivate ca artefacte, deci nu sunt demonstrate aici.

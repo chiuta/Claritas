@@ -462,8 +462,29 @@ jobs:
         if: always()
         with: { name: r-safari-real, path: test/results }
 
+  ocr-module:
+    name: modul OCR local (Chromium)
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - run: pip install playwright pillow imageio-ffmpeg && python -m playwright install chromium ffmpeg
+      - run: bash tools/fetch_ocr.sh
+      - run: python build.py && mkdir dist/chromium-ocr-unz && unzip -q dist/claritas-chromium-ocr.zip -d dist/chromium-ocr-unz
+      - name: Teste module opționale (inclusiv OCR)
+        env: { BROWSER_CHANNEL: chromium }
+        run: python test/run_matrix.py ocr-module t13_modules.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: { name: r-ocr-module, path: test/results }
+
   publish:
-    needs: [lint, chromium-family, firefox, engines, safari-convert, samsung-emulation, chrome-for-testing, browser-profiles, firefox-android, ios-ipados, safari-real]
+    needs: [ocr-module, lint, chromium-family, firefox, engines, safari-convert, samsung-emulation, chrome-for-testing, browser-profiles, firefox-android, ios-ipados, safari-real]
     if: always()
     runs-on: ubuntu-latest
     permissions:

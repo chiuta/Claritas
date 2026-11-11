@@ -2,7 +2,7 @@
 
 [English](README.md) · [Română](README.ro.md) · **Français** · [Italiano](README.it.md) · [Español](README.es.md) · [Português](README.pt.md) · [Deutsch](README.de.md) · [Magyar](README.hu.md)
 
-**Version: 1.5.5 · Dernière mise à jour: 11/11/2026**
+**Version: 1.6.0 · Dernière mise à jour: 12/11/2026**
 
 Extension d’accessibilité tout-en-un, gratuite. Sans télémétrie, sans réseau, sans compte : tout reste dans votre navigateur.
 
@@ -56,4 +56,7 @@ MIT — copyright Alexandru-Ionuț Chiuță (Alexio).
 
 Si Claritas vous aide, vous pouvez soutenir ce travail : [Buy Me a Coffee](https://buymeacoffee.com/echo.of.the.strings).
 
-État de vérification (v1.5.5) : testé automatiquement en CI sur Chromium, Edge, Brave, Firefox (plusieurs canaux), Safari 27.2 réel sur macOS, Safari 26.2 dans le simulateur iPhone/iPad, Chrome 113 et Firefox 162 sur Android 14 (émulateur). Non vérifié : Opera, Vivaldi, Samsung Internet réel, l’extension activée dans Safari/iOS réels, Chrome de marque. Alt+Shift+O/D/L/G sont réassignables dans le navigateur ; P/H/S/M sont fixes. Le bouton de définition n’ouvre dexonline.ro ou Wiktionary qu’au clic.
+État de vérification (v1.6.0) : testé automatiquement en CI sur Chromium, Edge, Brave, Firefox (plusieurs canaux), Safari 27.2 réel sur macOS, Safari 26.2 dans le simulateur iPhone/iPad, Chrome 113 et Firefox 162 sur Android 14 (émulateur). Non vérifié : Opera, Vivaldi, Samsung Internet réel, l’extension activée dans Safari/iOS réels, Chrome de marque. Alt+Shift+O/D/L/G sont réassignables dans le navigateur ; P/H/S/M sont fixes. Le bouton de définition n’ouvre dexonline.ro ou Wiktionary qu’au clic.
+
+## Modules facultatifs (v1.6)
+Tous désactivés par défaut (popup → « Modules facultatifs ») ; rien ne quitte le navigateur. Catégories grammaticales dans le Lecteur (roumain/anglais, heuristique), règles d’audit supplémentaires (ARIA, formulaires, main, zoom, sous-titres), dictionnaire local (votre propre JSON/TSV, 4 Mo max.), synchronisation des réglages via `storage.sync` du navigateur (sans dictionnaire ni enregistrements) et OCR local dans le paquet séparé `claritas-*-ocr.zip` (~20 Mo ; vérifié automatiquement seulement dans Chromium, Firefox/Safari non vérifiés).

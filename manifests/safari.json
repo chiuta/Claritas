@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "__MSG_extName__",
   "short_name": "Claritas",
-  "version": "1.5.4",
+  "version": "1.6.0",
   "description": "__MSG_extDesc__",
   "icons": {
     "16": "icons/icon16.png",
@@ -35,6 +35,7 @@
         "content.js",
         "features.js",
         "extras.js",
+        "modules.js",
         "capture.js"
       ],
       "run_at": "document_start",
@@ -44,19 +45,19 @@
   "commands": {
     "toggle": {
       "suggested_key": {
-        "default": "Alt+Shift+C"
+        "default": "Alt+Shift+O"
       },
       "description": "__MSG_cmdToggle__"
     },
     "cycle-theme": {
       "suggested_key": {
-        "default": "Alt+Shift+T"
+        "default": "Alt+Shift+D"
       },
       "description": "__MSG_cmdTheme__"
     },
     "read": {
       "suggested_key": {
-        "default": "Alt+Shift+R"
+        "default": "Alt+Shift+L"
       },
       "description": "__MSG_cmdRead__"
     },

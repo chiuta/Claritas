@@ -2,7 +2,7 @@
 
 [English](README.md) · [Română](README.ro.md) · [Français](README.fr.md) · [Italiano](README.it.md) · [Español](README.es.md) · [Português](README.pt.md) · [Deutsch](README.de.md) · **Magyar**
 
-**Verzió: 1.5.5 · Utolsó frissítés: 2026. 11. 11.**
+**Verzió: 1.6.0 · Utolsó frissítés: 2026. 11. 12.**
 
 Ingyenes, mindent egyben tartalmazó akadálymentesítő bővítmény. Nincs telemetria, nincs hálózat, nincs fiók: minden a böngészőjében marad.
 
@@ -56,4 +56,7 @@ MIT — szerzői jog: Alexandru-Ionuț Chiuță (Alexio).
 
 Ha a Claritas segít Önnek, támogathatja a munkát: [Buy Me a Coffee](https://buymeacoffee.com/echo.of.the.strings).
 
-Ellenőrzési állapot (v1.5.5): automatikusan tesztelve CI-ben: Chromium, Edge, Brave, Firefox (több csatorna), valódi Safari 27.2 macOS-en, Safari 26.2 iPhone/iPad szimulátorban, Chrome 113 és Firefox 162 Android 14-en (emulátor). Nem ellenőrzött: Opera, Vivaldi, valódi Samsung Internet, a valódi Safari/iOS-ben aktivált bővítmény, márkás Chrome. Az Alt+Shift+O/D/L/G a böngészőben átállítható; a P/H/S/M rögzített. A definíció gomb csak kattintásra nyitja meg a dexonline.ro-t vagy a Wiktionaryt.
+Ellenőrzési állapot (v1.6.0): automatikusan tesztelve CI-ben: Chromium, Edge, Brave, Firefox (több csatorna), valódi Safari 27.2 macOS-en, Safari 26.2 iPhone/iPad szimulátorban, Chrome 113 és Firefox 162 Android 14-en (emulátor). Nem ellenőrzött: Opera, Vivaldi, valódi Samsung Internet, a valódi Safari/iOS-ben aktivált bővítmény, márkás Chrome. Az Alt+Shift+O/D/L/G a böngészőben átállítható; a P/H/S/M rögzített. A definíció gomb csak kattintásra nyitja meg a dexonline.ro-t vagy a Wiktionaryt.
+
+## Választható modulok (v1.6)
+Mind alapból ki van kapcsolva (felugró ablak → „Választható modulok”); semmi sem hagyja el a böngészőt. Szófajok az Olvasóban (román/angol, heurisztikus), kiegészítő ellenőrzési szabályok (ARIA, űrlapok, main, nagyítás, feliratok), helyi szótár (saját JSON/TSV, max. 4 MB), a beállítások szinkronizálása a böngésző `storage.sync` tárolójával (szótár és felvételek nélkül) és helyi OCR a külön `claritas-*-ocr.zip` csomagban (~20 MB; automatikusan csak Chromiumban ellenőrizve, Firefox/Safari nem ellenőrzött).

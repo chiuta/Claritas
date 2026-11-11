@@ -39,6 +39,7 @@
     #rdc table{border-collapse:collapse} #rdc td,#rdc th{border:1px solid currentColor;padding:4px 8px}
     #rdc pre{white-space:pre-wrap} #rdc blockquote{margin-left:0;padding-left:1em;border-left:4px solid currentColor}
     #rdc b.bn{font-weight:800}
+    #rdc .w[data-p=n]{border-bottom:2px solid currentColor} #rdc .w[data-p=v]{border-bottom:2px dashed currentColor} #rdc .w[data-p=a]{border-bottom:2px dotted currentColor} #rdc .w[data-p=r]{border-bottom:3px double currentColor}
     #rsvp{position:absolute;inset:0;background:#000;color:#fff;display:none;flex-direction:column;align-items:center;justify-content:center;gap:18px;z-index:2}
     #rsvp .word{display:grid;grid-template-columns:1fr auto 1fr;width:min(92vw,900px);font:600 clamp(32px,8vw,72px)/1.2 Georgia,serif;border-top:2px solid #444;border-bottom:2px solid #444;padding:22px 0}
     #rsvp .l{text-align:right} #rsvp .p{color:#ff5252} #rsvp .r{text-align:left}
@@ -271,6 +272,8 @@
 
   /* ================= bara pe selecție ================= */
   let selOn = false, selTimer = null;
+  let chipT = null;
+  function flashChip(msg) { const u = ui(); u.chip.textContent = ''; const m = doc.createElement('span'); m.textContent = msg; u.chip.append(m, btn('✕', T('close'), () => { u.chip.style.display = 'none'; })); u.chip.style.display = 'flex'; clearTimeout(chipT); chipT = setTimeout(() => { u.chip.style.display = 'none'; }, 12000); }
   function defineUrl(w) {
     const l = (L() === 'auto' ? (navigator.language || 'en').slice(0, 2) : L());
     return l === 'ro' ? 'https://dexonline.ro/definitie/' + encodeURIComponent(w) : 'https://' + (l.length === 2 ? l : 'en') + '.wiktionary.org/wiki/' + encodeURIComponent(w);
@@ -285,7 +288,7 @@
     if (!u.sel.firstChild) {
       u.sel.append(btn('🔊', T('tts_sel'), () => { ttsMode('selection'); hideSel(); }));
       [1, 2, 3, 4].forEach((c) => { const b = btn('', T('hl_color', { n: c }), () => { addHL(c); hideSel(); }); b.className = 'dot'; b.style.background = HL_COL[c]; u.sel.appendChild(b); });
-      u.sel.append(btn('📖', T('define'), () => { const w = String(window.getSelection()).trim().split(/\s+/)[0]; if (w) window.open(defineUrl(w), '_blank', 'noopener'); hideSel(); }));
+      u.sel.append(btn('📖', T('define'), async () => { const w = String(window.getSelection()).trim().split(/\s+/)[0]; if (w) { let d = null; if (S && S.modDict && CLR.mod && CLR.mod.dictLookup) { try { d = await CLR.mod.dictLookup(w); } catch (e) { } } if (d) flashChip(w + ' — ' + d); else window.open(defineUrl(w), '_blank', 'noopener'); } hideSel(); }));
       u.sel.append(btn('📋', T('copy'), () => { try { navigator.clipboard.writeText(String(window.getSelection())); } catch (e) { } hideSel(); }));
     }
     const rects = r.getClientRects(), b = rects.length ? rects[rects.length - 1] : r.getBoundingClientRect();
@@ -514,7 +517,7 @@
   }
 
   /* ================= mod lectură ================= */
-  const RD_DEF = { theme: 'light', size: 20, width: 68, lh: 1.7, font: 'sans', bionic: false, gradient: false, wpm: 300, syl: false, lf: false };
+  const RD_DEF = { theme: 'light', size: 20, width: 68, lh: 1.7, font: 'sans', bionic: false, gradient: false, wpm: 300, syl: false, lf: false, pos: false };
   const RD_THEMES = {
     light: { bg: '#ffffff', fg: '#1b1b1b', pal: ['#1b1b1b', '#0b3a8f', '#1b1b1b', '#8a1111'] },
     sepia: { bg: '#f4ecd8', fg: '#2b2118', pal: ['#2b2118', '#0b3a8f', '#2b2118', '#8a1111'] },
@@ -526,7 +529,7 @@
     o = o && typeof o === 'object' ? o : {};
     return {
       theme: RD_THEMES[o.theme] ? o.theme : RD_DEF.theme, size: clamp(o.size, 14, 48, RD_DEF.size), width: clamp(o.width, 30, 120, RD_DEF.width),
-      lh: clamp(o.lh, 1.2, 2.6, RD_DEF.lh), font: RD_FONTS.includes(o.font) ? o.font : RD_DEF.font, bionic: o.bionic === true, gradient: o.gradient === true, syl: o.syl === true, lf: o.lf === true, wpm: clamp(o.wpm, 100, 1000, RD_DEF.wpm)
+      lh: clamp(o.lh, 1.2, 2.6, RD_DEF.lh), font: RD_FONTS.includes(o.font) ? o.font : RD_DEF.font, bionic: o.bionic === true, gradient: o.gradient === true, syl: o.syl === true, lf: o.lf === true, pos: o.pos === true, wpm: clamp(o.wpm, 100, 1000, RD_DEF.wpm)
     };
   }
   const BAD_CLS = /(^|[-_\s])(ad|ads|advert|advertisement|banner|cookie|cookies|consent|share|sharing|social|comment|comments|sidebar|related|newsletter|promo|popup|modal|breadcrumb|breadcrumbs|menu|navbar|nav)([-_\s]|$)/i;
@@ -607,11 +610,12 @@
     if (!art.querySelector('h1')) { const h = doc.createElement('h1'); h.textContent = st.title; art.prepend(h); }
     const h1 = art.querySelector('h1'); if (h1) h1.style.cssText = 'font-size:1.6em;line-height:1.25;margin:0 0 .8em';
     if (CLR.x && CLR.x.font && /^(dyslexic|lexend|atkinson)$/.test(st.p.font)) CLR.x.font(st.p.font);
-    if (st.p.bionic || st.p.gradient || st.p.syl) wrapWords(art, st.p.bionic, st.p.gradient, st.p.syl);
+    if (st.p.bionic || st.p.gradient || st.p.syl || (st.p.pos && S && S.modPos)) wrapWords(art, st.p.bionic, st.p.gradient, st.p.syl, st.p.pos && S && S.modPos);
     lineFocus();
     if (st.p.gradient) { requestAnimationFrame(() => gradientLines(art, th.pal)); }
   }
-  function wrapWords(root, bionic, grad, syl) {
+  function wrapWords(root, bionic, grad, syl, pos) {
+    const plang = pos && CLR.mod && CLR.mod.posLang ? CLR.mod.posLang(doc.documentElement.lang || (L() === 'auto' ? (navigator.language || 'en') : L())) : null;
     const tw = doc.createTreeWalker(root, NodeFilter.SHOW_TEXT); const nodes = []; let n, words = 0;
     while ((n = tw.nextNode())) { if (n.parentElement.closest('pre,h1')) continue; nodes.push(n); }
     nodes.forEach((tn) => {
@@ -619,8 +623,9 @@
       parts.forEach((w) => {
         if (!w) return; if (/^\s+$/.test(w)) { f.appendChild(doc.createTextNode(w)); return; }
         words++;
+        const ptag = plang ? CLR.mod.pos(w, plang) : '';
         if (syl && CLR.syllabify) w = w.replace(/\p{L}{6,}/gu, (x) => CLR.syllabify(x).join('\u00B7'));
-        const sp = doc.createElement('span'); sp.className = 'w';
+        const sp = doc.createElement('span'); sp.className = 'w'; if (ptag && ptag !== 'f') sp.setAttribute('data-p', ptag);
         if (bionic && /\p{L}{2,}/u.test(w)) {
           const m = /^([^\p{L}]*)(\p{L}+)(.*)$/su.exec(w);
           if (m) { const k = Math.ceil(m[2].length / 2); const b = doc.createElement('b'); b.className = 'bn'; b.textContent = m[2].slice(0, k); sp.append(doc.createTextNode(m[1]), b, doc.createTextNode(m[2].slice(k) + m[3])); }
@@ -668,7 +673,7 @@
       th: btn('◐', T('rd_theme'), upd('theme', (v) => { const k = Object.keys(RD_THEMES); return k[(k.indexOf(v) + 1) % k.length]; })),
       ft: btn('Aa', T('font'), upd('font', (v) => RD_FONTS[(RD_FONTS.indexOf(v) + 1) % RD_FONTS.length])),
       bi: btn('𝗕', T('rd_bionic'), upd('bionic', (v) => !v)), gr: btn('🌈', T('rd_gradient'), upd('gradient', (v) => !v)),
-      sy: btn('sil·abe', T('rd_syl'), upd('syl', (v) => !v)), lf: btn('▭', T('rd_linefocus'), upd('lf', (v) => !v)), tl: btn('TL;DR', T('rd_tldr'), tldr),
+      sy: btn('sil·abe', T('rd_syl'), upd('syl', (v) => !v)), ...(S && S.modPos ? { po: btn('N/V', T('rd_pos'), upd('pos', (v) => !v)) } : {}), lf: btn('▭', T('rd_linefocus'), upd('lf', (v) => !v)), tl: btn('TL;DR', T('rd_tldr'), tldr),
       rd: btn('🔊', T('tts_page'), () => ttsMode('page')), rv: btn('⚡', T('rsvp'), startRSVP), cl: btn('✕', T('close'), closeReader)
     };
     rdState.bs = bs; Object.values(bs).forEach((b) => bar.appendChild(b));
@@ -700,7 +705,7 @@
     const r = await x.aiSummarize(readerCollect().text);
     note(r.text ? 'TL;DR: ' + r.text : (r.err === 'off' ? T('ai_off') : T('ai_na')));
   }
-  function syncBar() { if (!rdState) return; rdState.bs.bi.setAttribute('aria-pressed', String(rdState.p.bionic)); rdState.bs.gr.setAttribute('aria-pressed', String(rdState.p.gradient)); rdState.bs.sy.setAttribute('aria-pressed', String(rdState.p.syl)); rdState.bs.lf.setAttribute('aria-pressed', String(rdState.p.lf)); }
+  function syncBar() { if (!rdState) return; rdState.bs.bi.setAttribute('aria-pressed', String(rdState.p.bionic)); rdState.bs.gr.setAttribute('aria-pressed', String(rdState.p.gradient)); rdState.bs.sy.setAttribute('aria-pressed', String(rdState.p.syl)); rdState.bs.lf.setAttribute('aria-pressed', String(rdState.p.lf)); if (rdState.bs.po) rdState.bs.po.setAttribute('aria-pressed', String(rdState.p.pos)); }
   const RD_LOAD = () => new Promise((res) => { try { api.storage.local.get('reader').then((r) => res(cleanRD(r && r.reader)), () => res(cleanRD())); } catch (e) { res(cleanRD()); } });
   const saveRD = () => { if (rdState && alive()) try { api.storage.local.set({ reader: rdState.p }); } catch (e) { } };
   function rdKey(e) {
@@ -801,6 +806,7 @@
     if (!active && msg.cmd !== 'ping') return { ok: false, inactive: true };
     switch (msg.cmd) {
       case 'ping': return { ok: true, hl: hasHL(), tts: hasTTS() };
+      case 'readerStats': return rdOpen() && rdState && rdState.art ? { open: true, words: rdState.art.querySelectorAll('span.w').length, pos: rdState.art.querySelectorAll('[data-p]').length, noun: rdState.art.querySelectorAll('[data-p=n]').length } : { open: false };
       case 'reader': if (rdOpen()) closeReader(); else openReader(); return { ok: true, open: rdOpen() };
       case 'rsvp': openReader(); setTimeout(startRSVP, 120); return { ok: true };
       case 'picker': if (picking) stopPick(); else startPick(); return { ok: true, on: picking };

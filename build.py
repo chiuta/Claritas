@@ -41,5 +41,21 @@ echo "Dacă nu apare: Safari > Dezvoltare > Permite extensii nesemnate (la fieca
 (sf / "build-safari.sh").chmod(0o755)
 make_zip(sf, dist / "claritas-safari-source.zip")
 shutil.rmtree(sf)
+# Module opționale: OCR local (Tesseract.js împachetat). Se construiește doar dacă s-a rulat tools/fetch_ocr.sh.
+ocr_src = root / "modules-src" / "ocr"
+if (ocr_src / "vendor" / "tesseract.min.js").exists():
+    CSP = "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'"
+    for name in ("chromium", "firefox"):
+        out = dist / (name + "-ocr")
+        shutil.copytree(dist / name, out)
+        shutil.copy(ocr_src / "ocr.html", out / "ocr.html")
+        shutil.copy(ocr_src / "ocr.js", out / "ocr.js")
+        shutil.copytree(ocr_src / "vendor", out / "vendor")
+        mf = json.load(open(out / "manifest.json"))
+        mf["content_security_policy"] = {"extension_pages": CSP}
+        json.dump(mf, open(out / "manifest.json", "w"), indent=2, ensure_ascii=False)
+        make_zip(out, dist / ("claritas-%s-ocr.zip" % name))
+        shutil.rmtree(out)
+
 for z in sorted(dist.glob("*.zip")):
     print("OK", z.name, z.stat().st_size, "B")

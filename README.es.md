@@ -2,7 +2,7 @@
 
 [English](README.md) · [Română](README.ro.md) · [Français](README.fr.md) · [Italiano](README.it.md) · **Español** · [Português](README.pt.md) · [Deutsch](README.de.md) · [Magyar](README.hu.md)
 
-**Versión: 1.5.5 · Última actualización: 11/11/2026**
+**Versión: 1.6.0 · Última actualización: 12/11/2026**
 
 Extensión de accesibilidad todo en uno, gratuita. Sin telemetría, sin red, sin cuentas: todo se queda en tu navegador.
 
@@ -56,4 +56,7 @@ MIT — copyright Alexandru-Ionuț Chiuță (Alexio).
 
 Si Claritas te resulta útil, puedes apoyar el trabajo: [Buy Me a Coffee](https://buymeacoffee.com/echo.of.the.strings).
 
-Estado de verificación (v1.5.5): probado automáticamente en CI en Chromium, Edge, Brave, Firefox (varios canales), Safari 27.2 real en macOS, Safari 26.2 en el simulador iPhone/iPad, Chrome 113 y Firefox 162 en Android 14 (emulador). No verificado: Opera, Vivaldi, Samsung Internet real, la extensión activada en Safari/iOS reales, Chrome de marca. Alt+Shift+O/D/L/G se pueden reasignar en el navegador; P/H/S/M son fijos. El botón de definición abre dexonline.ro o Wiktionary solo al pulsarlo.
+Estado de verificación (v1.6.0): probado automáticamente en CI en Chromium, Edge, Brave, Firefox (varios canales), Safari 27.2 real en macOS, Safari 26.2 en el simulador iPhone/iPad, Chrome 113 y Firefox 162 en Android 14 (emulador). No verificado: Opera, Vivaldi, Samsung Internet real, la extensión activada en Safari/iOS reales, Chrome de marca. Alt+Shift+O/D/L/G se pueden reasignar en el navegador; P/H/S/M son fijos. El botón de definición abre dexonline.ro o Wiktionary solo al pulsarlo.
+
+## Módulos opcionales (v1.6)
+Todos desactivados por defecto (popup → «Módulos opcionales»); nada sale del navegador. Categorías gramaticales en el Lector (rumano/inglés, heurístico), reglas de auditoría adicionales (ARIA, formularios, main, zoom, subtítulos), diccionario local (tu propio JSON/TSV, máx. 4 MB), sincronización de ajustes con `storage.sync` del navegador (sin diccionario ni grabaciones) y OCR local en el paquete aparte `claritas-*-ocr.zip` (~20 MB; verificado automáticamente solo en Chromium, Firefox/Safari sin verificar).
