@@ -347,31 +347,60 @@ jobs:
           ID=$(pluginkit -mAv -p com.apple.Safari.web-extension | grep -i claritas | head -1 | awk '{print $1}' | tr -d '+-'); echo "ext id: $ID"
           [ -n "$ID" ] && pluginkit -e use -i "$ID" || true
           pluginkit -mAvv -p com.apple.Safari.web-extension | grep -iA3 claritas | head -10 || true
-      - name: Try to enable the extension through UI scripting (diagnostic)
+      - name: Enable the extension in real Safari through UI scripting
         continue-on-error: true
         run: |
-          open -a Safari; sleep 4
-          osascript <<'AS' 2>&1 | head -40
+          osascript -e 'tell application "Safari" to quit' 2>/dev/null || true; sleep 2
+          for d in com.apple.Safari "$HOME/Library/Containers/com.apple.Safari/Data/Library/Preferences/com.apple.Safari"; do
+            defaults write "$d" IncludeDevelopMenu -bool true || true
+            defaults write "$d" WebKitDeveloperExtrasEnabledPreferenceKey -bool true || true
+            defaults write "$d" "com.apple.Safari.ContentPageGroupIdentifier.WebKit2DeveloperExtrasEnabled" -bool true || true
+          done
+          open -a Safari; sleep 6
+          cat > /tmp/enable.applescript <<'AS'
+          on dump(lbl, el)
+            try
+              log lbl & ": " & (name of el as string)
+            end try
+          end dump
           tell application "System Events"
             tell process "Safari"
               set frontmost to true
               try
-                set mb to name of every menu bar item of menu bar 1
-                log "menus: " & (mb as string)
+                log "menus: " & (name of every menu bar item of menu bar 1 as string)
                 click menu bar item "Develop" of menu bar 1
                 delay 1
-                set mi to name of every menu item of menu 1 of menu bar item "Develop" of menu bar 1
-                log "develop: " & (mi as string)
+                log "develop: " & (name of every menu item of menu 1 of menu bar item "Develop" of menu bar 1 as string)
                 click menu item "Allow Unsigned Extensions" of menu 1 of menu bar item "Develop" of menu bar 1
-                delay 2
-                log "windows: " & (name of every window as string)
+                delay 3
+                log "windows after unsigned: " & (name of every window as string)
+                try
+                  log "dialog buttons: " & (name of every button of window 1 as string)
+                  log "dialog fields: " & (value of every text field of window 1 as string)
+                end try
               on error e
-                log "UI error: " & e
+                log "ERR develop: " & e
+              end try
+              try
+                keystroke "," using command down
+                delay 2
+                log "settings windows: " & (name of every window as string)
+                try
+                  log "toolbar: " & (name of every button of toolbar 1 of window 1 as string)
+                  click button "Extensions" of toolbar 1 of window 1
+                  delay 2
+                  log "ext ui: " & (name of every UI element of window 1 as string)
+                  log "ext rows: " & (description of every checkbox of window 1 as string)
+                  log "ext groups: " & (name of every UI element of group 1 of window 1 as string)
+                end try
+              on error e
+                log "ERR settings: " & e
               end try
             end tell
           end tell
           AS
-          defaults read com.apple.Safari 2>/dev/null | grep -iE "unsigned|extension" | head
+          osascript /tmp/enable.applescript 2>&1 | head -40
+          defaults read "$HOME/Library/Containers/com.apple.Safari/Data/Library/Preferences/com.apple.Safari" 2>/dev/null | grep -iE "unsigned|extension|Develop" | head
       - name: Selenium on real Safari
         run: |
           cat > /tmp/saf.py <<'PY'
