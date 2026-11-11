@@ -2,7 +2,7 @@
 
 [English](README.md) · [Română](README.ro.md) · [Français](README.fr.md) · [Italiano](README.it.md) · [Español](README.es.md) · [Português](README.pt.md) · **Deutsch** · [Magyar](README.hu.md)
 
-**Version: 1.5.3 · Letzte Aktualisierung: 11.11.2026**
+**Version: 1.5.5 · Letzte Aktualisierung: 11.11.2026**
 
 Kostenlose Barrierefreiheits-Erweiterung „Alles in einem“. Keine Telemetrie, kein Netzwerk, keine Konten: Alles bleibt in Ihrem Browser.
 
@@ -36,7 +36,7 @@ Wählen Sie das Paket passend zu Ihrem Browser (Ordner `dist/` oder Release-Date
 
 ## Tastenkürzel
 
-`Alt+Shift+C` an/aus · `T` Design · `R` Vorlesen · `G` Lineal · `Alt+Shift+P` Aufnahmemenü · `Alt+Shift+H` nummerierte Beschriftungen · `Alt+Shift+S` Scanning. Änderbar in den Tastenkürzel-Einstellungen der Browser-Erweiterungen (das Popup hat eine Schaltfläche dafür).
+`Alt+Shift+O` an/aus · `D` Design · `L` Vorlesen · `G` Lineal · `Alt+Shift+P` Aufnahmemenü · `Alt+Shift+H` nummerierte Beschriftungen · `Alt+Shift+S` Scanning. Änderbar in den Tastenkürzel-Einstellungen der Browser-Erweiterungen (das Popup hat eine Schaltfläche dafür).
 
 ## Datenschutz
 
@@ -55,3 +55,5 @@ MIT — Copyright Alexandru-Ionuț Chiuță (Alexio).
 ## Unterstützung
 
 Wenn Claritas Ihnen hilft, können Sie die Arbeit unterstützen: [Buy Me a Coffee](https://buymeacoffee.com/echo.of.the.strings).
+
+Prüfstatus (v1.5.5): automatisch in CI getestet auf Chromium, Edge, Brave, Firefox (mehrere Kanäle), echtem Safari 27.2 (macOS), Safari 26.2 im iPhone/iPad-Simulator, Chrome 113 und Firefox 162 auf Android 14 (Emulator). Nicht verifiziert: Opera, Vivaldi, echtes Samsung Internet, die in echtem Safari/iOS aktivierte Erweiterung, Chrome-Markenversion. Alt+Shift+O/D/L/G sind im Browser änderbar; P/H/S/M sind fest. Die Definitionsschaltfläche öffnet dexonline.ro oder Wiktionary nur auf Klick.

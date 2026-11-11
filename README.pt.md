@@ -2,7 +2,7 @@
 
 [English](README.md) · [Română](README.ro.md) · [Français](README.fr.md) · [Italiano](README.it.md) · [Español](README.es.md) · **Português** · [Deutsch](README.de.md) · [Magyar](README.hu.md)
 
-**Versão: 1.5.3 · Última atualização: 11/11/2026**
+**Versão: 1.5.5 · Última atualização: 11/11/2026**
 
 Extensão de acessibilidade tudo em um, gratuita. Sem telemetria, sem rede, sem contas: tudo fica no seu navegador.
 
@@ -36,7 +36,7 @@ Escolha o pacote adequado ao seu navegador (pasta `dist/` ou ficheiros da versã
 
 ## Atalhos
 
-`Alt+Shift+C` ativar/desativar · `T` tema · `R` leitura · `G` régua · `Alt+Shift+P` menu de captura · `Alt+Shift+H` etiquetas numeradas · `Alt+Shift+S` varrimento. Alteram-se nas definições de atalhos das extensões do navegador (o popup tem um botão para isso).
+`Alt+Shift+O` ativar/desativar · `D` tema · `L` leitura · `G` régua · `Alt+Shift+P` menu de captura · `Alt+Shift+H` etiquetas numeradas · `Alt+Shift+S` varrimento. Alteram-se nas definições de atalhos das extensões do navegador (o popup tem um botão para isso).
 
 ## Privacidade
 
@@ -55,3 +55,5 @@ MIT — copyright Alexandru-Ionuț Chiuță (Alexio).
 ## Apoio
 
 Se o Claritas lhe for útil, pode apoiar o trabalho: [Buy Me a Coffee](https://buymeacoffee.com/echo.of.the.strings).
+
+Estado de verificação (v1.5.5): testado automaticamente em CI no Chromium, Edge, Brave, Firefox (vários canais), Safari 27.2 real no macOS, Safari 26.2 no simulador iPhone/iPad, Chrome 113 e Firefox 162 no Android 14 (emulador). Não verificado: Opera, Vivaldi, Samsung Internet real, a extensão ativada no Safari/iOS reais, Chrome de marca. Alt+Shift+O/D/L/G podem ser alterados no navegador; P/H/S/M são fixos. O botão de definição só abre dexonline.ro ou Wiktionary ao clicar.

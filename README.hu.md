@@ -2,7 +2,7 @@
 
 [English](README.md) · [Română](README.ro.md) · [Français](README.fr.md) · [Italiano](README.it.md) · [Español](README.es.md) · [Português](README.pt.md) · [Deutsch](README.de.md) · **Magyar**
 
-**Verzió: 1.5.3 · Utolsó frissítés: 2026. 11. 11.**
+**Verzió: 1.5.5 · Utolsó frissítés: 2026. 11. 11.**
 
 Ingyenes, mindent egyben tartalmazó akadálymentesítő bővítmény. Nincs telemetria, nincs hálózat, nincs fiók: minden a böngészőjében marad.
 
@@ -36,7 +36,7 @@ Válassza a böngészőjének megfelelő csomagot (`dist/` mappa vagy a kiadás 
 
 ## Billentyűparancsok
 
-`Alt+Shift+C` be/ki · `T` téma · `R` felolvasás · `G` vonalzó · `Alt+Shift+P` rögzítési menü · `Alt+Shift+H` számozott címkék · `Alt+Shift+S` pásztázás. A böngésző bővítmény-billentyűparancs beállításaiban módosíthatók (a felugró ablakban gomb is van hozzá).
+`Alt+Shift+O` be/ki · `D` téma · `L` felolvasás · `G` vonalzó · `Alt+Shift+P` rögzítési menü · `Alt+Shift+H` számozott címkék · `Alt+Shift+S` pásztázás. A böngésző bővítmény-billentyűparancs beállításaiban módosíthatók (a felugró ablakban gomb is van hozzá).
 
 ## Adatvédelem
 
@@ -55,3 +55,5 @@ MIT — szerzői jog: Alexandru-Ionuț Chiuță (Alexio).
 ## Támogatás
 
 Ha a Claritas segít Önnek, támogathatja a munkát: [Buy Me a Coffee](https://buymeacoffee.com/echo.of.the.strings).
+
+Ellenőrzési állapot (v1.5.5): automatikusan tesztelve CI-ben: Chromium, Edge, Brave, Firefox (több csatorna), valódi Safari 27.2 macOS-en, Safari 26.2 iPhone/iPad szimulátorban, Chrome 113 és Firefox 162 Android 14-en (emulátor). Nem ellenőrzött: Opera, Vivaldi, valódi Samsung Internet, a valódi Safari/iOS-ben aktivált bővítmény, márkás Chrome. Az Alt+Shift+O/D/L/G a böngészőben átállítható; a P/H/S/M rögzített. A definíció gomb csak kattintásra nyitja meg a dexonline.ro-t vagy a Wiktionaryt.

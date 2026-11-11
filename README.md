@@ -2,7 +2,7 @@
 
 **English** · [Română](README.ro.md) · [Français](README.fr.md) · [Italiano](README.it.md) · [Español](README.es.md) · [Português](README.pt.md) · [Deutsch](README.de.md) · [Magyar](README.hu.md)
 
-**Version: 1.5.3 · Last updated: 11 Nov 2026**
+**Version: 1.5.5 · Last updated: 11 Nov 2026**
 
 Free all-in-one accessibility extension. No telemetry, no network, no accounts: everything stays in your browser.
 
@@ -36,7 +36,7 @@ Pick the package that matches your browser (in the `dist/` folder or the release
 
 ## Shortcuts
 
-`Alt+Shift+C` on/off · `T` theme · `R` read aloud · `G` ruler · `Alt+Shift+P` screenshot menu · `Alt+Shift+H` numbered labels · `Alt+Shift+S` scanning. Change them in your browser’s extension shortcut settings (the popup has a button for it).
+`Alt+Shift+O` on/off · `D` theme · `L` read aloud · `G` ruler · `Alt+Shift+P` screenshot menu · `Alt+Shift+H` numbered labels · `Alt+Shift+S` scanning. Change them in your browser’s extension shortcut settings (the popup has a button for it).
 
 ## Privacy
 
@@ -46,7 +46,6 @@ No network requests, no telemetry, no accounts. Screenshots and recordings are c
 
 - Safari and Samsung Internet have no enterprise (managed) policies; Firefox Android has no screen recording.
 - Safari iOS may crop screenshots; use region or element capture.
-- Verified live in Chrome; Firefox, Safari and the other browsers were reviewed statically.
 
 ## License
 
@@ -55,3 +54,5 @@ MIT — copyright Alexandru-Ionuț Chiuță (Alexio).
 ## Support
 
 If Claritas helps you, you can support the work: [Buy Me a Coffee](https://buymeacoffee.com/echo.of.the.strings).
+
+Verification status (v1.5.5): tested automatically in CI on Chromium, Edge, Brave, Firefox (several channels), real Safari 27.2 on macOS, Safari 26.2 in iPhone/iPad Simulator, Chrome 113 and Firefox 162 on Android 14 (emulator). Not verified: Opera, Vivaldi, real Samsung Internet, the extension activated inside real Safari/iOS, branded Chrome. Shortcuts Alt+Shift+O/D/L/G can be remapped in the browser; P/H/S/M are fixed. The definition button opens dexonline.ro or Wiktionary only when you click it.

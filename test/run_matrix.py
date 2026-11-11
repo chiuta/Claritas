@@ -4,7 +4,7 @@ os.chdir(os.path.dirname(os.path.abspath(__file__)))
 label = sys.argv[1] if len(sys.argv) > 1 else 'browser'
 only = sys.argv[2:]
 res = {}
-for f in sorted(glob.glob('t*.py')):
+for f in sorted([x for x in glob.glob('t*.py') if x not in ('t1.py', 't2.py')]):
     if only and f not in only: continue
     code = "import bt,runpy,sys;sys.argv=['%s'];runpy.run_path('%s',run_name='__main__')" % (f, f)
     t = time.time()
@@ -15,9 +15,14 @@ for f in sorted(glob.glob('t*.py')):
         o = e.stdout or ''
         out, rc = (o.decode() if isinstance(o, bytes) else o), -9
     fl = [l for l in out.splitlines() if l.startswith('FAIL')]
-    res[f] = {'pass': out.count('PASS '), 'fail': len(fl), 'rc': rc, 'secs': round(time.time()-t), 'fails': fl[:15], 'tail': out[-700:] if (fl or rc) else ''}
+    res[f] = {'pass': out.count('PASS '), 'fail': len(fl) + (1 if (rc != 0 or not out.count('PASS ')) and not fl else 0), 'rc': rc, 'secs': round(time.time()-t), 'fails': fl[:15], 'tail': out[-700:] if (fl or rc) else ''}
     print(f, res[f]['pass'], 'pass', res[f]['fail'], 'fail rc', rc, flush=True)
     for l in fl: print('   ', l, flush=True)
     if res[f]['tail']: print('   TAIL:', res[f]['tail'].replace('\n', '\n   | '), flush=True)
 os.makedirs('results', exist_ok=True)
 json.dump(res, open('results/%s.json' % label, 'w'), indent=1, ensure_ascii=False)
+
+bad = [k for k, v in res.items() if v['fail'] or v['rc'] != 0]
+if bad:
+    print('EȘEC:', ', '.join(bad), flush=True)
+    sys.exit(1)

@@ -1,4 +1,4 @@
+test/results/
+test/__pycache__/
+*.png
 dist/
-__pycache__/
-*.pyc
-/tmp/

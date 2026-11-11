@@ -2,7 +2,7 @@
 
 [English](README.md) · **Română** · [Français](README.fr.md) · [Italiano](README.it.md) · [Español](README.es.md) · [Português](README.pt.md) · [Deutsch](README.de.md) · [Magyar](README.hu.md)
 
-**Versiune: 1.5.3 · Ultima actualizare: 11.11.2026**
+**Versiune: 1.5.5 · Ultima actualizare: 11.11.2026**
 
 Extensie gratuită de accesibilitate all-in-one. Fără telemetrie, fără rețea, fără conturi: totul rămâne în browserul tău.
 
@@ -25,22 +25,22 @@ Alege pachetul potrivit browserului (în folderul `dist/` sau în fișierele de 
 
 | Pachet | Browsere |
 |---|---|
-| `claritas-chromium.zip` | Chrome, Edge, Opera / Opera GX, Brave, Vivaldi, Arc, Dia, Comet, Yandex, Whale și orice browser Chromium 109+ |
+| `claritas-chromium.zip` | Chrome, Edge, Opera / Opera GX, Brave, Vivaldi, Arc, Dia, Comet, Yandex, Whale și alte browsere Chromium (testat direct doar Chromium, Edge, Brave) |
 | `claritas-firefox.zip` | Firefox (desktop 140+ și Android 142+), LibreWolf, Zen, Floorp, Waterfox, Mullvad Browser |
 | `claritas-safari-source.zip` | Safari macOS / iOS / iPadOS (necesită un Mac cu Xcode) |
 
 - **Familia Chromium**: dezarhivează, deschide pagina de extensii (`chrome://extensions`, `edge://extensions`, `opera://extensions`…), activează *Mod dezvoltator*, alege *Încarcă extensie despachetată* și selectează folderul.
 - **Firefox**: `about:debugging#/runtime/this-firefox` → *Load Temporary Add-on* → `manifest.json`. Pentru instalare permanentă, semnează-l ca add-on nelistat pe addons.mozilla.org (ID `claritas@trom.tf`).
 - **Safari**: pe un Mac cu Xcode rulează `./build-safari.sh` din sursa dezarhivată, apoi activează-l în Safari → Setări → Extensii.
-- **Mobil**: Firefox Android (prin colecție personalizată de add-on-uri), Edge Android și Samsung Internet (prin magazinele lor). Chrome, Brave și Opera pe Android nu acceptă extensii.
+- **Mobil**: Firefox Android (prin colecție personalizată de add-on-uri), Edge Android și Samsung Internet (neverificat real). Chrome, Brave și Opera pe Android nu acceptă extensii.
 
 ## Scurtături
 
-`Alt+Shift+C` pornit/oprit · `T` temă · `R` citire cu voce · `G` riglă · `Alt+Shift+P` meniul de captură · `Alt+Shift+H` etichete numerotate · `Alt+Shift+S` scanare. Se schimbă din setările de scurtături ale extensiilor din browser (popup-ul are un buton pentru asta).
+`Alt+Shift+O` pornit/oprit · `D` temă · `L` citire cu voce · `G` riglă (aceste 4 se pot schimba din setările de scurtături ale browserului; popup-ul are un buton pentru asta). Scurtăturile din pagină `Alt+Shift+P` (meniul de captură), `H` (etichete numerotate), `S` (scanare) și `M` sunt fixe și nu apar în setările browserului.
 
 ## Confidențialitate
 
-Fără cereri de rețea, fără telemetrie, fără conturi. Capturile și înregistrările se creează și se salvează local, în browser.
+Fără telemetrie, fără conturi, fără servere proprii. Capturile și înregistrările se creează și se salvează local, în browser. Singura cerere de rețea apare la acțiunea ta explicită: butonul de definiție deschide dexonline.ro sau Wiktionary într-o filă nouă, cu cuvântul selectat.
 
 ## Limite cunoscute
 
@@ -55,6 +55,12 @@ MIT — drepturi de autor Alexandru-Ionuț Chiuță (Alexio).
 ## Susținere
 
 Dacă Claritas te ajută, poți sprijini munca: [Buy Me a Coffee](https://buymeacoffee.com/echo.of.the.strings).
+
+## Verificare v1.5.5 — browsere reale (CI)
+- Testat automat în GitHub Actions (Playwright/Selenium): Chromium, Edge și Brave pe Linux cu toate cele 10 fișiere de test trecute; Opera și Vivaldi au fost încercate, dar testele lor nu au rulat (conectare CDP refuzată / timeout) — deci **nu sunt verificate**; Chromium/Edge pe Windows și macOS; Firefox (latest, ESR, beta, nightly, developer edition; Linux/Windows/macOS) cu 17 verificări trecute pe fiecare. Profilurile emulate (Samsung/Chrome/Edge/Opera Android, Yandex, Whale, Arc, High Contrast, mod întunecat, mișcare redusă, zoom 200 %) sunt doar emulări de engine, nu browsere reale. Rezultatele rulărilor Chrome for Testing/profiluri nu sunt arhivate ca artefacte, deci nu sunt demonstrate aici.
+- Dispozitive reale/simulatoare (job `real-devices`): pagina de test încarcă scripturile de conținut ale extensiei cu un API `chrome` simulat și măsoară contrastul — verifică motorul și logica, **nu** extensia instalată (fără manifest, permisiuni, background). Rezultate v1.5.5: Safari macOS 27.2 real — trecut (contrast 1,9 → 7,1; temă; oprit); Firefox 162 pe Android 14 (emulator) — trecut (instalare add-on + injectare + contrast 7,1/7,2); Chrome 113 pe Android 14 — trecut; Safari 26.2 în Simulator iPhone și iPad — trecut. Un bug real găsit și reparat cu ocazia asta: la pagini cu tranziții CSS pe culoare (sau cu «reduce motion» în sistem) corecția de contrast se pierdea la a doua trecere.
+- Neverificat: Samsung Internet real (APK-ul se prăbușește sub translarea ARM → x86 din emulator; doar emulat); extensia **activată** în Safari real macOS și iOS/iPadOS (activarea cere parolă de administrator și dialoguri de sistem care blochează automatizarea); Chrome ramura brandată (ignoră `--load-extension`; testat prin Chromium/Chrome for Testing); versiunile minime declarate (Chromium 109, Firefox 140) nu au fost testate sub versiunile curente.
+- Corecții: popup-ul nu mai depășește lățimea în germană cu fonturi late; măștile de confidențialitate din cadre rămân negre în High Contrast (`forced-color-adjust:none`); Safari: eliminat `match_about_blank` (neacceptat).
 
 ## Audit v1.5.3 → v1.5.4
 - Cadrele sandbox (opace) sunt acum acoperite la captură (`match_origin_as_fallback`); iframe-urile din shadow DOM la fel (masca se trimite mereu).
@@ -77,7 +83,7 @@ Dacă Claritas te ajută, poți sprijini munca: [Buy Me a Coffee](https://buymea
 - Nicio cerere de rețea, nimic încărcat; fișierele merg direct în Descărcări. Pe pagini file:// Chrome cere „Permite accesul la URL-uri de fișiere".
 - Limite: pagini interne (chrome://, magazinul de extensii) nu pot fi capturate; derulare pe containere interne doar pentru cel mai mare container; înregistrarea cu MediaRecorder în Safari/Firefox neverificată.
 
-## Noutăți v1.4 (din STUDIU_ACTUALIZARE_2026-11-11.md)
+## Noutăți v1.4
 - **Preferințe de sistem**: respectă `forced-colors`, `prefers-contrast`, `prefers-reduced-motion`, `prefers-reduced-transparency` (setare „osPrefs").
 - **Fonturi încorporate** (SIL OFL): Lexend, Atkinson Hyperlegible, OpenDyslexic — încărcate prin FontFace, fără dependență de CSP-ul paginii. OpenDyslexic nu are ă/ș/ț: se folosește Lexend pentru ele.
 - **Calm și stabilitate**: mod calm (cookie/pop-up/chat/redare automată), bare fixe dezlipite, focus care nu dispare sub bare fixe, reflow, GIF-uri înghețate, profil „Calm".
@@ -91,7 +97,7 @@ Dacă Claritas te ajută, poți sprijini munca: [Buy Me a Coffee](https://buymea
 
 ## Noutăți v1.3 (studiu comparativ → funcții clean-room)
 
-Vezi `STUDIU_COMPARATIV.md` (produse studiate, matrice funcție × produs, ce nu s-a implementat și de ce).
+
 Adăugat: voce cu evidențiere pe propoziție/cuvânt, pauză/anterior/următor, ton și alegere voce, citire la hover; **mod lectură** (bionic, fir de culoare pe rânduri, RSVP, teme/fonturi/lățime); **evidențiator persistent** (4 culori, export Markdown); bară de acțiuni la selecție; **ascundere elemente** cu click; **audit de accesibilitate** (21 de tipuri de constatări) + structura paginii + statistici de lizibilitate; derulare automată; click prin staționare (dwell); ținte mari; inel în jurul cursorului; folii colorate; rotire nuanță; simulatoare de vedere (încețoșare, cataractă, tubular, pierdere centrală); programare automată a temei (oră / sistem); mod listă albă; moștenire pe subdomenii; lățime maximă paragraf; oprire sunet la redare automată; profiluri „Abilități motorii” și „Citire confortabilă”.
 Corecție: limita contrastului din setări era 150 % deși interfața permite 200 %.
 Teste noi: `test/t5_features.py`, `test/t6_popup_tools.py`.
@@ -118,7 +124,7 @@ Limite rămase (nu se pot rezolva fiabil): rădăcini shadow *closed* inaccesibi
 - Fundalurile cu **imagini** (nu gradiente) nu pot fi măsurate; temele de contrast mare le elimină.
 - Fontul „prietenos cu dislexia” folosește OpenDyslexic / Lexend / Atkinson Hyperlegible dacă sunt instalate în sistem.
 - Pe browserele fără API pentru zoom (`tabs.setZoom`) și fără scurtături (unele mobile) aceste comenzi lipsesc automat.
-- Testat automat doar în Chrome (extensie reală încărcată, capturi și măsurători) și validat cu `web-ext lint` pentru Firefox. Opera, Edge, Brave, Vivaldi etc. folosesc același motor și același pachet, dar nu au fost rulate aici.
+- Vezi „Verificare v1.5.5” pentru ce a fost și ce nu a fost testat pe fiecare browser.
 
 ## Structură
 `extension/` sursa comună · `manifests/` manifest per familie de browsere · `build.py` generează `dist/*.zip` · `test/` scripturi Playwright.

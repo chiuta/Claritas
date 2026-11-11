@@ -51,7 +51,7 @@ async def main():
         # ascundere element: injectăm selector în storage, verificăm
         await sw.evaluate("() => chrome.storage.local.set({hidden:{'':['#cookie-banner','!!!invalid[[']}})"); await page.wait_for_timeout(400)
         ok(await page.evaluate("getComputedStyle(document.getElementById('cookie-banner')).display") == 'none', 'element ascuns după selector')
-        ok(await page.evaluate("getComputedStyle(document.body).display") != 'none' or True, 'ok')
+        ok(await page.evaluate("getComputedStyle(document.body).display") != 'none', 'selector invalid nu strică pagina')
         await feat('hiddenClear'); await page.wait_for_timeout(300)
         ok(await page.evaluate("getComputedStyle(document.getElementById('cookie-banner')).display") != 'none', 'elemente restaurate')
         # mod lectură
