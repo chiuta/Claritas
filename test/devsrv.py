@@ -18,7 +18,8 @@ const q=new URLSearchParams(location.search);const sc=q.get('s');const next=%s;
 const errs=[];addEventListener('error',e=>errs.push(String(e.message)));
 const lum=c=>{const [r,g,b]=c.match(/[\\d.]+/g).slice(0,3).map(Number);const f=v=>{v/=255;return v<=0.03928?v/12.92:Math.pow((v+0.055)/1.055,2.4)};return 0.2126*f(r)+0.7152*f(g)+0.0722*f(b)};
 const ratio=(a,b)=>{const x=lum(a),y=lum(b);return (Math.max(x,y)+0.05)/(Math.min(x,y)+0.05)};
-const cs=(id)=>getComputedStyle(document.getElementById(id));
+const fin=()=>{try{document.getAnimations().forEach(a=>{try{a.finish()}catch(e){}})}catch(e){}};
+const cs=(id)=>{fin();return getComputedStyle(document.getElementById(id))};
 setTimeout(async()=>{const R=[];const ok=(n,c,d)=>R.push({name:n,ok:!!c,detail:d===undefined?'':String(d)});
  try{
   ok('CLR încărcat',typeof CLR==='object',typeof CLR);
@@ -26,9 +27,9 @@ setTimeout(async()=>{const R=[];const ok=(n,c,d)=>R.push({name:n,ok:!!c,detail:d
   if(sc==='on'){const p=cs('p'),d=cs('d');
     ok('contrast text pal corectat',ratio(p.color,p.backgroundColor)>=4.5,p.color+' pe '+p.backgroundColor+' = '+ratio(p.color,p.backgroundColor).toFixed(1));
     ok('contrast câmp dezactivat corectat',ratio(d.color,d.backgroundColor)>=4.5,d.color+' pe '+d.backgroundColor+' = '+ratio(d.color,d.backgroundColor).toFixed(1));}
-  if(sc==='yb'){const bg=getComputedStyle(document.body).backgroundColor;ok('temă galben pe negru',/rgba?\\(0, 0, 0(, 1)?\\)/.test(bg),bg);}
+  if(sc==='yb'){fin();const bg=getComputedStyle(document.body).backgroundColor;ok('temă galben pe negru',/rgba?\\(0, 0, 0(, 1)?\\)/.test(bg),bg);}
   if(sc==='off'){const c=cs('p').color;ok('extensie oprită: pagină neschimbată',c==='rgb(187, 187, 187)',c);}
-  let cv='';ok('probă CSS de autor (control)',(()=>{const st=document.createElement('style');st.textContent='#ctl{color:rgb(1,2,3)!important}';document.head.appendChild(st);cv=getComputedStyle(document.getElementById('ctl')).color;st.remove();return cv==='rgb(1, 2, 3)'})(),cv);
+  let cv='';ok('probă CSS de autor (control)',(()=>{const st=document.createElement('style');st.textContent='#ctl{color:rgb(1,2,3)!important}';document.head.appendChild(st);fin();cv=getComputedStyle(document.getElementById('ctl')).color;st.remove();return cv==='rgb(1, 2, 3)'})(),cv);
   const cl=document.getElementById('clr-style');
   ok('diagnostic (informativ)',true,JSON.stringify({vis:document.visibilityState,hidden:document.hidden,focus:document.hasFocus(),clrStyleLen:cl?cl.textContent.length:null,fixed:document.querySelectorAll('[data-clr-c]').length,pAttrs:[...document.getElementById('p').attributes].map(a=>a.name+'='+a.value).join(';'),ctlAttrs:[...document.getElementById('ctl').attributes].map(a=>a.name+'='+a.value).join(';'),sheets:document.styleSheets.length,tr:cs('p').transition,anim:cs('p').animationName}));
   if(sc==='on'){await new Promise(r=>setTimeout(r,8000));const p2=cs('p');ok('contrast text pal după încă 8 s (informativ)',true,p2.color+' = '+ratio(p2.color,p2.backgroundColor).toFixed(1)+' vis='+document.visibilityState);}

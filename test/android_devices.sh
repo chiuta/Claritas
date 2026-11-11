@@ -25,12 +25,12 @@ run() {  # tag pkg
 [ -f /tmp/fenix.apk ] && adb install -r /tmp/fenix.apk >/dev/null 2>&1
 run fenix org.mozilla.fenix
 run chrome-android com.android.chrome
-# Samsung Internet real (APK de pe sursa externă, dacă se poate instala)
-if [ -s /tmp/sbrowser.apk ]; then
-  adb install -r /tmp/sbrowser.apk 2>&1 | tail -3 || true
-  adb install -r --abi arm64-v8a /tmp/sbrowser.apk 2>&1 | tail -3 || true
-  [ -d /tmp/sbsplits ] && (adb install-multiple -r /tmp/sbsplits/*.apk 2>&1 | tail -3 || true)
-  adb shell pm path com.sec.android.app.sbrowser; adb shell cmd package resolve-activity --brief -a android.intent.action.VIEW -d http://x.y -p com.sec.android.app.sbrowser | tail -2
-  run samsung-internet com.sec.android.app.sbrowser
-else echo "Samsung Internet: APK indisponibil"; fi
+# Samsung Internet real (mai multe versiuni arm64 rulate prin traducere ARM în emulator x86_64)
+for f in /tmp/sb/*.apk; do
+  [ -s "$f" ] || continue; v=$(basename "$f" .apk); echo "######## Samsung Internet $v"
+  adb uninstall com.sec.android.app.sbrowser >/dev/null 2>&1
+  adb install -r "$f" 2>&1 | tail -2
+  adb shell pm path com.sec.android.app.sbrowser
+  run samsung-$v com.sec.android.app.sbrowser
+done
 exit 0
