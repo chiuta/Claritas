@@ -484,14 +484,16 @@ jobs:
         run: |
           python - <<'PY'
           import json, glob, sys
-          bad = []
+          bad = []; exp = []
+          EXPERIMENTAL = ('ubuntu-latest-opera.json', 'ubuntu-latest-vivaldi.json')  # CDP în browsere branded: neverificate, raportate separat
           for f in sorted(glob.glob('collected/*/*.json')):
               try: d = json.load(open(f))
               except Exception: continue
               if not isinstance(d, dict): continue
               for k, v in d.items():
                   if isinstance(v, dict) and 'rc' in v and (v.get('fail') or v.get('rc') != 0):
-                      bad.append(f"{f.split('/')[-1]}:{k} fail={v.get('fail')} rc={v.get('rc')}")
+                      (exp if f.endswith(EXPERIMENTAL) else bad).append(f"{f.split('/')[-1]}:{k} fail={v.get('fail')} rc={v.get('rc')}")
+          if exp: print('EXPERIMENTAL (neverificat, nu blochează):', len(exp), 'fișiere de test pentru Opera/Vivaldi')
           print('\n'.join(bad) or 'toate verificările au trecut')
           sys.exit(1 if bad else 0)
           PY

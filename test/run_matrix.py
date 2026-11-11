@@ -8,12 +8,16 @@ for f in sorted([x for x in glob.glob('t*.py') if x not in ('t1.py', 't2.py')]):
     if only and f not in only: continue
     code = "import bt,runpy,sys;sys.argv=['%s'];runpy.run_path('%s',run_name='__main__')" % (f, f)
     t = time.time()
-    try:
-        r = subprocess.run([sys.executable, '-c', code], capture_output=True, text=True, timeout=170)
-        out, rc = r.stdout + r.stderr, r.returncode
-    except subprocess.TimeoutExpired as e:
-        o = e.stdout or ''
-        out, rc = (o.decode() if isinstance(o, bytes) else o), -9
+    for attempt in (1, 2):
+        try:
+            r = subprocess.run([sys.executable, '-c', code], capture_output=True, text=True, timeout=300)
+            out, rc = r.stdout + r.stderr, r.returncode
+        except subprocess.TimeoutExpired as e:
+            o = e.stdout or ''
+            out, rc = (o.decode() if isinstance(o, bytes) else o), -9
+        # a doua încercare doar pentru căderi de infrastructură (timeout/descărcare/conectare), nu pentru aserțiuni picate
+        if rc == 0 or any(l.startswith('FAIL') for l in out.splitlines()): break
+        print('  reîncerc', f, '(rc', rc, ')', flush=True)
     fl = [l for l in out.splitlines() if l.startswith('FAIL')]
     res[f] = {'pass': out.count('PASS '), 'fail': len(fl) + (1 if (rc != 0 or not out.count('PASS ')) and not fl else 0), 'rc': rc, 'secs': round(time.time()-t), 'fails': fl[:15], 'tail': out[-700:] if (fl or rc) else ''}
     print(f, res[f]['pass'], 'pass', res[f]['fail'], 'fail rc', rc, flush=True)

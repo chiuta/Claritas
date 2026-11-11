@@ -33,13 +33,15 @@ async def _cdp_launch(self, kw):
     args = [a for a in kw.get('args', []) if not a.startswith('--headless')]
     cmd = [exe, f'--user-data-dir={prof}', f'--remote-debugging-port={port}', '--no-first-run', '--no-default-browser-check', '--no-sandbox',
            '--disable-features=DisableLoadExtensionCommandLineSwitch'] + (['--headless=new'] if not os.environ.get('HEADED') else []) + args + ['about:blank']
-    logf = open(os.path.join(tempfile.gettempdir(), 'cdp-browser.log'), 'w'); proc = subprocess.Popen(cmd, stdout=logf, stderr=logf)
+    proc = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     for _ in range(60):
         try: urllib.request.urlopen(f'http://127.0.0.1:{port}/json/version', timeout=1); break
         except Exception: time.sleep(0.5)
-    if proc.poll() is not None:
-        print('Browserul a ieșit cu codul', proc.returncode, open(logf.name).read()[-600:])
-    br = await self.connect_over_cdp(f'http://127.0.0.1:{port}')
+    try:
+        br = await self.connect_over_cdp(f'http://127.0.0.1:{port}', timeout=90000)
+    except Exception:
+        print('CDP indisponibil; jurnal browser:', open(logf.name).read()[-800:], 'proces viu:', proc.poll() is None)
+        raise
     ctx = br.contexts[0]
     import hashlib
     ext = [a.split('=', 1)[1] for a in args if a.startswith('--load-extension=')]
