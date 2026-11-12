@@ -143,6 +143,19 @@ jobs:
                     end if
                   end try
                 end repeat
+                log "=== add temporary extension"
+                click button "Add Temporary Extension…" of group 1 of group 1 of window 1
+                delay 3
+                keystroke "g" using {command down, shift down}
+                delay 2
+                keystroke "__EXTDIR__"
+                delay 1
+                keystroke return
+                delay 2
+                keystroke return
+                delay 5
+                log "windows after temp ext: " & (name of every window as string)
+                log my dump(window 1, 0, 3)
               on error e
                 log "ERR developer " & e
               end try
@@ -157,6 +170,7 @@ jobs:
             end tell
           end tell
           AS
+          sed -i '' "s#__EXTDIR__#$GITHUB_WORKSPACE/dist/safari#" /tmp/ui.applescript
           osascript /tmp/ui.applescript 2>&1 | head -150
           screencapture -x test/results/safari-ext.png || true
       - uses: actions/upload-artifact@v4
