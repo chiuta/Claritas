@@ -1,0 +1,68 @@
+name: vivaldi-dev
+on:
+  push: { branches: [ci/vivaldi] }
+jobs:
+  vivaldi:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - run: pip install playwright websockets && python build.py
+      - name: Install Vivaldi
+        run: |
+          curl -fsSL https://repo.vivaldi.com/archive/linux_signing_key.pub | sudo gpg --dearmor -o /usr/share/keyrings/vivaldi.gpg
+          echo "deb [signed-by=/usr/share/keyrings/vivaldi.gpg] https://repo.vivaldi.com/archive/deb/ stable main" | sudo tee /etc/apt/sources.list.d/vivaldi.list
+          for i in 1 2 3 4; do sudo apt-get update && sudo apt-get install -y -o Acquire::Retries=5 vivaldi-stable xvfb && break; sleep 20; done
+      - name: Experimente
+        run: |
+          cat > /tmp/viv.py <<'PY'
+          import asyncio, json, os, subprocess, sys, time, urllib.request, tempfile, pathlib
+          import websockets
+          from playwright.async_api import async_playwright
+          EXT = str(pathlib.Path('dist/chromium').resolve()); EXE = '/usr/bin/vivaldi-stable'
+          def start(port, load=True):
+              prof = tempfile.mkdtemp()
+              cmd = [EXE, f'--user-data-dir={prof}', f'--remote-debugging-port={port}', '--no-first-run', '--no-default-browser-check', '--no-sandbox', '--disable-gpu', '--disable-features=DisableLoadExtensionCommandLineSwitch'] + ([f'--disable-extensions-except={EXT}', f'--load-extension={EXT}'] if load else []) + ['about:blank']
+              p = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+              for _ in range(60):
+                  try: return p, json.load(urllib.request.urlopen(f'http://127.0.0.1:{port}/json/version', timeout=1))
+                  except Exception: time.sleep(0.5)
+              return p, None
+          async def raw(ws_url):
+              async with websockets.connect(ws_url, max_size=None) as ws:
+                  await ws.send(json.dumps({'id': 1, 'method': 'Target.getTargets'}))
+                  r = json.loads(await asyncio.wait_for(ws.recv(), 10))
+                  for t in r['result']['targetInfos']: print('  target', t['type'], t['url'][:90], 'attached=', t.get('attached'))
+          async def main():
+              print('=== E1: raw CDP (load-extension)')
+              p, v = start(9501)
+              print('version', v and v['Browser'])
+              if v:
+                  await raw(v['webSocketDebuggerUrl'])
+                  print('=== E2: Playwright connect_over_cdp (30s)')
+                  async with async_playwright() as pw:
+                      try:
+                          b = await pw.chromium.connect_over_cdp('http://127.0.0.1:9501', timeout=30000)
+                          print('connected; contexts', len(b.contexts), 'pages', [pg.url for c in b.contexts for pg in c.pages][:5])
+                          c = b.contexts[0]; print('service_workers', [w.url for w in c.service_workers])
+                      except Exception as e: print('E2 fail', str(e)[:300])
+              p.terminate(); time.sleep(2)
+              print('=== E3: Playwright launch_persistent_context(executable_path)')
+              async with async_playwright() as pw:
+                  try:
+                      c = await asyncio.wait_for(pw.chromium.launch_persistent_context(tempfile.mkdtemp(), executable_path=EXE, headless=False, args=['--no-sandbox', f'--disable-extensions-except={EXT}', f'--load-extension={EXT}'], timeout=45000), 60)
+                      pg = await c.new_page(); await pg.goto('about:blank'); await asyncio.sleep(3)
+                      print('E3 ok; service_workers', [w.url for w in c.service_workers], 'pages', len(c.pages)); await c.close()
+                  except Exception as e: print('E3 fail', str(e)[:300])
+              print('=== E4: connect_over_cdp WITHOUT load-extension')
+              p, v = start(9502, load=False)
+              async with async_playwright() as pw:
+                  try:
+                      b = await pw.chromium.connect_over_cdp('http://127.0.0.1:9502', timeout=30000); print('E4 connected', len(b.contexts))
+                  except Exception as e: print('E4 fail', str(e)[:200])
+              p.terminate()
+          asyncio.run(main())
+          PY
+          DEBUG=pw:browser xvfb-run -a python /tmp/viv.py 2>&1 | tail -70
