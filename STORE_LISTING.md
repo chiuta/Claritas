@@ -33,4 +33,4 @@ Improve the readability and usability of web pages for people with different vis
 - Privacy policy: PRIVACY.md in the repository.
 
 ## Support
-Contact: alexio@trom.tf · Source: https://github.com/chiuta/Claritas · Support the project: https://buymeacoffee.com/echo.of.the.strings
+Website: https://claritas.chiuta.ro · Contact: alexio@trom.tf · Source: https://github.com/chiuta/Claritas · Support the project: https://buymeacoffee.com/echo.of.the.strings

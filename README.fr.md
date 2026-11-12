@@ -58,6 +58,8 @@ Si Claritas vous aide, vous pouvez soutenir ce travail : [Buy Me a Coffee](https
 
 Politique de confidentialité: [PRIVACY.md](PRIVACY.md)
 
+Site web: https://claritas.chiuta.ro
+
 État de vérification (v1.6.0) : testé automatiquement en CI sur Chromium, Edge, Brave, Firefox (plusieurs canaux), Safari 27.2 réel sur macOS, Safari 26.2 dans le simulateur iPhone/iPad, Chrome 113 et Firefox 162 sur Android 14 (émulateur). Vérifié en CI sous Linux pour v1.7.0 : Opera 140 (les 12 fichiers de test). Non vérifié : Vivaldi (il démarre, mais la connexion de débogage automatique expire), Samsung Internet réel, l’extension activée dans Safari/iOS réels, Chrome de marque. Alt+Shift+O/D/L/G sont réassignables dans le navigateur ; P/H/S/M sont fixes. Le bouton de définition n’ouvre dexonline.ro ou Wiktionary qu’au clic.
 
 ## Modules optionnels (v1.8)
