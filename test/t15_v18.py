@@ -54,6 +54,7 @@ async def main():
           return {n:['a','b','c','d','e','f','g'].map(i=>M.accName(q(i))), role:['a','d','e','f'].map(i=>M.roleOf(q(i))),
             m1:M.mathSpeech(q('m1'),'en'), m1r:M.mathSpeech(q('m1'),'ro'), m2:M.mathSpeech(q('m2'),'en'), m3:M.mathSpeech(q('m3'),'ro'),
             css:M.cleanCss('@import url(http://x/y.css); a{background:url(https://evil/x.png);color:red} b{background:url(data:image/png;base64,AA)} /* c */ i{behavior:url(x.htc)}'),
+            css2:['a{background-image:image-set("https://evil/x.png" 1x)}','a{background:\\\\75rl(https://evil/x)}','a{background:u\\\\72l(//evil/x)}','a{background:src("https://evil/x")}','a{background:cross-fade(url(//evil/x) 50%,red)}','a{background:-webkit-image-set(url(//evil/x) 1x)}','.md\\\\:flex{display:flex}'].map(M.cleanCss),
             rl:[M.rlClean({url:'javascript:alert(1)'}),M.rlClean({url:'https://a.b/c',title:'T',note:'n'})],
             md:M.rlMarkdown([{url:'https://a.b/c',title:'T [x]',note:'n1\\nn2',sel:'q',read:true},{url:'https://d.e',title:'',note:'',sel:'',read:false}],'List')}}""")
         ok(r['n'] == ['Close', 'Save', '', 'Name field', 'Logo', 'Tip', 'Mail'], f'accName {r["n"]}')
@@ -64,6 +65,7 @@ async def main():
         ok(r['m3'] == 'y la puterea 5 diferit de 0', f'mathSpeech putere: {r["m3"]}')
         ok('@import' not in r['css'] and 'evil' not in r['css'] and 'data:' not in r['css'] and 'behavior' not in r['css'] and 'color:red' in r['css'], f'cleanCss: {r["css"]}')
         ok(r['md'] == '# List\n\n- [x] [T x](https://a.b/c)\n  - n1\n    n2\n  - > q\n- [ ] [https://d.e](https://d.e)\n', f'export .md: {r["md"]!r}')
+        ok(all('evil' not in x for x in r['css2']) and r['css2'][-1] == '.md\\:flex{display:flex}', f'cleanCss: ocoliri blocate (image-set, escape, src, cross-fade): {r["css2"]}')
         ok(r['rl'][0] is None and r['rl'][1]['url'] == 'https://a.b/c', 'rlClean respinge javascript:')
         # ---- B. pagină reală ----
         await setset(autoFix=False, modInspect=True, modOrder=True, modReadList=True, modSiteCss=True, modMath=True, modAI=True)

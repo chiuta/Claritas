@@ -356,12 +356,12 @@
         if (!w.started) { w.started = true; if (w.root.nodeType !== 11) visit(w.root); }
         const n = w.tw.nextNode();
         if (!n) { walkers.shift(); continue; }
-        if (++nodeCount > MAX_NODES) { walkers = []; break; }
+        if (++nodeCount > MAX_NODES) { walkers = []; nodeCount = 0; break; } /* plafonul se aplică unei singure rafale; contorul nu mai crește pe viața paginii */
         try { visit(n); } catch (e) { /* nod dispărut sau inaccesibil: îl săr */ }
       }
     } catch (e) { walkers.shift(); }
     if (doc.querySelector('video[autoplay]') && S.noMotion) doc.querySelectorAll('video[autoplay]').forEach((v) => { try { v.autoplay = false; v.pause(); } catch (e) { } });
-    if (walkers.length) schedule();
+    if (walkers.length) schedule(); else nodeCount = 0;
   }
 
   function onMutations(records) {

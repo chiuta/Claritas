@@ -119,11 +119,16 @@
   }
 
   /* ================= CSS propriu pe site ================= */
+  /* Curăță CSS-ul scris/importat de utilizator: fără @import, fără orice funcție de imagine/URL (url, image-set, src, cross-fade, element, paint, image),
+     fără escape-uri CSS în valori (\75rl( = url( ar ocoli filtrul). Selectorii păstrează escape-urile (ex. .md\:flex). */
+  const FN = '(?:-webkit-|-moz-)?(?:url|image-set|src|cross-fade|element|paint|image)';
+  const unesc = (v) => v.replace(/\\([0-9a-f]{1,6})\s?|\\([^\n])/gi, (m, h, c) => h ? String.fromCodePoint(Math.min(parseInt(h, 16) || 0xfffd, 0x10ffff)) : c);
   function cleanCss(css) {
     let s = String(css || '').slice(0, 60000);
-    s = s.replace(/\/\*[\s\S]*?\*\//g, '').replace(/@import[^;]*;?/gi, '').replace(/expression\s*\(/gi, '(').replace(/javascript\s*:/gi, '').replace(/behavior\s*:[^;}]*/gi, '').replace(/-moz-binding\s*:[^;}]*/gi, '');
-    s = s.replace(/url\(\s*(['"]?)\s*(?:https?:)?\/\/[^)]*\)/gi, 'none').replace(/url\(\s*(['"]?)\s*(?:data|javascript|blob):[^)]*\)/gi, 'none');
-    s = s.replace(/<\/?style[^>]*>/gi, '');
+    s = s.replace(/\/\*[\s\S]*?\*\//g, '').replace(/@import[^;]*;?/gi, '').replace(/<\/?style[^>]*>/gi, '');
+    s = s.replace(/\{[^{}]*\}/g, (blk) => unesc(blk));
+    s = s.replace(/expression\s*\(/gi, '(').replace(/javascript\s*:/gi, '').replace(/behavior\s*:[^;}]*/gi, '').replace(/-moz-binding\s*:[^;}]*/gi, '');
+    for (let i = 0; i < 4; i++) s = s.replace(new RegExp(FN + '\\s*\\((?:[^()]|\\([^()]*\\))*\\)', 'gi'), 'none');
     return s.trim();
   }
   const hostKey = () => (doc.location && doc.location.hostname || '').replace(/^www\./, '');
