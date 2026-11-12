@@ -29,6 +29,23 @@ jobs:
           osascript -e 'tell application "Safari" to quit' 2>/dev/null || true; sleep 2
           open -a Safari; sleep 7
           cat > /tmp/ui.applescript <<'AS'
+          on findAll(el, rl)
+            tell application "System Events"
+              set res to {}
+              try
+                set kids to UI elements of el
+              on error
+                return {}
+              end try
+              repeat with k in kids
+                try
+                  if (role of k) is rl then set end of res to contents of k
+                end try
+                set res to res & my findAll(k, rl)
+              end repeat
+              return res
+            end tell
+          end findAll
           on dump(el, depth, maxd)
             tell application "System Events"
               set out to ""
@@ -78,15 +95,25 @@ jobs:
               on error e
                 log "ERR devcheck " & e
               end try
-              log "=== menus: " & (name of every menu bar item of menu bar 1 as string)
               try
-                log "develop: " & (name of every menu item of menu 1 of menu bar item "Develop" of menu bar 1 as string)
-                click menu item "Allow Unsigned Extensions" of menu 1 of menu bar item "Develop" of menu bar 1
-                delay 3
-                log "after unsigned windows: " & (name of every window as string)
-                log "after unsigned UI:" & linefeed & my dump(window 1, 0, 4)
+                click button "Developer" of toolbar 1 of window 1
+                delay 2
+                log "=== DEV UI"
+                log my dump(window 1, 0, 6)
+                set cbs to my findAll(window 1, "AXCheckBox")
+                repeat with c in cbs
+                  try
+                    if (name of c) contains "nsigned" then
+                      log "unsigned cb before: " & (value of c)
+                      if (value of c) is 0 then click c
+                      delay 3
+                      log "unsigned cb after: " & (value of c)
+                      log "windows now: " & (name of every window as string)
+                    end if
+                  end try
+                end repeat
               on error e
-                log "ERR develop " & e
+                log "ERR developer " & e
               end try
               try
                 click button "Extensions" of toolbar 1 of window 1
