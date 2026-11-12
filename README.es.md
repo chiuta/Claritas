@@ -56,6 +56,8 @@ MIT — copyright Alexandru-Ionuț Chiuță (Alexio).
 
 Si Claritas te resulta útil, puedes apoyar el trabajo: [Buy Me a Coffee](https://buymeacoffee.com/echo.of.the.strings).
 
+Política de privacidad: [PRIVACY.md](PRIVACY.md)
+
 Estado de verificación (v1.6.0): probado automáticamente en CI en Chromium, Edge, Brave, Firefox (varios canales), Safari 27.2 real en macOS, Safari 26.2 en el simulador iPhone/iPad, Chrome 113 y Firefox 162 en Android 14 (emulador). Verificado en CI en Linux para v1.7.0: Opera 140 (los 12 archivos de prueba). No verificado: Vivaldi (arranca, pero la conexión de depuración automática caduca), Samsung Internet real, la extensión activada en Safari/iOS reales, Chrome de marca. Alt+Shift+O/D/L/G se pueden reasignar en el navegador; P/H/S/M son fijos. El botón de definición abre dexonline.ro o Wiktionary solo al pulsarlo.
 
 ## Módulos opcionales (v1.8)

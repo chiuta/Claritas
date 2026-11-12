@@ -338,6 +338,7 @@
 "m3_rl_save": "Enregistrer la note",
 "m3_rl_saved": "Note enregistrée.",
 "m3_rl_added": "Page ajoutée à la liste.",
+"m3_rl_full": "La liste a atteint sa limite de {n} pages : la plus ancienne a été supprimée. Exportez la liste pour tout conserver.",
 "m3_rl_del": "Supprimer",
 "m3_rl_markread": "Marquer comme lu",
 "m3_rl_unread": "Marquer comme non lu",

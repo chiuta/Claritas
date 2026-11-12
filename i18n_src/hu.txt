@@ -464,6 +464,7 @@ m3_rl_import=Importálás .json
 m3_rl_save=Jegyzet mentése
 m3_rl_saved=Jegyzet mentve.
 m3_rl_added=Az oldal felkerült a listára.
+m3_rl_full=A lista elérte a {n} oldalas korlátot: a legrégebbi törlődött. Exportáld a listát, hogy mindent megőrizz.
 m3_rl_del=Eltávolítás
 m3_rl_markread=Megjelölés olvasottként
 m3_rl_unread=Megjelölés olvasatlanként

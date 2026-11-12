@@ -464,6 +464,7 @@ m3_rl_import=.json importieren
 m3_rl_save=Notiz speichern
 m3_rl_saved=Notiz gespeichert.
 m3_rl_added=Seite zur Liste hinzugefügt.
+m3_rl_full=Die Liste hat ihr Limit von {n} Seiten erreicht: Die älteste wurde entfernt. Exportiere die Liste, um alles zu behalten.
 m3_rl_del=Entfernen
 m3_rl_markread=Als gelesen markieren
 m3_rl_unread=Als ungelesen markieren

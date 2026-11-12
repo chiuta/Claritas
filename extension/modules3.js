@@ -266,9 +266,10 @@
 
   /* ---------- 3. listă de citit cu note ---------- */
   const RL_MAX = 300;
-  async function rlGet() { try { const r = await api.storage.local.get('readList'); return Array.isArray(r && r.readList) ? r.readList : []; } catch (e) { return []; } }
+  async function rlGet() { try { const r = await api.storage.local.get('readList'); return Array.isArray(r && r.readList) ? r.readList.map(rlClean).filter(Boolean) : []; } catch (e) { return []; } }
   async function rlSet(a) { await api.storage.local.set({ readList: a.slice(0, RL_MAX) }); }
-  const rlClean = (x) => x && typeof x.url === 'string' && /^https?:|^file:/i.test(x.url) ? { id: String(x.id || Date.now() + Math.random()).slice(0, 40), url: x.url.slice(0, 2000), title: String(x.title || '').slice(0, 300), note: String(x.note || '').slice(0, 4000), sel: String(x.sel || '').slice(0, 2000), ts: +x.ts || Date.now(), read: !!x.read } : null;
+  const hash32 = (t) => { let h = 5381; for (let i = 0; i < t.length; i++) h = ((h << 5) + h + t.charCodeAt(i)) | 0; return (h >>> 0).toString(36); };
+  const rlClean = (x) => x && typeof x.url === 'string' && /^https?:|^file:/i.test(x.url) ? { id: String(x.id || 'u' + hash32(x.url)).slice(0, 40), url: x.url.slice(0, 2000), title: String(x.title || '').slice(0, 300), note: String(x.note || '').slice(0, 4000), sel: String(x.sel || '').slice(0, 2000), ts: +x.ts || Date.now(), read: !!x.read } : null;
   function rlMarkdown(l, title) {
     return '# ' + title + '\n\n' + l.map((x) => '- [' + (x.read ? 'x' : ' ') + '] [' + (x.title || x.url).replace(/[\[\]]/g, '') + '](' + x.url + ')' + (x.note ? '\n  - ' + x.note.replace(/\n/g, '\n    ') : '') + (x.sel ? '\n  - > ' + x.sel.replace(/\n/g, ' ') : '')).join('\n') + '\n';
   }
@@ -295,7 +296,7 @@
     const i = list.findIndex((x) => x.url === url);
     if (i >= 0) { if (note) list[i].note = (list[i].note ? list[i].note + '\n' : '') + note; if (sel) list[i].sel = sel; list[i].ts = Date.now(); }
     else list.unshift({ id: String(Date.now()), url, title: (doc.title || url).slice(0, 300), note: note || '', sel, ts: Date.now(), read: false });
-    await rlSet(list); say(T('m3_rl_added')); renderRL();
+    const over = list.length > RL_MAX; await rlSet(list); say(over ? T('m3_rl_full').replace('{n}', RL_MAX) : T('m3_rl_added')); renderRL();
   }
   async function openRL() {
     const p = openPanel('rl', T('m3_rl_title')); if (!p) return;

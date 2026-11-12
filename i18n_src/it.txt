@@ -464,6 +464,7 @@ m3_rl_import=Importa .json
 m3_rl_save=Salva la nota
 m3_rl_saved=Nota salvata.
 m3_rl_added=Pagina aggiunta alla lista.
+m3_rl_full=La lista ha raggiunto il limite di {n} pagine: la più vecchia è stata rimossa. Esporta la lista per conservare tutto.
 m3_rl_del=Rimuovi
 m3_rl_markread=Segna come letto
 m3_rl_unread=Segna come non letto
