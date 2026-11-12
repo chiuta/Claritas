@@ -143,11 +143,12 @@ try:
         d.switch_to.window(PAGE_H); d.get('http://127.0.0.1:8771/mod.html'); time.sleep(3.2)
         alts = d.execute_script("return ['i1','i2','i4'].map(i=>document.getElementById(i).getAttribute('alt'))")
         ok(alts[0] and 'Casa veche din Brașov' in alts[0] and alts[1] and 'Casa din brasov' in alts[1] and alts[2] == 'Grafic vânzări', f'Firefox v1.7: alt imagini {alts}')
+        print('DIAG storage', end=' '); ext_tab(); print(d.execute_async_script("const cb=arguments[arguments.length-1];browser.storage.local.get('settings').then(r=>browser.tabs.query({}).then(t=>cb(JSON.stringify([r,t.map(x=>x.url)]))))")[:400]); d.switch_to.window(PAGE_H)
         def m2(what, **kw):
             ext_tab()
             r = d.execute_async_script("const [w,kw,cb]=[arguments[0],arguments[1],arguments[arguments.length-1]];browser.tabs.query({url:'http://127.0.0.1/*'}).then(t=>browser.tabs.sendMessage(t[0].id,Object.assign({type:'feat',cmd:'m2',what:w},kw))).then(r=>cb(r),e=>cb({err:String(e)}))", what, kw)
             d.switch_to.window(PAGE_H); return r
-        m2('nextH'); a1 = d.execute_script("return document.activeElement.textContent"); m2('nextH'); a2 = d.execute_script("return document.activeElement.textContent")
+        print('DIAG nextH ->', m2('nextH')); a1 = d.execute_script("return document.activeElement.textContent"); m2('nextH'); a2 = d.execute_script("return document.activeElement.textContent")
         ok((a1, a2) == ('Titlu principal', 'Secțiunea doi'), f'Firefox v1.7: navigare titluri {a1!r}, {a2!r}')
         m2('list'); time.sleep(0.4)
         n = d.execute_script("const h=document.getElementById('clr-m2');return h&&h.shadowRoot?h.shadowRoot.querySelectorAll('.pnl li button').length:-1")
