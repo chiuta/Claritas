@@ -76,29 +76,37 @@ jobs:
               delay 2
               log "windows: " & (name of every window as string)
               set sw to missing value
-              repeat with w in windows
+              set wi to 0
+              repeat with i from 1 to (count of windows)
+                set w to window i
                 try
-                  if (name of w) is "General" then set sw to contents of w
+                  if (name of w) is "General" then set wi to i
                 end try
               end repeat
-              log "settings window found: " & (sw is not missing value)
-              repeat with b in (entire contents of sw)
-                  if (role of b) is "AXButton" and (name of b) is "Advanced" then
-                    click b
-                    exit repeat
-                  end if
-                end repeat
+              log "settings window index: " & wi
+              set sw to window wi
+              try
+                click button "Advanced" of toolbar 1 of sw
+              on error e1
+                log "toolbar click failed: " & e1
+                try
+                  click button "Advanced" of sw
+                on error e2
+                  log "direct click failed: " & e2
+                  log "WINDOW DUMP:" & linefeed & my dump(sw, 0, 4)
+                end try
+              end try
               delay 2
               log "=== ADV checkboxes"
               try
-                repeat with c in (entire contents of sw)
+                repeat with c in (entire contents of window wi)
                   if (role of c) is "AXCheckBox" then log "  cb: " & (name of c) & " = " & (value of c)
                 end repeat
               on error e
                 log "ERR adv list " & e
               end try
               try
-                repeat with c in (entire contents of sw)
+                repeat with c in (entire contents of window wi)
                   if (role of c) is "AXCheckBox" and (name of c) contains "web developer" then
                     if (value of c) is 0 then click c
                   end if
@@ -118,12 +126,7 @@ jobs:
                 log "ERR develop " & e
               end try
               try
-                repeat with b in (entire contents of sw)
-                  if (role of b) is "AXButton" and (name of b) is "Extensions" then
-                    click b
-                    exit repeat
-                  end if
-                end repeat
+                click button "Extensions" of toolbar 1 of sw
               on error e
                 log "ERR ext " & e
               end try
@@ -131,7 +134,7 @@ jobs:
               log "=== EXT UI"
               log my dump(window 1, 0, 9)
               try
-                repeat with c in (entire contents of sw)
+                repeat with c in (entire contents of window wi)
                   if (role of c) is "AXCheckBox" then log "  ext cb: " & (name of c) & " = " & (value of c) & " desc=" & (description of c)
                 end repeat
               end try
