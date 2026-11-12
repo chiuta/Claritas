@@ -1,0 +1,24 @@
+name: site
+on:
+  push:
+    branches: [ci/browser-matrix]
+    paths: ['site/**', 'test/site_cross.py', '.github/workflows/site.yml']
+  workflow_dispatch:
+jobs:
+  site:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { os: ubuntu-latest, eng: chromium }
+          - { os: ubuntu-latest, eng: firefox }
+          - { os: ubuntu-latest, eng: webkit }
+          - { os: macos-latest, eng: webkit }
+          - { os: windows-latest, eng: chromium }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - run: pip install playwright && python -m playwright install --with-deps ${{ matrix.eng }}
+      - run: python test/site_cross.py ${{ matrix.eng }}

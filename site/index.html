@@ -1,0 +1,1239 @@
+<!DOCTYPE html>
+<html lang="ro" data-theme="auto">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Claritas — extensie de accesibilitate: vezi mai clar, citește mai ușor</title>
+<meta name="description" content="Claritas: extensie gratuită de accesibilitate pentru Chromium, Firefox și Safari. Contrast corectat automat, mod cititor, citire cu voce, audit WCAG 2.2. Fără telemetrie.">
+<meta name="color-scheme" content="light dark">
+<meta name="referrer" content="no-referrer">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230a0f1f'/%3E%3Ccircle cx='16' cy='16' r='8' fill='none' stroke='%23ffcf5c' stroke-width='3'/%3E%3Cpath d='M16 8a8 8 0 0 1 0 16z' fill='%23ffcf5c'/%3E%3C/svg%3E">
+<script>
+/* tema și limba înainte de afișare, ca să nu pâlpâie */
+(function(){var d=document.documentElement;d.classList.add('js');
+try{var t=localStorage.getItem('claritas-theme');if(t==='light'||t==='dark')d.setAttribute('data-theme',t);
+var l=localStorage.getItem('claritas-lang');if(l==='en'){d.lang='en';}}catch(e){}})();
+</script>
+<style>
+:root{
+  --bg:#fbf8f1;--bg2:#f1eadb;--surface:#ffffff;--surface2:#f6f0e3;--line:#7a7466;--soft-line:#d9d0bc;
+  --text:#13182a;--muted:#3b4358;--accent:#2f23a8;--accent-ink:#ffffff;--focus:#2f23a8;
+  --ok-bg:#d6f2e3;--ok:#0a4727;--prog-bg:#fde7b0;--prog:#5a3900;--bad-bg:#fbd9df;--bad:#750d20;--emu-bg:#e1e6f7;--emu:#232d58;
+  --glow1:rgba(47,35,168,.16);--glow2:rgba(255,170,40,.28);
+  --shadow:0 18px 50px -20px rgba(30,24,80,.35);
+  --display:ui-serif,"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  color-scheme:light;
+}
+:root[data-theme="dark"],:root[data-theme="auto"].dark-pref{
+  --bg:#0a0f1f;--bg2:#0e1630;--surface:#141d38;--surface2:#1b2648;--line:#6c7aa8;--soft-line:#2c3963;
+  --text:#f4f6fc;--muted:#c5cde6;--accent:#ffcf5c;--accent-ink:#0a0f1f;--focus:#ffe08a;
+  --ok-bg:#0e2e20;--ok:#a6f5c6;--prog-bg:#33290c;--prog:#ffd981;--bad-bg:#3a1520;--bad:#ffbcc6;--emu-bg:#222a4a;--emu:#d3dbf7;
+  --glow1:rgba(120,110,255,.28);--glow2:rgba(255,190,60,.16);
+  --shadow:0 18px 50px -20px rgba(0,0,0,.7);
+  color-scheme:dark;
+}
+@media (prefers-color-scheme:dark){
+  :root[data-theme="auto"]{
+  --bg:#0a0f1f;--bg2:#0e1630;--surface:#141d38;--surface2:#1b2648;--line:#6c7aa8;--soft-line:#2c3963;
+  --text:#f4f6fc;--muted:#c5cde6;--accent:#ffcf5c;--accent-ink:#0a0f1f;--focus:#ffe08a;
+  --ok-bg:#0e2e20;--ok:#a6f5c6;--prog-bg:#33290c;--prog:#ffd981;--bad-bg:#3a1520;--bad:#ffbcc6;--emu-bg:#222a4a;--emu:#d3dbf7;
+  --glow1:rgba(120,110,255,.28);--glow2:rgba(255,190,60,.16);
+  --shadow:0 18px 50px -20px rgba(0,0,0,.7);
+  color-scheme:dark;}
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:84px;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--text);font:400 1.0625rem/1.65 var(--sans);overflow-x:hidden}
+img,svg{max-width:100%}
+h1,h2,h3{font-family:var(--display);line-height:1.12;margin:0 0 .5em;font-weight:700;letter-spacing:-.01em;text-wrap:balance}
+h1{font-size:clamp(2.4rem,6vw,4.25rem)}
+h2{font-size:clamp(1.9rem,4.6vw,3rem)}
+h3{font-size:1.3rem}
+p{margin:0 0 1em}
+a{color:var(--accent);text-underline-offset:.2em;text-decoration-thickness:2px}
+a:hover{text-decoration-thickness:3px}
+code,kbd{font-family:var(--mono);font-size:.92em}
+code{background:var(--surface2);border:1px solid var(--soft-line);padding:.1em .4em;border-radius:6px;overflow-wrap:anywhere}
+kbd{background:var(--surface2);border:1px solid var(--line);border-bottom-width:3px;padding:.05em .45em;border-radius:7px;white-space:nowrap}
+:focus-visible{outline:3px solid var(--focus);outline-offset:3px;border-radius:6px}
+.sr-only{position:absolute!important;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+.skip{position:absolute;left:12px;top:-80px;z-index:200;background:var(--accent);color:var(--accent-ink);padding:12px 18px;border-radius:10px;font-weight:700;text-decoration:none;min-height:44px}
+.skip:focus{top:12px}
+.wrap{width:min(1180px,100% - 2rem);margin-inline:auto}
+section{padding-block:clamp(64px,9vw,120px);position:relative}
+.eyebrow{display:inline-flex;align-items:center;gap:.6em;font:700 .85rem/1 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:1rem}
+.eyebrow::before{content:"";width:28px;height:3px;background:currentColor;border-radius:3px}
+.lead{font-size:clamp(1.1rem,2.2vw,1.35rem);color:var(--muted);max-width:62ch}
+.sec-head{max-width:760px;margin-bottom:clamp(32px,5vw,56px)}
+.alt{background:linear-gradient(180deg,var(--bg2),var(--bg))}
+
+/* butoane */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.55em;min-height:48px;min-width:44px;padding:.7em 1.35em;border-radius:999px;border:2px solid var(--accent);background:var(--accent);color:var(--accent-ink);font:700 1rem/1.2 var(--sans);text-decoration:none;cursor:pointer;transition:transform .2s,box-shadow .2s,background .2s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 10px 26px -10px var(--accent)}
+.btn.ghost{background:transparent;color:var(--text);border-color:var(--line)}
+.btn.ghost:hover{border-color:var(--accent);color:var(--accent);box-shadow:none}
+.btn.sm{min-height:44px;padding:.5em 1em;font-size:.95rem}
+.btn[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn.ghost[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.ic{width:1.35em;height:1.35em;flex:none;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+/* antet */
+header.top{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:1px solid var(--soft-line)}
+.top .wrap{display:flex;align-items:center;gap:.5rem;min-height:68px}
+.brand{display:inline-flex;align-items:center;gap:.6rem;font:700 1.35rem/1 var(--display);color:var(--text);text-decoration:none;min-height:44px;margin-right:auto}
+.brand svg{width:34px;height:34px}
+nav.main ul{list-style:none;margin:0;padding:0;display:flex;gap:.1rem}
+nav.main a{display:inline-flex;align-items:center;min-height:44px;padding:0 .8rem;color:var(--text);text-decoration:none;font-weight:600;font-size:.97rem;border-radius:10px}
+nav.main a:hover{background:var(--surface2);color:var(--accent)}
+.icon-btn{display:inline-flex;align-items:center;justify-content:center;gap:.4em;min-width:44px;min-height:44px;padding:0 .7rem;border-radius:12px;border:2px solid var(--soft-line);background:var(--surface);color:var(--text);font:700 .95rem/1 var(--sans);cursor:pointer}
+.icon-btn:hover{border-color:var(--accent)}
+.menu-btn{display:none}
+@media (max-width:1060px){
+  .menu-btn{display:inline-flex}
+  .js nav.main{position:absolute;left:0;right:0;top:100%;background:var(--bg);border-bottom:1px solid var(--soft-line);padding:.5rem 1rem 1rem;box-shadow:var(--shadow)}
+  .js nav.main[hidden]{display:none}
+  nav.main ul{flex-direction:column}
+  nav.main a{width:100%;font-size:1.05rem}
+}
+@media (min-width:1061px){nav.main[hidden]{display:block}}
+html:not(.js) nav.main ul{flex-wrap:wrap}
+
+/* hero */
+.hero{padding-top:clamp(40px,6vw,88px);overflow:hidden;isolation:isolate}
+.hero::before,.hero::after{content:"";position:absolute;z-index:-1;border-radius:50%;filter:blur(70px);pointer-events:none}
+.hero::before{width:620px;height:620px;left:-180px;top:-160px;background:var(--glow1);animation:drift 18s ease-in-out infinite alternate}
+.hero::after{width:520px;height:520px;right:-140px;top:140px;background:var(--glow2);animation:drift 22s ease-in-out infinite alternate-reverse}
+@keyframes drift{to{transform:translate(60px,40px) scale(1.12)}}
+.hero-grid{display:grid;gap:clamp(32px,5vw,64px);grid-template-columns:1fr;align-items:center}
+@media (min-width:1000px){.hero-grid{grid-template-columns:1.02fr 1fr}}
+.hero h1 .focus{display:inline-block;color:var(--accent);animation:focusin 2.2s .3s cubic-bezier(.2,.7,.2,1) both}
+@keyframes focusin{from{filter:blur(14px);opacity:.25;letter-spacing:.08em}to{filter:blur(0);opacity:1;letter-spacing:0}}
+.hero .sub{display:block;font-size:.5em;font-weight:600;margin-top:.45em;color:var(--muted);line-height:1.25}
+.cta{display:flex;flex-wrap:wrap;gap:.8rem;margin:1.8rem 0 1.4rem}
+.pills{display:flex;flex-wrap:wrap;gap:.5rem;list-style:none;margin:0;padding:0}
+.pills li{background:var(--surface);border:1px solid var(--soft-line);border-radius:999px;padding:.35rem .9rem;font-size:.92rem;font-weight:600;color:var(--muted)}
+
+/* demo înainte/după */
+.ba-card{background:var(--surface);border:1px solid var(--soft-line);border-radius:22px;padding:14px;box-shadow:var(--shadow)}
+.ba{--p:50%;position:relative;border-radius:14px;overflow:hidden;background:#f4f4f4;touch-action:pan-y;user-select:none;-webkit-user-select:none}
+.mock{--m-bg:#f4f4f4;--m-h:#1a1a1a;--m-p:#2f2f2f;--m-a:#0b3d91;--m-mut:#4a4a4a;--m-btn:#0b3d91;--m-btnt:#ffffff;--m-fld:#2b2b2b;--m-fldb:#555;
+  background:var(--m-bg);color:var(--m-p);font:400 1rem/1.55 var(--sans);color-scheme:light}
+.mock.bad{--m-h:#b7b7b7;--m-p:#a9a9a9;--m-a:#9dbbe6;--m-mut:#c2c2c2;--m-btn:#cfe2fb;--m-btnt:#ffffff;--m-fld:#bdbdbd;--m-fldb:#d4d4d4}
+.mock-bar{display:flex;align-items:center;gap:6px;padding:10px 12px;background:#e3e3e3;border-bottom:1px solid #cfcfcf}
+.mock-bar i{width:10px;height:10px;border-radius:50%;background:#9a9a9a;display:block}
+.mock-url{margin-left:8px;font:.78rem var(--mono);color:#444;background:#fff;border-radius:99px;padding:2px 10px}
+.mock.bad .mock-bar{background:#ececec}.mock.bad .mock-url{color:#a0a0a0}
+.mock-body{padding:clamp(16px,3vw,28px);min-height:310px}
+.m-h{font:700 clamp(1.4rem,3vw,1.85rem)/1.2 var(--display);color:var(--m-h);margin:0 0 .5rem}
+.m-p{color:var(--m-p);margin:0 0 .8rem;font-size:.98rem}
+.m-a{color:var(--m-a);text-decoration:underline}
+.m-mut{color:var(--m-mut);font-size:.88rem}
+.m-fld{display:block;border:1.5px solid var(--m-fldb);border-radius:8px;padding:.55rem .8rem;color:var(--m-fld);font-size:.95rem;margin:.8rem 0;background:#fafafa}
+.m-btn{display:inline-block;background:var(--m-btn);color:var(--m-btnt);border-radius:8px;padding:.6rem 1.2rem;font-weight:700;font-size:.95rem}
+.layer-bad .mock{height:100%}
+.layer-bad{position:absolute;inset:0;clip-path:inset(0 calc(100% - var(--p)) 0 0)}
+.ba-chip{position:absolute;bottom:10px;z-index:3;padding:.25rem .7rem;border-radius:99px;font:700 .78rem var(--sans);background:#111;color:#fff;pointer-events:none}
+.ba-chip.l{left:12px}.ba-chip.r{right:12px;background:#fff;color:#111;border:1px solid #111}
+.ba-line{position:absolute;top:0;bottom:0;left:var(--p);width:4px;margin-left:-2px;background:#6a3bff;z-index:4;pointer-events:none;box-shadow:0 0 0 2px #fff}
+.ba-handle{position:absolute;top:50%;left:var(--p);width:48px;height:48px;margin:-24px 0 0 -24px;border-radius:50%;background:#6a3bff;color:#fff;border:3px solid #fff;display:grid;place-items:center;z-index:5;pointer-events:none;box-shadow:0 6px 20px rgba(0,0,0,.35)}
+.ba-handle svg{width:24px;height:24px}
+.ba input[type=range]{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;z-index:6;cursor:ew-resize;touch-action:pan-y}
+.ba:has(input:focus-visible){outline:3px solid var(--focus);outline-offset:4px}
+.ba:has(input:focus-visible) .ba-handle{box-shadow:0 0 0 4px #fff,0 0 0 8px #6a3bff}
+.ba-meta{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center;justify-content:space-between;margin:14px 4px 4px}
+.ratio-pair{display:flex;gap:.5rem;flex-wrap:wrap;font-weight:700;font-size:.95rem}
+.ratio-pair span{padding:.25rem .7rem;border-radius:99px;border:1px solid var(--soft-line)}
+.ratio-pair .r-bad{background:var(--bad-bg);color:var(--bad)}
+.ratio-pair .r-ok{background:var(--ok-bg);color:var(--ok)}
+.ba-hint{font-size:.9rem;color:var(--muted);margin:8px 4px 0}
+
+/* statistici */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;margin-top:clamp(40px,6vw,72px)}
+.stat{background:var(--surface);border:1px solid var(--soft-line);border-radius:18px;padding:1.1rem 1.2rem}
+.stat b{display:block;font:700 2.4rem/1 var(--display);color:var(--accent)}
+.stat span{color:var(--muted);font-size:.95rem}
+
+/* reveal */
+.js .rv{opacity:0;transform:translateY(26px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1);transition-delay:var(--d,0s)}
+.js .rv.in{opacity:1;transform:none}
+
+/* laborator */
+.lab{background:var(--surface);border:1px solid var(--soft-line);border-radius:24px;box-shadow:var(--shadow);overflow:hidden}
+[role=tablist]{display:flex;flex-wrap:wrap;gap:.4rem;padding:.7rem;background:var(--surface2)}
+[role=tab]{flex:0 0 auto;min-height:48px;padding:.55rem 1.15rem;border-radius:12px;border:2px solid transparent;background:transparent;color:var(--text);font:700 1rem/1.2 var(--sans);cursor:pointer;display:inline-flex;align-items:center;gap:.5em}
+[role=tab]:hover{border-color:var(--line)}
+[role=tab][aria-selected=true]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+[role=tabpanel]{padding:clamp(18px,3.5vw,36px)}
+[role=tabpanel][hidden]{display:none}
+.panel-grid{display:grid;gap:clamp(20px,3vw,36px);grid-template-columns:1fr}
+@media (min-width:900px){.panel-grid{grid-template-columns:minmax(0,1fr) minmax(0,1.1fr)}}
+.ctl{display:grid;gap:1rem;align-content:start}
+.ctl label,.ctl legend{font-weight:700;font-size:.98rem}
+fieldset{border:0;padding:0;margin:0;min-width:0}
+.row{display:flex;flex-wrap:wrap;gap:.7rem;align-items:center}
+input[type=color]{width:56px;height:48px;min-width:44px;padding:3px;border-radius:10px;border:2px solid var(--line);background:var(--surface);cursor:pointer}
+input[type=range]{width:100%;min-height:44px;accent-color:var(--accent);cursor:pointer;margin:0}
+select{min-height:48px;padding:.4rem .8rem;border-radius:10px;border:2px solid var(--line);background:var(--surface);color:var(--text);font:600 1rem var(--sans);max-width:100%}
+.check{display:flex;align-items:center;gap:.7rem;min-height:44px;font-weight:600;cursor:pointer}
+.check input{width:24px;height:24px;accent-color:var(--accent);flex:none;margin:0}
+.chips{display:flex;flex-wrap:wrap;gap:.5rem}
+.seg{display:flex;flex-wrap:wrap;gap:.5rem}
+.seg label{position:relative;display:inline-flex;align-items:center;min-height:44px;padding:.4rem 1rem;border:2px solid var(--line);border-radius:999px;font-weight:600;cursor:pointer;background:var(--surface)}
+.seg input{position:absolute;opacity:0;inset:-2px;width:calc(100% + 4px);height:calc(100% + 4px);margin:0;cursor:pointer}
+.seg label:has(input:checked){background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.seg label:has(input:focus-visible){outline:3px solid var(--focus);outline-offset:3px}
+.preview{border-radius:16px;border:1px solid var(--soft-line);padding:clamp(16px,3vw,28px);min-height:190px;display:flex;flex-direction:column;justify-content:center;gap:.6rem}
+.big-ratio{font:700 clamp(2.6rem,7vw,4rem)/1 var(--display)}
+.results{list-style:none;margin:0;padding:0;display:grid;gap:.5rem}
+.results li{display:flex;justify-content:space-between;align-items:center;gap:.8rem;padding:.55rem .9rem;border-radius:12px;background:var(--surface2);font-weight:600;font-size:.97rem}
+.badge{display:inline-flex;align-items:center;gap:.4em;padding:.25rem .75rem;border-radius:99px;font:700 .85rem/1.2 var(--sans);white-space:nowrap}
+.b-ok{background:var(--ok-bg);color:var(--ok)}
+.b-bad{background:var(--bad-bg);color:var(--bad)}
+.b-prog{background:var(--prog-bg);color:var(--prog)}
+.b-emu{background:var(--emu-bg);color:var(--emu);border:1px solid var(--line)}
+.note:empty{display:none}
+.note{font-size:.92rem;color:var(--muted);border-left:4px solid var(--accent);padding:.3rem 0 .3rem .9rem;margin:.5rem 0 0}
+.cb-stage{border-radius:16px;overflow:hidden;border:1px solid var(--soft-line);background:#fff;color:#14151a;padding:clamp(14px,3vw,24px);color-scheme:light}
+.cb-stage .ttl{margin:0 0 .6rem;font:700 1.05rem var(--sans)}
+.cb-bars{display:flex;align-items:flex-end;gap:10px;height:130px;margin-bottom:1rem}
+.cb-bars i{flex:1;border-radius:8px 8px 0 0;display:block}
+.cb-status{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:.8rem}
+.cb-status span{padding:.3rem .8rem;border-radius:99px;font-weight:700;color:#fff;font-size:.9rem}
+.cb-dots{display:flex;gap:.6rem;align-items:center;font-size:.9rem}
+.cb-dots i{width:26px;height:26px;border-radius:50%;display:block}
+.sample{border-radius:16px;border:1px solid var(--soft-line);padding:clamp(16px,3vw,28px);background:var(--surface2)}
+.sample p{margin:0 0 1em;max-width:none}
+.rd-box{position:relative;overflow:hidden;border-radius:16px;border:1px solid var(--soft-line);background:var(--surface2);padding:clamp(16px,3vw,28px);cursor:text}
+.rd-box:focus-visible{outline-offset:2px}
+.rd-box p{position:relative;margin:0 0 1em;font-size:1.12rem;line-height:1.75}
+.rd-box.rsvp-on p{display:none}
+.rd-box b.bn{font-weight:800}
+.rd-band{position:absolute;left:0;right:0;height:2.1em;top:0;pointer-events:none;border-top:3px solid var(--accent);border-bottom:3px solid var(--accent);background:color-mix(in srgb,var(--accent) 12%,transparent);display:none;z-index:2;transition:top .08s linear}
+.rd-box.ruler .rd-band{display:block}
+.rd-box.mask .rd-band{display:block;box-shadow:0 0 0 2000px rgba(8,10,20,.68);background:transparent;border-color:transparent}
+.rsvp{display:none;min-height:150px;place-items:center;font:700 clamp(2rem,7vw,3.4rem)/1.1 var(--display);text-align:center;padding:1rem;overflow-wrap:anywhere}
+.rd-box.rsvp-on .rsvp{display:grid}
+.rsvp em{font-style:normal;color:var(--accent)}
+.spacer{height:10px}
+
+/* funcții */
+.grid{display:grid;gap:1.1rem;grid-template-columns:repeat(auto-fill,minmax(min(100%,290px),1fr))}
+.card{background:var(--surface);border:1px solid var(--soft-line);border-radius:20px;padding:1.5rem;position:relative;transition:transform .25s,border-color .25s,box-shadow .25s}
+.card:hover{transform:translateY(-4px);border-color:var(--accent);box-shadow:var(--shadow)}
+.card .ico{width:52px;height:52px;border-radius:14px;display:grid;place-items:center;background:var(--surface2);color:var(--accent);margin-bottom:1rem;border:1px solid var(--soft-line)}
+.card .ico svg{width:28px;height:28px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.card h3{font-size:1.18rem;font-family:var(--sans);font-weight:700;margin-bottom:.4em}
+.card p{margin:0;color:var(--muted);font-size:.98rem}
+.tag{display:inline-block;font:700 .75rem/1 var(--sans);letter-spacing:.05em;padding:.3rem .55rem;border-radius:7px;background:var(--surface2);border:1px solid var(--line);color:var(--text);margin-bottom:.7rem}
+.langs{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:2rem;list-style:none;padding:0}
+.langs li{padding:.35rem .9rem;border:1px solid var(--line);border-radius:99px;font-weight:600;background:var(--surface)}
+
+/* confidențialitate */
+.priv-grid{display:grid;gap:clamp(24px,4vw,56px);grid-template-columns:1fr;align-items:center}
+@media (min-width:960px){.priv-grid{grid-template-columns:1fr 1fr}}
+.priv-art{background:var(--surface);border:1px solid var(--soft-line);border-radius:24px;padding:1.5rem;box-shadow:var(--shadow)}
+.priv-art svg{width:100%;height:auto;display:block}
+.priv-art .pa-line{stroke:var(--line)}
+.priv-art .pa-fill{fill:var(--surface2)}
+.priv-art .pa-acc{stroke:var(--accent);fill:none}
+.priv-art .pa-txt{fill:var(--text);font:700 15px var(--sans)}
+.priv-art .pa-mut{fill:var(--muted);font:600 13px var(--sans)}
+.pa-dash{stroke-dasharray:6 6;animation:dash 1.2s linear infinite}
+@keyframes dash{to{stroke-dashoffset:-12}}
+.checks{list-style:none;padding:0;margin:1.4rem 0 0;display:grid;gap:.8rem}
+.checks li{display:grid;grid-template-columns:32px 1fr;gap:.8rem;align-items:start}
+.checks .tick{width:32px;height:32px;border-radius:50%;background:var(--ok-bg);color:var(--ok);display:grid;place-items:center;font-weight:800;margin-top:2px}
+.checks .tick.warn{background:var(--prog-bg);color:var(--prog)}
+.checks b{display:block}
+
+/* browsere */
+.fam{display:grid;gap:1.1rem;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr))}
+.fam .card h3{font-family:var(--display);font-size:1.5rem}
+.fam code.pkg{display:inline-block;margin-bottom:.8rem}
+.names{display:flex;flex-wrap:wrap;gap:.4rem;list-style:none;padding:0;margin:.8rem 0 0}
+.names li{font-size:.88rem;font-weight:600;padding:.2rem .65rem;border-radius:99px;background:var(--surface2);border:1px solid var(--soft-line)}
+.legend{display:flex;flex-wrap:wrap;gap:.6rem 1.2rem;align-items:center;margin-bottom:1.6rem;padding:0;list-style:none}
+.compat{list-style:none;margin:0;padding:0;display:grid;gap:.8rem}
+.compat li{display:grid;grid-template-columns:1fr;gap:.5rem .9rem;background:var(--surface);border:1px solid var(--soft-line);border-radius:16px;padding:1rem 1.2rem}
+@media (min-width:760px){.compat li{grid-template-columns:220px 170px 1fr;align-items:start}}
+.compat h3{font:700 1.05rem var(--sans);margin:0}
+.compat p{margin:0;color:var(--muted);font-size:.96rem}
+.callout{margin-top:1.6rem;background:var(--surface);border:2px dashed var(--line);border-radius:18px;padding:1.2rem 1.4rem}
+.callout h3{font:700 1.1rem var(--sans)}
+.callout p:last-child{margin:0}
+
+/* module */
+.mod .tag{margin-bottom:.5rem}
+.mod p{font-size:.95rem}
+
+/* audit */
+.audit-grid{display:grid;gap:clamp(24px,4vw,48px);grid-template-columns:1fr}
+@media (min-width:960px){.audit-grid{grid-template-columns:1fr 1.05fr}}
+.report{align-self:start;background:var(--surface);border:1px solid var(--soft-line);border-radius:20px;overflow:hidden;box-shadow:var(--shadow)}
+.report .rh{display:flex;justify-content:space-between;align-items:center;gap:1rem;padding:.9rem 1.2rem;background:var(--surface2);font-weight:700;flex-wrap:wrap}
+.report table{width:100%;border-collapse:collapse;font-size:.92rem}
+.report caption{text-align:left;padding:.8rem 1.2rem 0;color:var(--muted);font-size:.88rem}
+.report th,.report td{text-align:left;padding:.65rem 1.2rem;border-top:1px solid var(--soft-line);vertical-align:top}
+.report th{font-weight:700}
+.report table{table-layout:fixed}
+.report th:first-child{width:4.6rem}.report th:last-child,.report td:last-child{width:7.6rem}
+.report td,.report th{overflow-wrap:anywhere}
+.report .badge{white-space:normal}
+@media (max-width:480px){.report th,.report td{padding:.55rem .6rem}.report caption{padding:.8rem .6rem 0}.report .rh{padding:.8rem .6rem}}
+.report thead th{border-top:0;color:var(--muted);font-size:.82rem;text-transform:uppercase;letter-spacing:.06em}
+.codeblock{position:relative;background:#0b1020;color:#eef2ff;border-radius:14px;padding:1rem 1rem 1rem 1.2rem;font:.9rem/1.6 var(--mono);overflow-x:auto;margin:1rem 0;border:1px solid #3a4676;color-scheme:dark}
+.codeblock pre{margin:0;white-space:pre-wrap;overflow-wrap:anywhere}
+.codeblock .btn{margin-top:.8rem;background:#ffcf5c;color:#0a0f1f;border-color:#ffcf5c}
+
+/* instalare */
+.steps{counter-reset:s;list-style:none;margin:0;padding:0;display:grid;gap:.9rem}
+.steps li{counter-increment:s;display:grid;grid-template-columns:44px 1fr;gap:1rem;align-items:start}
+.steps li::before{content:counter(s);width:44px;height:44px;border-radius:50%;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font:700 1.15rem var(--display)}
+.steps li>div{padding-top:.5rem}
+.kbd-table{width:100%;border-collapse:collapse}
+.kbd-table caption{text-align:left;font-weight:700;padding-bottom:.6rem}
+.kbd-table th,.kbd-table td{text-align:left;padding:.6rem .5rem;border-top:1px solid var(--soft-line)}
+.kbd-table th{font-weight:600}
+
+/* faq */
+.faq{display:grid;gap:.7rem;max-width:860px}
+details{background:var(--surface);border:1px solid var(--soft-line);border-radius:16px}
+details[open]{border-color:var(--accent)}
+summary{display:flex;align-items:center;justify-content:space-between;gap:1rem;min-height:56px;padding:.7rem 1.2rem;cursor:pointer;font-weight:700;font-size:1.05rem;list-style:none;border-radius:16px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";font:700 1.6rem/1 var(--sans);color:var(--accent);flex:none;width:32px;text-align:center}
+details[open] summary::after{content:"\2212"}
+details .ans{padding:0 1.2rem 1.1rem;color:var(--muted)}
+details .ans p:last-child{margin:0}
+
+/* footer */
+footer{border-top:1px solid var(--soft-line);padding-block:48px;background:var(--bg2)}
+.foot{display:grid;gap:2rem;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr))}
+.foot h2{font:700 .9rem var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:.6rem}
+.foot ul{list-style:none;margin:0;padding:0}
+.foot a{display:inline-flex;align-items:center;min-height:44px}
+.fine{margin-top:2rem;padding-top:1.4rem;border-top:1px solid var(--soft-line);color:var(--muted);font-size:.92rem}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+  .js .rv{opacity:1;transform:none}
+}
+@media (forced-colors:active){
+  .btn,.icon-btn,[role=tab],.card,details{border:2px solid ButtonText}
+  .ba-line,.ba-handle{forced-color-adjust:none}
+}
+@media (prefers-contrast:more){:root{--soft-line:var(--line)}}
+@media print{header.top,.cta,.ba-card{display:none}.js .rv{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main"><span data-en="Skip to content">Sari la conținut</span></a>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <filter id="cb-prot"><feColorMatrix type="matrix" values="0.567 0.433 0 0 0  0.558 0.442 0 0 0  0 0.242 0.758 0 0  0 0 0 1 0"/></filter>
+    <filter id="cb-deut"><feColorMatrix type="matrix" values="0.625 0.375 0 0 0  0.7 0.3 0 0 0  0 0.3 0.7 0 0  0 0 0 1 0"/></filter>
+    <filter id="cb-trit"><feColorMatrix type="matrix" values="0.95 0.05 0 0 0  0 0.433 0.567 0 0  0 0.475 0.525 0 0  0 0 0 1 0"/></filter>
+    <filter id="cb-achr"><feColorMatrix type="matrix" values="0.299 0.587 0.114 0 0  0.299 0.587 0.114 0 0  0.299 0.587 0.114 0 0  0 0 0 1 0"/></filter>
+    <symbol id="i-contrast" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/></symbol>
+    <symbol id="i-palette" viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 0 18c1.4 0 2-1 1.5-2.2-.5-1.2.3-2.3 1.6-2.3H17a4 4 0 0 0 4-4c0-5-4-9.5-9-9.5z"/><circle cx="7.5" cy="11" r="1"/><circle cx="10" cy="7" r="1"/><circle cx="15" cy="7.5" r="1"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="i-type" viewBox="0 0 24 24"><path d="M4 7V5h16v2M9 19h6M12 5v14"/></symbol>
+    <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2zM4 19V5M9 8h6M9 12h6"/></symbol>
+    <symbol id="i-speaker" viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9zM16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></symbol>
+    <symbol id="i-hand" viewBox="0 0 24 24"><path d="M9 11V5a1.5 1.5 0 0 1 3 0v5m0-1.5a1.5 1.5 0 0 1 3 0V11m0-1a1.5 1.5 0 0 1 3 0v5a6 6 0 0 1-6 6h-1a6 6 0 0 1-5-2.7L4 14.5a1.5 1.5 0 0 1 2.4-1.8L9 15z"/></symbol>
+    <symbol id="i-calm" viewBox="0 0 24 24"><path d="M2 9c3 0 3-3 5.5-3S10 9 12 9s3-3 5-3 2.5 3 5 3M2 16c3 0 3-3 5.5-3s2.5 3 4.5 3 3-3 5-3 2.5 3 5 3"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></symbol>
+    <symbol id="i-camera" viewBox="0 0 24 24"><path d="M3 8a2 2 0 0 1 2-2h2l1.5-2h7L17 6h2a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><circle cx="12" cy="13" r="3.5"/></symbol>
+    <symbol id="i-rec" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="3"/><circle cx="12" cy="12" r="3" fill="currentColor"/></symbol>
+    <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 4.8a3.5 3.5 0 0 1 0 6.4M18 14a6.5 6.5 0 0 1 3.5 6"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="11" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5z"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M2 12h2M20 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+    <symbol id="i-arrows" viewBox="0 0 24 24"><path d="M8 7l-5 5 5 5M16 7l5 5-5 5"/></symbol>
+    <symbol id="i-mic" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></symbol>
+    <symbol id="i-keyboard" viewBox="0 0 24 24"><rect x="2.5" y="6" width="19" height="12" rx="2.5"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M7 14h10"/></symbol>
+    <symbol id="i-list" viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01"/></symbol>
+    <symbol id="i-dict" viewBox="0 0 24 24"><path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3zM5 17a3 3 0 0 1 3-3h11M10 8h5"/></symbol>
+    <symbol id="i-sync" viewBox="0 0 24 24"><path d="M20 11a8 8 0 0 0-14-4L4 9M4 4v5h5M4 13a8 8 0 0 0 14 4l2-2M20 20v-5h-5"/></symbol>
+    <symbol id="i-scan" viewBox="0 0 24 24"><path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3M7 12h10"/></symbol>
+    <symbol id="i-cap" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M7 11h4M13 11h4M7 15h7"/></symbol>
+    <symbol id="i-img" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="1.8"/><path d="M21 16l-5-5-8 8"/></symbol>
+    <symbol id="i-pos" viewBox="0 0 24 24"><path d="M4 6h7M4 12h16M4 18h10"/><path d="M14 4l3 4 3-4" /></symbol>
+    <symbol id="i-simplify" viewBox="0 0 24 24"><path d="M4 6h16M4 10h16M4 14h10M4 18h6"/></symbol>
+    <symbol id="i-terminal" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M7 10l3 2-3 2M12 15h5"/></symbol>
+  </defs>
+</svg>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#main" aria-label="Claritas">
+      <svg viewBox="0 0 34 34" aria-hidden="true" focusable="false"><rect width="34" height="34" rx="9" fill="#0a0f1f"/><circle cx="17" cy="17" r="8.5" fill="none" stroke="#ffcf5c" stroke-width="3"/><path d="M17 8.5a8.5 8.5 0 0 1 0 17z" fill="#ffcf5c"/></svg>
+      <span>Claritas</span>
+    </a>
+    <nav class="main" id="mainnav" aria-label="Navigare principală" data-en-aria-label="Main navigation">
+      <ul>
+        <li><a href="#laborator"><span data-en="Try it">Încearcă</span></a></li>
+        <li><a href="#functii"><span data-en="Features">Funcții</span></a></li>
+        <li><a href="#module"><span data-en="Modules">Module</span></a></li>
+        <li><a href="#confidentialitate"><span data-en="Privacy">Confidențialitate</span></a></li>
+        <li><a href="#compatibilitate"><span data-en="Compatibility">Compatibilitate</span></a></li>
+        <li><a href="#instalare"><span data-en="Install">Instalare</span></a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+    </nav>
+    <button class="icon-btn" id="langBtn" type="button" lang="en" aria-label="Switch to English">EN</button>
+    <button class="icon-btn" id="themeBtn" type="button" aria-label="Temă"><svg class="ic" aria-hidden="true" id="themeIc"><use href="#i-moon"/></svg><span class="sr-only" id="themeTxt"></span></button>
+    <button class="icon-btn menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="mainnav" aria-label="Meniu" data-en-aria-label="Menu"><svg class="ic" aria-hidden="true"><use href="#i-menu"/></svg></button>
+  </div>
+</header>
+
+<main id="main" tabindex="-1">
+
+<!-- HERO -->
+<section class="hero" aria-labelledby="h-hero">
+  <div class="wrap hero-grid">
+    <div>
+      <p class="eyebrow"><span data-en="Free accessibility extension · v1.7.0">Extensie gratuită de accesibilitate · v1.7.0</span></p>
+      <h1 id="h-hero"><span data-en="See &lt;span class=&quot;focus&quot;&gt;more clearly&lt;/span&gt;.&lt;span class=&quot;sub&quot;&gt;Read more easily. Without being tracked.&lt;/span&gt;">Vezi <span class="focus">mai clar</span>.<span class="sub">Citești mai ușor. Fără să te urmărească nimeni.</span></span></h1>
+      <p class="lead"><span data-en="Claritas measures the real contrast of the text on the pages you visit and fixes it where it is too weak. It adds themes, a reader mode, read-aloud and a WCAG 2.2 audit, all running locally in your browser.">Claritas măsoară contrastul real al textului din paginile pe care le vizitezi și îl corectează acolo unde e prea slab. Adaugă teme, mod cititor, citire cu voce și un audit WCAG 2.2, totul rulând local, în browserul tău.</span></p>
+      <div class="cta">
+        <a class="btn" href="#instalare"><svg class="ic" aria-hidden="true"><use href="#i-arrows"/></svg><span data-en="How to install">Cum se instalează</span></a>
+        <a class="btn ghost" href="#laborator"><span data-en="Try the demos">Încearcă demo-urile</span></a>
+      </div>
+      <ul class="pills">
+        <li>Chromium · Firefox · Safari</li>
+        <li><span data-en="8 languages">8 limbi</span></li>
+        <li><span data-en="MIT licence">Licență MIT</span></li>
+        <li><span data-en="No accounts">Fără conturi</span></li>
+      </ul>
+    </div>
+
+    <div class="ba-card rv">
+      <div class="ba" id="ba" role="group" aria-label="Comparație înainte și după aplicarea Claritas" data-en-aria-label="Before and after comparison of Claritas">
+        <div class="mock" id="mockGood" lang="ro" aria-hidden="true">
+          <div class="mock-bar"><i></i><i></i><i></i><span class="mock-url">exemplu.ro/program</span></div>
+          <div class="mock-body">
+            <div class="m-h" id="mH">Program de vară</div>
+            <p class="m-p" id="mP">Înscrierile se închid vineri. Citește condițiile și completează formularul până la ora 18:00.</p>
+            <p class="m-p"><span class="m-a" id="mA">Vezi condițiile</span> · <span class="m-mut" id="mM">Actualizat azi</span></p>
+            <span class="m-fld">nume@exemplu.ro</span>
+            <span class="m-btn" id="mB">Înscrie-mă</span>
+          </div>
+        </div>
+        <div class="layer-bad" aria-hidden="true"><div class="mock bad" id="mockBad"></div></div>
+        <span class="ba-chip l" aria-hidden="true"><span data-en="Before">Înainte</span></span>
+        <span class="ba-chip r" aria-hidden="true"><span data-en="After">După</span></span>
+        <div class="ba-line" aria-hidden="true"></div>
+        <div class="ba-handle" aria-hidden="true"><svg class="ic" viewBox="0 0 24 24"><use href="#i-arrows"/></svg></div>
+        <input type="range" id="baRange" min="0" max="100" value="50" step="1" aria-label="Cât din pagină arată cu Claritas aplicat. Glisează sau folosește tastele săgeți." data-en-aria-label="How much of the page is shown with Claritas applied. Drag or use the arrow keys.">
+      </div>
+      <div class="ba-meta">
+        <div class="ratio-pair" id="baRatios"></div>
+        <button class="btn sm ghost" type="button" id="baToggle" aria-pressed="false"><span data-en="Apply Claritas everywhere">Aplică Claritas peste tot</span></button>
+      </div>
+      <p class="ba-hint"><span data-en="Illustration: the contrast ratio is computed live from the displayed colours. The “before” page is an invented example with deliberately weak text.">Ilustrație: raportul de contrast e calculat live din culorile afișate. Pagina „înainte” e un exemplu inventat, cu text deliberat slab.</span></p>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="stats" role="list">
+      <div class="stat rv" role="listitem"><b>WCAG</b><span><span data-en="AA / AAA contrast correction">corecție AA / AAA a contrastului</span></span></div>
+      <div class="stat rv" role="listitem" style="--d:.06s"><b>19</b><span><span data-en="ready-made profiles">profiluri gata făcute</span></span></div>
+      <div class="stat rv" role="listitem" style="--d:.12s"><b>8</b><span><span data-en="interface languages">limbi în interfață</span></span></div>
+      <div class="stat rv" role="listitem" style="--d:.18s"><b>0</b><span><span data-en="telemetry, accounts or own servers">telemetrie, conturi sau servere proprii</span></span></div>
+    </div>
+  </div>
+</section>
+
+<!-- LABORATOR -->
+<section id="laborator" class="alt" aria-labelledby="h-lab">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <p class="eyebrow"><span data-en="Demos on this page">Demo-uri în pagină</span></p>
+      <h2 id="h-lab"><span data-en="Try it yourself">Încearcă tu însuți</span></h2>
+      <p class="lead"><span data-en="Four small demonstrations running right here in your browser. They illustrate the principles behind the extension; they are not the extension itself.">Patru mici demonstrații care rulează chiar aici, în browserul tău. Ilustrează principiile din spatele extensiei; nu sunt extensia însăși.</span></p>
+    </div>
+
+    <div class="lab rv">
+      <div role="tablist" id="labTabs" aria-label="Demo-uri" data-en-aria-label="Demos">
+        <button role="tab" id="tab-c" aria-controls="pan-c" aria-selected="true" type="button"><span data-en="Contrast">Contrast</span></button>
+        <button role="tab" id="tab-d" aria-controls="pan-d" aria-selected="false" tabindex="-1" type="button"><span data-en="Colour blindness">Daltonism</span></button>
+        <button role="tab" id="tab-t" aria-controls="pan-t" aria-selected="false" tabindex="-1" type="button"><span data-en="Text &amp;amp; dyslexia">Text și dislexie</span></button>
+        <button role="tab" id="tab-r" aria-controls="pan-r" aria-selected="false" tabindex="-1" type="button"><span data-en="Reading mode">Mod citire</span></button>
+      </div>
+
+      <!-- contrast -->
+      <div role="tabpanel" id="pan-c" aria-labelledby="tab-c">
+        <div class="panel-grid">
+          <div class="ctl">
+            <div class="row">
+              <label for="fgC"><span data-en="Text colour">Culoare text</span></label><input type="color" id="fgC" value="#9a9a9a">
+              <code id="fgHex">#9a9a9a</code>
+            </div>
+            <div class="row">
+              <label for="bgC"><span data-en="Background colour">Culoare fundal</span></label><input type="color" id="bgC" value="#f3f3f3">
+              <code id="bgHex">#f3f3f3</code>
+            </div>
+            <fieldset>
+              <legend><span data-en="Fix target">Țintă pentru corecție</span></legend>
+              <div class="seg">
+                <label><input type="radio" name="tgt" value="4.5" checked><span><span data-en="AA (4.5:1)">AA (4,5:1)</span></span></label>
+                <label><input type="radio" name="tgt" value="7"><span>AAA (7:1)</span></label>
+              </div>
+            </fieldset>
+            <div class="chips">
+              <button type="button" class="btn sm ghost" data-preset="#9a9a9a,#f3f3f3"><span data-en="Grey on white">Gri pe alb</span></button>
+              <button type="button" class="btn sm ghost" data-preset="#e8c200,#ffffff"><span data-en="Yellow on white">Galben pe alb</span></button>
+              <button type="button" class="btn sm ghost" data-preset="#3a3aa8,#0b0b1c"><span data-en="Blue on black">Albastru pe negru</span></button>
+            </div>
+            <div class="row"><button type="button" class="btn" id="fixBtn"><span data-en="Fix it like Claritas">Corectează ca Claritas</span></button></div>
+            <p class="note" id="fixNote" aria-live="polite"></p>
+          </div>
+          <div>
+            <div class="preview" id="cPrev">
+              <div class="big-ratio" id="cRatio" aria-live="polite">–</div>
+              <div style="font-size:1rem" id="cSample1"><span data-en="Regular text, 16 px. The summer programme starts on Monday.">Text obișnuit, 16 px. Programul de vară începe luni.</span></div>
+              <div style="font-size:1.5rem;font-weight:700" id="cSample2"><span data-en="Large bold text">Text mare, îngroșat</span></div>
+            </div>
+            <div class="spacer"></div>
+            <ul class="results" id="cRes">
+              <li data-th="4.5"><span><span data-en="AA · normal text (4.5:1)">AA · text obișnuit (4,5:1)</span></span><span class="badge"></span></li>
+              <li data-th="3"><span><span data-en="AA · large text (3:1)">AA · text mare (3:1)</span></span><span class="badge"></span></li>
+              <li data-th="7"><span><span data-en="AAA · normal text (7:1)">AAA · text obișnuit (7:1)</span></span><span class="badge"></span></li>
+              <li data-th="4.5"><span><span data-en="AAA · large text (4.5:1)">AAA · text mare (4,5:1)</span></span><span class="badge"></span></li>
+              <li data-th="3"><span><span data-en="UI components, graphics (3:1)">Componente UI, grafică (3:1)</span></span><span class="badge"></span></li>
+            </ul>
+            <p class="note"><span data-en="The ratio uses the WCAG formula (relative luminance). “Fix” only changes the lightness of the text and keeps the hue. This illustrates the principle; the extension’s real algorithm works on whole pages and may pick other values.">Raportul se calculează cu formula WCAG (luminanță relativă). „Corectează” schimbă doar luminozitatea textului, păstrând nuanța. Ilustrează principiul; algoritmul real din extensie lucrează pe pagini întregi și poate alege alte valori.</span></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- daltonism -->
+      <div role="tabpanel" id="pan-d" aria-labelledby="tab-d" hidden>
+        <div class="panel-grid">
+          <div class="ctl">
+            <fieldset>
+              <legend><span data-en="How it might look to someone with…">Cum ar arăta pentru cineva cu…</span></legend>
+              <div class="seg" id="cbSeg">
+                <label><input type="radio" name="cb" value="" checked><span><span data-en="Typical vision">Vedere obișnuită</span></span></label>
+                <label><input type="radio" name="cb" value="cb-prot"><span><span data-en="Protanopia">Protanopie</span></span></label>
+                <label><input type="radio" name="cb" value="cb-deut"><span><span data-en="Deuteranopia">Deuteranopie</span></span></label>
+                <label><input type="radio" name="cb" value="cb-trit"><span><span data-en="Tritanopia">Tritanopie</span></span></label>
+                <label><input type="radio" name="cb" value="cb-achr"><span><span data-en="Achromatopsia">Acromatopsie</span></span></label>
+              </div>
+            </fieldset>
+            <p id="cbSay" aria-live="polite" style="font-weight:600"></p>
+            <p class="note"><span data-en="Approximate simulation made with SVG colour filters. Real experience varies from person to person. Claritas includes both simulation and colour correction, but the lesson is simple: never convey information by colour alone.">Simulare aproximativă, făcută cu filtre de culoare SVG. Experiența reală diferă de la om la om. Claritas include atât simulare, cât și corecție de culoare, dar lecția e simplă: nu transmite informația doar prin culoare.</span></p>
+          </div>
+          <div>
+            <div class="cb-stage" id="cbStage" role="img" aria-label="Exemplu de grafic cu bare colorate și etichete de stare. Culorile se schimbă în funcție de simularea aleasă." data-en-aria-label="Example of a chart with coloured bars and status labels. The colours change with the chosen simulation.">
+              <div class="ttl"><span data-en="Requests this month">Cereri pe luna aceasta</span></div>
+              <div class="cb-bars" aria-hidden="true">
+                <i style="height:92%;background:#d7263d"></i><i style="height:70%;background:#2e9e44"></i><i style="height:55%;background:#1f6fd6"></i><i style="height:80%;background:#f08a00"></i><i style="height:40%;background:#8a3ffc"></i>
+              </div>
+              <div class="cb-status" aria-hidden="true">
+                <span style="background:#0f5c25">✓ <span data-en="Approved">Aprobat</span></span><span style="background:#8f0f22">✕ <span data-en="Rejected">Respins</span></span><span style="background:#6b4400">… <span data-en="Pending">În așteptare</span></span>
+              </div>
+              <div class="cb-dots" aria-hidden="true"><i style="background:#d7263d"></i><i style="background:#2e9e44"></i><span><span data-en="Colour only: which one is “good”?">Doar culoare: care e „bine”?</span></span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- text -->
+      <div role="tabpanel" id="pan-t" aria-labelledby="tab-t" hidden>
+        <div class="panel-grid">
+          <div class="ctl">
+            <div><label for="tSize"><span data-en="Text size: &lt;output id=&quot;oSize2&quot;&gt;100&lt;/output&gt;%">Mărime text: <output id="oSize">100</output>%</span></label><input type="range" id="tSize" min="90" max="220" step="5" value="100"></div>
+            <div><label for="tLh"><span data-en="Line height: &lt;output id=&quot;oLh2&quot;&gt;1.65&lt;/output&gt;">Spațiu între rânduri: <output id="oLh">1,65</output></span></label><input type="range" id="tLh" min="1.2" max="2.4" step="0.05" value="1.65"></div>
+            <div><label for="tLs"><span data-en="Letter spacing: &lt;output id=&quot;oLs2&quot;&gt;0&lt;/output&gt; em">Spațiu între litere: <output id="oLs">0</output> em</span></label><input type="range" id="tLs" min="0" max="0.2" step="0.01" value="0"></div>
+            <div><label for="tWs"><span data-en="Word spacing: &lt;output id=&quot;oWs2&quot;&gt;0&lt;/output&gt; em">Spațiu între cuvinte: <output id="oWs">0</output> em</span></label><input type="range" id="tWs" min="0" max="0.5" step="0.02" value="0"></div>
+            <div class="row"><label for="tFont"><span data-en="Font">Font</span></label>
+              <select id="tFont">
+                <option value="var(--sans)" data-en="System sans-serif">Sans-serif de sistem</option>
+                <option value="Verdana,Tahoma,Geneva,sans-serif" data-en="Wide sans-serif (Verdana)">Sans-serif lat (Verdana)</option>
+                <option value="Georgia,'Times New Roman',serif" data-en="Serif">Serif</option>
+                <option value="var(--mono)" data-en="Monospaced">Monospațiat</option>
+              </select></div>
+            <label class="check"><input type="checkbox" id="tLeft"><span><span data-en="Left-aligned, no justified text">Aliniere la stânga, fără text justificat</span></span></label>
+            <label class="check"><input type="checkbox" id="tScr"><span><span data-en="Simulate dyslexia (letters shuffled inside words)">Simulează dislexia (litere amestecate în cuvinte)</span></span></label>
+            <div class="chips">
+              <button type="button" class="btn sm ghost" id="tWcag"><span data-en="WCAG 1.4.12 spacing">Spațiere WCAG 1.4.12</span></button>
+              <button type="button" class="btn sm ghost" id="tReset"><span data-en="Reset">Resetează</span></button>
+            </div>
+            <p class="note"><span data-en="Claritas bundles the Lexend, Atkinson Hyperlegible and OpenDyslexic fonts inside the package. This demo only uses your system’s fonts, with no downloads.">Claritas include fonturile Lexend, Atkinson Hyperlegible și OpenDyslexic, livrate în pachet. Demo-ul de aici folosește doar fonturile sistemului tău, fără descărcări.</span></p>
+          </div>
+          <div class="sample" id="tSample">
+            <p id="tText"></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- citire -->
+      <div role="tabpanel" id="pan-r" aria-labelledby="tab-r" hidden>
+        <div class="panel-grid">
+          <div class="ctl">
+            <fieldset>
+              <legend><span data-en="Reading aids">Ajutoare de citire</span></legend>
+              <label class="check"><input type="checkbox" id="rRuler"><span><span data-en="Reading ruler">Riglă de citire</span></span></label>
+              <label class="check"><input type="checkbox" id="rMask"><span><span data-en="Mask (dims the rest)">Mască (estompează restul)</span></span></label>
+              <label class="check"><input type="checkbox" id="rBion"><span><span data-en="Emphasise word beginnings">Evidențiază începutul cuvintelor</span></span></label>
+            </fieldset>
+            <p class="note" id="rHelp"><span data-en="Move the ruler with the mouse or your finger. By keyboard: focus the text and use the up/down arrows.">Mută rigla cu mouse-ul sau cu degetul. De la tastatură: focalizează textul și folosește săgețile sus/jos.</span></p>
+            <fieldset>
+              <legend><span data-en="Speed reading (one word at a time)">Citire rapidă (un cuvânt pe rând)</span></legend>
+              <div><label for="rWpm"><span data-en="Speed: &lt;output id=&quot;oWpm2&quot;&gt;240&lt;/output&gt; words/min">Viteză: <output id="oWpm">240</output> cuvinte/min</span></label><input type="range" id="rWpm" min="120" max="600" step="20" value="240"></div>
+              <div class="chips"><button type="button" class="btn sm" id="rPlay"><span data-en="Start">Pornește</span></button></div>
+            </fieldset>
+            <div class="chips">
+              <button type="button" class="btn sm ghost" id="rSpeak"><span data-en="Read aloud">Citește cu voce</span></button>
+            </div>
+            <p class="note" id="rSpeakNote"><span data-en="Read-aloud uses your browser’s voices. Claritas prefers local voices.">Citirea cu voce folosește vocile browserului tău. Claritas preferă vocile locale.</span></p>
+          </div>
+          <div>
+            <div class="rd-box" id="rBox" tabindex="0" role="group" aria-label="Text de citit. Cu rigla pornită, săgețile sus și jos mută rigla." data-en-aria-label="Text to read. With the ruler on, the up and down arrows move it.">
+              <div class="rd-band" id="rBand" aria-hidden="true"></div>
+              <div id="rText"></div>
+              <div class="rsvp" id="rRsvp" aria-hidden="true"></div>
+            </div>
+            <p class="sr-only" aria-live="polite" id="rLive"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FUNCȚII -->
+<section id="functii" aria-labelledby="h-f">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <p class="eyebrow"><span data-en="Everything Claritas does">Tot ce face Claritas</span></p>
+      <h2 id="h-f"><span data-en="One extension, many ways to read, see and navigate">O singură extensie, mai multe feluri de a citi, de a vedea și de a naviga</span></h2>
+      <p class="lead"><span data-en="Turn on what you need and leave the rest off. Settings can be saved per site, per profile or for the whole browser.">Pornești ce ai nevoie și lași restul oprit. Setările se pot salva pe site, pe profil sau pentru tot browserul.</span></p>
+    </div>
+    <div class="grid">
+      <article class="card rv"><div class="ico"><svg aria-hidden="true"><use href="#i-contrast"/></svg></div><h3><span data-en="Automatic contrast fix">Corecție automată a contrastului</span></h3><p><span data-en="Measures the real text/background contrast (WCAG AA or AAA) and adjusts only the insufficient text, including disabled fields.">Măsoară contrastul real text/fundal (WCAG AA sau AAA) și ajustează doar textul insuficient, inclusiv câmpurile dezactivate.</span></p></article>
+      <article class="card rv" style="--d:.05s"><div class="ico"><svg aria-hidden="true"><use href="#i-palette"/></svg></div><h3><span data-en="Themes and colour filters">Teme și filtre de culoare</span></h3><p><span data-en="High-contrast themes, colour filters, a blue-light filter, and respect for system preferences (contrast, reduced motion, forced colours).">Teme cu contrast mare, filtre de culoare, filtru de lumină albastră și respectarea preferințelor sistemului (contrast, mișcare redusă, culori forțate).</span></p></article>
+      <article class="card rv" style="--d:.1s"><div class="ico"><svg aria-hidden="true"><use href="#i-eye"/></svg></div><h3><span data-en="Colour blindness and vision simulators">Daltonism și simulatoare de vedere</span></h3><p><span data-en="Correction and simulation for colour blindness, plus simulations of blur, cataract, tunnel vision, central vision loss, astigmatism and glare.">Corecție și simulare pentru daltonism, plus simulări de încețoșare, cataractă, vedere tubulară, pierdere centrală, astigmatism, strălucire.</span></p></article>
+      <article class="card rv"><div class="ico"><svg aria-hidden="true"><use href="#i-type"/></svg></div><h3><span data-en="Text, spacing and fonts">Text, spațiere și fonturi</span></h3><p><span data-en="Zoom, size, spacing, left alignment and dyslexia-friendly fonts: Lexend, Atkinson Hyperlegible, OpenDyslexic.">Zoom, mărime, spațieri, aliniere la stânga și fonturi prietenoase cu dislexia: Lexend, Atkinson Hyperlegible, OpenDyslexic.</span></p></article>
+      <article class="card rv" style="--d:.05s"><div class="ico"><svg aria-hidden="true"><use href="#i-book"/></svg></div><h3><span data-en="Comfortable reading">Citire confortabilă</span></h3><p><span data-en="Ruler, mask, magnifier, reader mode, speed reading, highlights with export and a readability index.">Riglă, mască, lupă, mod cititor, citire rapidă, evidențieri cu export și indice de lizibilitate.</span></p></article>
+      <article class="card rv" style="--d:.1s"><div class="ico"><svg aria-hidden="true"><use href="#i-speaker"/></svg></div><h3><span data-en="Read aloud">Citire cu voce</span></h3><p><span data-en="Sentence and word highlighting, pause, previous/next, voice choice (local voices preferred) and language detected from the text.">Evidențiere pe propoziție și cuvânt, pauză, anterior/următor, alegerea vocii (cu preferință pentru voci locale) și limba detectată din text.</span></p></article>
+      <article class="card rv"><div class="ico"><svg aria-hidden="true"><use href="#i-hand"/></svg></div><h3><span data-en="Motor and control">Motricitate și control</span></h3><p><span data-en="Large click targets, dwell click, single-switch scanning, numbered labels, unblocked paste.">Ținte de clic mari, clic prin menținere, scanare cu un singur buton, etichete numerotate, lipire deblocată.</span></p></article>
+      <article class="card rv" style="--d:.05s"><div class="ico"><svg aria-hidden="true"><use href="#i-calm"/></svg></div><h3><span data-en="Calm and stability">Calm și stabilitate</span></h3><p><span data-en="Hides banners and pop-ups, freezes GIFs, keeps focus visible and supports reflow.">Ascunde bannere și ferestre pop-up, oprește GIF-urile, păstrează focusul vizibil și permite reflow.</span></p></article>
+      <article class="card rv" style="--d:.1s"><div class="ico"><svg aria-hidden="true"><use href="#i-camera"/></svg></div><h3><span data-en="Local screenshots">Captură de ecran locală</span></h3><p><span data-en="Visible area, region, full page or one element, with annotations and automatic covering of personal data. Produces a ZIP with a PNG and a description (.md).">Zonă vizibilă, regiune, toată pagina sau un element, cu adnotări și acoperire automată a datelor personale. Rezultă un ZIP cu PNG și descriere (.md).</span></p></article>
+      <article class="card rv"><div class="ico"><svg aria-hidden="true"><use href="#i-rec"/></svg></div><h3><span data-en="Local screen recording">Înregistrare locală a ecranului</span></h3><p><span data-en="Click rings, shown keys and a WebVTT action log: an accessible transcript of the demonstration.">Inele la clic, taste afișate și un jurnal de acțiuni WebVTT: un transcript accesibil al demonstrației.</span></p></article>
+      <article class="card rv" style="--d:.05s"><div class="ico"><svg aria-hidden="true"><use href="#i-shield"/></svg></div><h3><span data-en="WCAG 2.2 audit">Audit WCAG 2.2</span></h3><p><span data-en="Continuous monitoring, manual checks and page structure. See the report and command-line section below.">Monitorizare continuă, verificări manuale și structura paginii. Vezi secțiunea despre raport și linia de comandă mai jos.</span></p></article>
+      <article class="card rv" style="--d:.1s"><div class="ico"><svg aria-hidden="true"><use href="#i-users"/></svg></div><h3><span data-en="Profiles and per-site settings">Profiluri și setări pe site</span></h3><p><span data-en="19 profiles, per-site settings, JSON export/import and enterprise policies (managed storage) for organisations.">19 profiluri, setări pe site, export/import JSON și politici de administrare (managed storage) pentru organizații.</span></p></article>
+    </div>
+    <h3 style="margin-top:2.5rem" id="h-langs"><span data-en="Interface in 8 languages">Interfață în 8 limbi</span></h3>
+    <ul class="langs" aria-labelledby="h-langs">
+      <li lang="ro">Română</li><li lang="en">English</li><li lang="de">Deutsch</li><li lang="es">Español</li><li lang="fr">Français</li><li lang="hu">Magyar</li><li lang="it">Italiano</li><li lang="pt">Português</li>
+    </ul>
+  </div>
+</section>
+
+<!-- AUDIT -->
+<section id="audit" class="alt" aria-labelledby="h-a">
+  <div class="wrap audit-grid">
+    <div class="rv">
+      <p class="eyebrow"><span data-en="For teams and developers">Pentru echipe și dezvoltatori</span></p>
+      <h2 id="h-a"><span data-en="Audit with a WCAG 2.2 and EN 301 549 report">Audit cu raport WCAG 2.2 și EN 301 549</span></h2>
+      <p class="lead"><span data-en="The audit runs in the page, with continuous monitoring. The report exports as HTML, CSV or JSON, with WCAG 2.2 / EN 301 549 mapping, repair suggestions and comparison with a saved baseline.">Auditul rulează în pagină, cu monitorizare continuă. Raportul se exportă ca HTML, CSV sau JSON, cu corespondență WCAG 2.2 / EN 301 549, sugestii de reparare și comparare cu o referință salvată.</span></p>
+      <p><span data-en="From the command line, CI mode can fail a pipeline when the error threshold is exceeded. It covers only Claritas’s automatic rules; it does not replace manual evaluation.">Din linia de comandă, modul CI poate opri un pipeline când pragul de erori e depășit. Acoperă doar regulile automate Claritas; nu înlocuiește evaluarea manuală.</span></p>
+      <div class="codeblock" lang="en"><pre id="ciCmd">python tools/claritas_ci.py https://example.org --format all --max-errors 0</pre>
+        <button class="btn sm" type="button" id="copyCi" data-copy="ciCmd">Copy</button></div>
+      <p class="note"><span data-en="Exit code 1 if the threshold is exceeded.">Cod de ieșire 1 dacă pragul e depășit.</span></p>
+    </div>
+    <div class="report rv" style="--d:.08s">
+      <div class="rh"><span><span data-en="Audit report (illustrative example)">Raport de audit (exemplu ilustrativ)</span></span><span class="chips"><span class="badge b-emu">HTML</span><span class="badge b-emu">CSV</span><span class="badge b-emu">JSON</span></span></div>
+      <table>
+        <caption><span data-en="Invented mock-up to show the structure; it does not come from a real page.">Machetă inventată pentru a arăta structura; nu provine dintr-o pagină reală.</span></caption>
+        <thead><tr><th scope="col">WCAG</th><th scope="col"><span data-en="Finding">Constatare</span></th><th scope="col"><span data-en="Impact">Impact</span></th></tr></thead>
+        <tbody>
+          <tr><th scope="row">1.4.3</th><td><span data-en="Insufficient contrast on 4 text elements">Contrast insuficient la 4 elemente de text</span></td><td><span class="badge b-bad">✕ <span data-en="Error">Eroare</span></span></td></tr>
+          <tr><th scope="row">1.1.1</th><td><span data-en="Image without alternative text">Imagine fără text alternativ</span></td><td><span class="badge b-bad">✕ <span data-en="Error">Eroare</span></span></td></tr>
+          <tr><th scope="row">2.4.11</th><td><span data-en="Focus partly covered by a fixed bar">Focus parțial acoperit de o bară fixă</span></td><td><span class="badge b-prog">! <span data-en="Warning">Avertisment</span></span></td></tr>
+          <tr><th scope="row">3.1.1</th><td><span data-en="Page language declared">Limba paginii declarată</span></td><td><span class="badge b-ok">✓ <span data-en="Pass">Trece</span></span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- MODULE -->
+<section id="module" aria-labelledby="h-m">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <p class="eyebrow"><span data-en="Optional modules · v1.6 and v1.7">Module opționale · v1.6 și v1.7</span></p>
+      <h2 id="h-m"><span data-en="Switch them on only if you need them">Le pornești doar dacă ai nevoie de ele</span></h2>
+      <p class="lead"><span data-en="All are off by default (in the popup: “More” → “Optional modules”). Nothing sends data outside the browser. Each has its limits, which we state openly.">Toate sunt oprite implicit (în popup: «Mai mult» → «Module opționale»). Nimic nu trimite date în afara browserului. Fiecare are limitele ei, pe care le spunem deschis.</span></p>
+    </div>
+    <div class="grid">
+      <article class="card mod rv"><span class="tag">v1.7</span><h3><svg class="ic" aria-hidden="true"><use href="#i-keyboard"/></svg> <span data-en="Quick keyboard navigation">Navigare rapidă de la tastatură</span></h3><p><span data-en="Next/previous heading and landmark, a filterable list of landmarks, headings and links, paragraph spotlight; enlarged, visible focus.">Titlu următor/anterior, reper următor/anterior, listă filtrabilă de repere, titluri și linkuri, spotlight pe paragraf; focus mărit și vizibil.</span></p></article>
+      <article class="card mod rv" style="--d:.05s"><span class="tag">v1.7</span><h3><svg class="ic" aria-hidden="true"><use href="#i-mic"/></svg> <span data-en="Voice control">Control vocal</span></h3><p><span data-en="Commands such as “next heading”, “zoom in”, “read”, “help”. In Chrome the audio is processed by the browser’s speech recognition service; Firefox does not have this feature.">Comenzi precum „titlul următor”, „zoom in”, „citește”, „ajutor”. În Chrome, sunetul este prelucrat de serviciul de recunoaștere vocală al browserului; în Firefox această funcție lipsește.</span></p></article>
+      <article class="card mod rv" style="--d:.1s"><span class="tag">v1.7</span><h3><svg class="ic" aria-hidden="true"><use href="#i-simplify"/></svg> <span data-en="Summary, simplification, glossary">Rezumat, simplificare, glosar</span></h3><p><span data-en="Summary by statistical sentence selection (not AI); simplification only splits long sentences; a glossary of abbreviations defined on the page and long words. Chrome’s on-device AI is used only if you turn it on and it is available.">Rezumat prin selecția statistică a propozițiilor (nu e AI); simplificarea doar împarte propozițiile lungi; glosar de abrevieri definite în pagină și cuvinte lungi. AI-ul local din Chrome se folosește doar dacă îl pornești și e disponibil.</span></p></article>
+      <article class="card mod rv"><span class="tag">v1.7</span><h3><svg class="ic" aria-hidden="true"><use href="#i-img"/></svg> <span data-en="Suggested image descriptions">Descrieri sugerate pentru imagini</span></h3><p><span data-en="For images without alt text: from the caption, title, link text or file name, marked “auto-generated”. It does not analyse the image.">Pentru imaginile fără alt: din legendă, titlu, textul linkului sau numele fișierului, marcate „generat automat”. Nu analizează imaginea.</span></p></article>
+      <article class="card mod rv" style="--d:.05s"><span class="tag">v1.7</span><h3><svg class="ic" aria-hidden="true"><use href="#i-cap"/></svg> <span data-en="Live captions">Subtitrări live</span></h3><p><span data-en="Only speech picked up by the microphone, not the sound of videos or the page.">Doar vorbirea captată de microfon, nu sunetul din filme sau din pagină.</span></p></article>
+      <article class="card mod rv" style="--d:.1s"><span class="tag">v1.7</span><h3><svg class="ic" aria-hidden="true"><use href="#i-shield"/></svg> <span data-en="Audit report, CI mode, per-site rules">Raport de audit, mod CI, reguli pe site</span></h3><p><span data-en="HTML/CSV/JSON reports, new profiles (older adults, tremor/mobility, photosensitivity, ADHD/focus), per-site rules with JSON export/import.">Rapoarte HTML/CSV/JSON, profiluri noi (vârstnici, tremor/mobilitate, fotosensibilitate, ADHD/concentrare), reguli pe site cu export/import JSON.</span></p></article>
+      <article class="card mod rv"><span class="tag">v1.6</span><h3><svg class="ic" aria-hidden="true"><use href="#i-pos"/></svg> <span data-en="Parts of speech in Reader">Părți de vorbire în Cititor</span></h3><p><span data-en="Romanian and English: noun, verb, adjective, adverb, with different underlines (not just colour). Heuristic, so approximate.">Română și engleză: substantiv, verb, adjectiv, adverb, cu subliniere diferită (nu doar culoare). Euristic, deci aproximativ.</span></p></article>
+      <article class="card mod rv" style="--d:.05s"><span class="tag">v1.6</span><h3><svg class="ic" aria-hidden="true"><use href="#i-list"/></svg> <span data-en="Extra audit rules">Reguli suplimentare de audit</span></h3><p><span data-en="ARIA roles and references, unlabelled fields, missing or duplicate &lt;code&gt;main&lt;/code&gt;, blocked zoom, video without captions, unnamed SVG, missing skip link and more.">Roluri și referințe ARIA, câmpuri fără etichetă, lipsă sau duplicare <code>main</code>, zoom blocat, video fără subtitrări, SVG fără nume, link „sari la conținut” lipsă și altele.</span></p></article>
+      <article class="card mod rv" style="--d:.1s"><span class="tag">v1.6</span><h3><svg class="ic" aria-hidden="true"><use href="#i-dict"/></svg> <span data-en="Local dictionary">Dicționar local</span></h3><p><span data-en="You import your own JSON or TSV file (max. 4 MB). Lookups go there first, then, on your request, to the online dictionary.">Îți imporți propriul fișier JSON sau TSV (max. 4 MB). Căutarea se face întâi acolo, apoi, la cererea ta, în dicționarul online.</span></p></article>
+      <article class="card mod rv"><span class="tag">v1.6</span><h3><svg class="ic" aria-hidden="true"><use href="#i-sync"/></svg> <span data-en="Settings sync">Sincronizare setări</span></h3><p><span data-en="Through the browser’s &lt;code&gt;storage.sync&lt;/code&gt;: only settings and per-site rules, not the dictionary, screenshots or recordings.">Prin <code>storage.sync</code> al browserului: doar setările și regulile pe site, nu dicționarul, capturile sau înregistrările.</span></p></article>
+      <article class="card mod rv" style="--d:.05s"><span class="tag">v1.6</span><h3><svg class="ic" aria-hidden="true"><use href="#i-scan"/></svg> <span data-en="Local OCR">OCR local</span></h3><p><span data-en="A separate package (~20 MB) with Tesseract.js and language data for the 8 languages, running in the browser. Automatically verified in Chromium only; Safari does not get the OCR package.">Pachet separat (~20 MB) cu Tesseract.js și date de limbă pentru cele 8 limbi, rulat în browser. Verificat automat doar în Chromium; Safari nu primește pachetul OCR.</span></p></article>
+    </div>
+    <div class="callout rv">
+      <h3><span data-en="What is verified and what is not, for the v1.7 modules">Ce e verificat și ce nu, la modulele v1.7</span></h3>
+      <p><span data-en="Verified in Chromium with the real extension: 36 checks (navigation, list, spotlight, voice-command parser, alt text, summary/glossary, reports, profiles, rule import, privacy panel, clean-up on disable). Not verified: speech recognition with a real voice (only start/stop and the command parser) and live captions with a real voice. The same module checks also pass on Firefox.">Verificat în Chromium cu extensia reală: 36 de verificări (navigare, listă, spotlight, parser de comenzi vocale, alt, rezumat/glosar, rapoarte, profiluri, import de reguli, panou de confidențialitate, curățare la dezactivare). Neverificat: recunoașterea vocală cu voce reală (doar pornirea/oprirea și parserul de comenzi) și subtitrările live cu voce reală. Aceleași verificări ale modulelor trec și pe Firefox.</span></p>
+    </div>
+  </div>
+</section>
+
+<!-- CONFIDENȚIALITATE -->
+<section id="confidentialitate" class="alt" aria-labelledby="h-p">
+  <div class="wrap priv-grid">
+    <div class="rv">
+      <p class="eyebrow"><span data-en="Privacy">Confidențialitate</span></p>
+      <h2 id="h-p"><span data-en="Nothing leaves your browser">Nimic nu pleacă din browserul tău</span></h2>
+      <p class="lead"><span data-en="An accessibility extension sees your pages. That is why Claritas has no telemetry, no accounts and no servers of its own.">O extensie de accesibilitate vede paginile tale. De aceea Claritas nu are telemetrie, conturi sau servere proprii.</span></p>
+      <ul class="checks">
+        <li><span class="tick" aria-hidden="true">✓</span><div><b><span data-en="No telemetry, no accounts">Fără telemetrie, fără conturi</span></b><span data-en="We send nothing and never ask you to sign up.">Nu trimitem nimic și nu-ți cerem să te înregistrezi.</span></div></li>
+        <li><span class="tick" aria-hidden="true">✓</span><div><b><span data-en="Screenshots and recordings stay local">Capturile și înregistrările rămân locale</span></b><span data-en="They are created and saved in the browser; files go straight to Downloads.">Se creează și se salvează în browser; fișierele merg direct în Descărcări.</span></div></li>
+        <li><span class="tick" aria-hidden="true">✓</span><div><b><span data-en="You can check for yourself">Poți verifica singur</span></b><span data-en="The “What leaves the browser?” button in the modules panel reads the extension’s code and lists the addresses and network calls it finds. And the code is open (MIT).">Butonul «Ce părăsește browserul?» din panoul modulelor citește codul extensiei și listează adresele și apelurile de rețea găsite. Iar codul e deschis (MIT).</span></div></li>
+        <li><span class="tick warn" aria-hidden="true">!</span><div><b><span data-en="The only exceptions, stated openly">Singurele excepții, spuse deschis</span></b><span data-en="The definition button opens dexonline.ro or Wiktionary in a new tab, only when you press it. Voice control in Chrome uses the browser’s speech recognition service. Settings sync (optional, off by default) goes through your browser’s own sync.">Butonul de definiție deschide dexonline.ro sau Wiktionary într-o filă nouă, doar când apeși. Controlul vocal în Chrome folosește serviciul de recunoaștere vocală al browserului. Sincronizarea setărilor (opțională, oprită implicit) trece prin sincronizarea browserului tău.</span></div></li>
+      </ul>
+    </div>
+    <div class="priv-art rv" style="--d:.1s">
+      <svg viewBox="0 0 480 360" role="img" aria-label="Schemă: pagina, extensia Claritas și setările rămân în interiorul browserului; săgețile către internet sunt tăiate." data-en-aria-label="Diagram: the page, the Claritas extension and the settings stay inside the browser; arrows to the internet are crossed out.">
+        <rect class="pa-fill pa-line" x="20" y="20" width="440" height="230" rx="22" stroke-width="2.5"/>
+        <text class="pa-mut" x="40" y="48"><span data-en="YOUR BROWSER">BROWSERUL TĂU</span></text>
+        <rect class="pa-fill pa-line" x="44" y="66" width="170" height="150" rx="14" stroke-width="2"/>
+        <text class="pa-txt" x="60" y="94"><span data-en="Web page">Pagina web</span></text>
+        <rect class="pa-line" x="60" y="110" width="124" height="9" rx="4" style="fill:var(--line)" opacity=".5"/>
+        <rect class="pa-line" x="60" y="130" width="100" height="9" rx="4" style="fill:var(--line)" opacity=".5"/>
+        <rect class="pa-line" x="60" y="150" width="130" height="9" rx="4" style="fill:var(--line)" opacity=".5"/>
+        <rect x="60" y="176" width="90" height="24" rx="12" style="fill:var(--accent)"/>
+        <rect class="pa-fill pa-line" x="266" y="66" width="170" height="150" rx="14" stroke-width="2"/>
+        <circle cx="300" cy="104" r="16" style="fill:none;stroke:var(--accent)" stroke-width="4"/><path d="M300 88a16 16 0 0 1 0 32z" style="fill:var(--accent)"/>
+        <text class="pa-txt" x="326" y="110">Claritas</text>
+        <text class="pa-mut" x="282" y="146"><span data-en="settings · rules · profiles">setări · reguli · profiluri</span></text>
+        <text class="pa-mut" x="282" y="170"><span data-en="screenshots · recordings">capturi · înregistrări</span></text>
+        <text class="pa-mut" x="282" y="194"><span data-en="local dictionary · OCR">dicționar local · OCR</span></text>
+        <path class="pa-acc pa-dash" d="M214 140h52" stroke-width="3"></path>
+        <path d="M240 250v52" style="stroke:var(--line)" stroke-width="3" stroke-dasharray="4 6"/>
+        <circle cx="240" cy="276" r="21" style="fill:var(--bad-bg);stroke:var(--bad)" stroke-width="3"/>
+        <path d="M230 266l20 20M250 266l-20 20" style="stroke:var(--bad)" stroke-width="4" stroke-linecap="round"/>
+        <rect class="pa-fill pa-line" x="150" y="304" width="180" height="40" rx="20" stroke-width="2"/>
+        <text class="pa-txt" x="240" y="329" text-anchor="middle"><span data-en="Internet: 0 telemetry">Internet: 0 telemetrie</span></text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- BROWSERE -->
+<section id="browsere" aria-labelledby="h-b">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <p class="eyebrow"><span data-en="Browsers">Browsere</span></p>
+      <h2 id="h-b"><span data-en="One Claritas, three browser families">Un singur Claritas, trei familii de browsere</span></h2>
+      <p class="lead"><span data-en="The extension is built on Manifest V3 and ships one package per family. Below you can see which browsers each package is meant for; what has actually been verified is in the next section.">Extensia e construită pe Manifest V3 și are câte un pachet pentru fiecare familie. Mai jos vezi pentru ce browsere e destinat fiecare pachet; ce a fost într-adevăr verificat găsești în secțiunea următoare.</span></p>
+    </div>
+    <div class="fam">
+      <article class="card rv"><h3>Chromium</h3><code class="pkg">claritas-chromium.zip</code>
+        <p><span data-en="For Chrome, Edge, Opera / Opera GX, Brave, Vivaldi, Arc, Dia, Comet, Yandex, Whale and other Chromium 109+ browsers.">Pentru Chrome, Edge, Opera / Opera GX, Brave, Vivaldi, Arc, Dia, Comet, Yandex, Whale și alte browsere Chromium 109+.</span></p>
+        <ul class="names" lang="en"><li>Chrome</li><li>Edge</li><li>Opera</li><li>Brave</li><li>Vivaldi</li><li>Arc</li><li>Dia</li><li>Comet</li><li>Yandex</li><li>Whale</li></ul></article>
+      <article class="card rv" style="--d:.06s"><h3>Firefox</h3><code class="pkg">claritas-firefox.zip</code>
+        <p><span data-en="Firefox desktop 140+ and Android 142+, LibreWolf, Zen, Floorp, Waterfox, Mullvad Browser.">Firefox desktop 140+ și Android 142+, LibreWolf, Zen, Floorp, Waterfox, Mullvad Browser.</span></p>
+        <ul class="names" lang="en"><li>Firefox</li><li>LibreWolf</li><li>Zen</li><li>Floorp</li><li>Waterfox</li><li>Mullvad Browser</li></ul></article>
+      <article class="card rv" style="--d:.12s"><h3>Safari</h3><code class="pkg">claritas-safari-source.zip</code>
+        <p><span data-en="Safari on macOS, iOS and iPadOS. The package is a source you build on a Mac with Xcode.">Safari pe macOS, iOS și iPadOS. Pachetul e o sursă pe care o construiești pe un Mac cu Xcode.</span></p>
+        <ul class="names" lang="en"><li>Safari macOS</li><li>iOS</li><li>iPadOS</li></ul></article>
+    </div>
+    <p class="note rv"><span data-en="On mobile: Firefox for Android (via a custom add-on collection), Edge Android and Samsung Internet (the latter not verified on a real device). Chrome, Brave and Opera on Android do not accept extensions.">Pe mobil: Firefox pentru Android (printr-o colecție personalizată de add-on-uri), Edge Android și Samsung Internet (acesta din urmă, neverificat pe dispozitiv real). Chrome, Brave și Opera pe Android nu acceptă extensii.</span></p>
+  </div>
+</section>
+
+<!-- COMPATIBILITATE -->
+<section id="compatibilitate" class="alt" aria-labelledby="h-c">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <p class="eyebrow"><span data-en="Compatibility status">Stare compatibilitate</span></p>
+      <h2 id="h-c"><span data-en="What we verified and what we did not">Ce am verificat și ce nu</span></h2>
+      <p class="lead"><span data-en="We do not say “works everywhere” just because the package can be installed everywhere. The status below comes from automated continuous-integration runs (the &lt;code&gt;ci/browser-matrix&lt;/code&gt; branch) and from what could not yet be tested.">Nu spunem „merge peste tot” doar pentru că pachetul se poate instala peste tot. Starea de mai jos vine din rulările automate de integrare continuă (ramura <code>ci/browser-matrix</code>) și din ce nu s-a putut încă testa.</span></p>
+    </div>
+    <ul class="legend rv" aria-label="Legendă" data-en-aria-label="Legend">
+      <li><span class="badge b-ok">✓ <span data-en="Verified">Verificat</span></span></li>
+      <li><span class="badge b-prog">… <span data-en="In progress">În curs</span></span></li>
+      <li><span class="badge b-emu">~ <span data-en="Partial / emulated">Parțial / emulat</span></span></li>
+      <li><span class="badge b-bad">✕ <span data-en="Not verified">Neverificat</span></span></li>
+    </ul>
+    <ul class="compat">
+      <li class="rv"><h3 lang="en">Chromium · Edge · Brave · Chrome for Testing</h3><span><span class="badge b-ok">✓ <span data-en="Verified">Verificat</span></span></span><p><span data-en="Verified automatically on Linux, Windows and macOS. Branded Chrome ignores automated extension loading, so it is covered through Chromium and Chrome for Testing.">Verificat automat pe Linux, Windows și macOS. Chrome „de marcă” ignoră încărcarea automată a extensiilor, deci e acoperit prin Chromium și Chrome for Testing.</span></p></li>
+      <li class="rv"><h3 lang="en">Firefox</h3><span><span class="badge b-ok">✓ <span data-en="Verified">Verificat</span></span></span><p><span data-en="Tested automatically across several channels (latest, ESR, beta, nightly, developer edition) on Linux, Windows and macOS, including the optional v1.7 modules (navigation, summary, alt text, voice-command parser, reports).">Testat automat în mai multe canale (latest, ESR, beta, nightly, developer edition) pe Linux, Windows și macOS, inclusiv modulele opționale v1.7 (navigare, rezumat, alt, parser de comenzi vocale, rapoarte).</span></p></li>
+      <li class="rv"><h3 lang="en">Safari</h3><span><span class="badge b-emu">~ <span data-en="Partial">Parțial</span></span></span><p><span data-en="Verified at engine level only, in real Safari on macOS, plus iOS and iPadOS simulators. Enabling the extension in real Safari is not verified yet.">Verificat doar la nivel de motor, în Safari real pe macOS, plus simulatoare iOS și iPadOS. Activarea extensiei în Safari real nu e încă verificată.</span></p></li>
+      <li class="rv"><h3 lang="en">Opera</h3><span><span class="badge b-ok">✓ <span data-en="Verified (Linux)">Verificat (Linux)</span></span></span><p><span data-en="Opera 140 passed the CI checks on Linux for v1.7.0 (all 12 test files). Other systems: not verified.">Opera 140 a trecut verificările din CI pe Linux pentru v1.7.0 (toate cele 12 fișiere de test). Alte sisteme: neverificate.</span></p></li>
+      <li class="rv"><h3 lang="en">Vivaldi</h3><span><span class="badge b-bad">✕ <span data-en="Not verified">Neverificat</span></span></span><p><span data-en="It starts, but the automated debugging connection times out, so we cannot confirm.">Pornește, dar conexiunea automată de depanare expiră, deci nu putem confirma.</span></p></li>
+      <li class="rv"><h3 lang="en">Samsung Internet</h3><span><span class="badge b-emu">~ <span data-en="Emulated only">Doar emulat</span></span></span><p><span data-en="Engine emulation only; not verified on a real Samsung Internet.">Doar emulare de motor; nu a fost verificat pe un Samsung Internet real.</span></p></li>
+      <li class="rv"><h3><span data-en="Firefox on Android">Firefox pe Android</span></h3><span><span class="badge b-emu">~ <span data-en="Emulator, v1.5.5">Emulator, v1.5.5</span></span></span><p><span data-en="Passed in an emulator (Android 14) at v1.5.5. It has no screen recording.">Trecut în emulator (Android 14) la v1.5.5. Nu are înregistrare de ecran.</span></p></li>
+    </ul>
+    <div class="callout rv">
+      <h3><span data-en="Other caveats">Alte nuanțe</span></h3>
+      <p><span data-en="The declared minimum versions (Chromium 109, Firefox 140) have not been tested below current versions. The results of some runs (Chrome for Testing, emulated profiles) are not archived as artefacts. Internal browser pages, extension stores and the PDF viewer cannot be changed by any extension. Safari and Samsung Internet have no enterprise policies.">Versiunile minime declarate (Chromium 109, Firefox 140) nu au fost testate sub versiunile curente. Rezultatele unor rulări (Chrome for Testing, profiluri emulate) nu sunt arhivate ca artefacte. Paginile interne ale browserului, magazinele de extensii și vizualizatorul PDF nu pot fi modificate de nicio extensie. Safari și Samsung Internet nu au politici de întreprindere.</span></p>
+      <p><span data-en="Speech recognition: in Chrome the audio is processed by the browser’s speech service; in Firefox the feature is missing.">Recunoașterea vocală: în Chrome, sunetul e prelucrat de serviciul de vorbire al browserului; în Firefox funcția lipsește.</span></p>
+    </div>
+  </div>
+</section>
+
+<!-- INSTALARE -->
+<section id="instalare" aria-labelledby="h-i">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <p class="eyebrow"><span data-en="Installation">Instalare</span></p>
+      <h2 id="h-i"><span data-en="How to install">Cum se instalează</span></h2>
+      <p class="lead"><span data-en="Pick the package that matches your browser from the code repository (the &lt;code&gt;dist/&lt;/code&gt; folder or the release files). The steps below install from the package; we do not claim a store listing here.">Alege pachetul potrivit browserului tău din depozitul de cod (folderul <code>dist/</code> sau fișierele de versiune). Instalarea de mai jos e cea „din pachet”; nu pretindem aici o listare într-un magazin de extensii.</span></p>
+    </div>
+    <div class="lab rv">
+      <div role="tablist" id="insTabs" aria-label="Instalare pe browser" data-en-aria-label="Install by browser">
+        <button role="tab" id="itab-1" aria-controls="ipan-1" aria-selected="true" type="button">Chromium</button>
+        <button role="tab" id="itab-2" aria-controls="ipan-2" aria-selected="false" tabindex="-1" type="button">Firefox</button>
+        <button role="tab" id="itab-3" aria-controls="ipan-3" aria-selected="false" tabindex="-1" type="button">Safari</button>
+      </div>
+      <div role="tabpanel" id="ipan-1" aria-labelledby="itab-1">
+        <ol class="steps">
+          <li><div><span data-en="Download &lt;code&gt;claritas-chromium.zip&lt;/code&gt; and unzip it into a folder.">Descarcă <code>claritas-chromium.zip</code> și dezarhivează-l într-un folder.</span></div></li>
+          <li><div><span data-en="Open the extensions page: &lt;code&gt;chrome://extensions&lt;/code&gt;, &lt;code&gt;edge://extensions&lt;/code&gt;, &lt;code&gt;opera://extensions&lt;/code&gt;…">Deschide pagina de extensii: <code>chrome://extensions</code>, <code>edge://extensions</code>, <code>opera://extensions</code>…</span></div></li>
+          <li><div><span data-en="Turn on &lt;em&gt;Developer mode&lt;/em&gt;.">Activează <em>Mod dezvoltator</em>.</span></div></li>
+          <li><div><span data-en="Choose &lt;em&gt;Load unpacked&lt;/em&gt; and select the folder.">Alege <em>Încarcă extensie despachetată</em> și selectează folderul.</span></div></li>
+        </ol>
+      </div>
+      <div role="tabpanel" id="ipan-2" aria-labelledby="itab-2" hidden>
+        <ol class="steps">
+          <li><div><span data-en="Download &lt;code&gt;claritas-firefox.zip&lt;/code&gt;.">Descarcă <code>claritas-firefox.zip</code>.</span></div></li>
+          <li><div><span data-en="Open &lt;code&gt;about:debugging#/runtime/this-firefox&lt;/code&gt;.">Deschide <code>about:debugging#/runtime/this-firefox</code>.</span></div></li>
+          <li><div><span data-en="Choose &lt;em&gt;Load Temporary Add-on&lt;/em&gt; and select &lt;code&gt;manifest.json&lt;/code&gt;.">Alege <em>Load Temporary Add-on</em> și selectează <code>manifest.json</code>.</span></div></li>
+          <li><div><span data-en="For a permanent install, sign it as an unlisted add-on on addons.mozilla.org (ID &lt;code&gt;claritas@trom.tf&lt;/code&gt;).">Pentru instalare permanentă, semnează-l ca add-on nelistat pe addons.mozilla.org (ID <code>claritas@trom.tf</code>).</span></div></li>
+        </ol>
+      </div>
+      <div role="tabpanel" id="ipan-3" aria-labelledby="itab-3" hidden>
+        <ol class="steps">
+          <li><div><span data-en="Download &lt;code&gt;claritas-safari-source.zip&lt;/code&gt; and unzip it on a Mac with Xcode.">Descarcă <code>claritas-safari-source.zip</code> și dezarhivează-l pe un Mac cu Xcode.</span></div></li>
+          <li><div><span data-en="From the unzipped folder run &lt;code&gt;./build-safari.sh&lt;/code&gt;.">Din folderul dezarhivat rulează <code>./build-safari.sh</code>.</span></div></li>
+          <li><div><span data-en="Enable the extension in Safari → Settings → Extensions.">Activează extensia în Safari → Setări → Extensii.</span></div></li>
+          <li><div><span data-en="Note: enabling in real Safari is not yet verified by us (see “Compatibility status”).">Reține: activarea în Safari real nu e încă verificată de noi (vezi „Stare compatibilitate”).</span></div></li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="grid" style="margin-top:2rem">
+      <div class="card rv">
+        <h3><span data-en="Keyboard shortcuts">Scurtături de tastatură</span></h3>
+        <table class="kbd-table">
+          <tbody>
+            <tr><th scope="row"><span data-en="On / off">Pornit / oprit</span></th><td><kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>O</kbd></td></tr>
+            <tr><th scope="row"><span data-en="Theme">Temă</span></th><td><kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>D</kbd></td></tr>
+            <tr><th scope="row"><span data-en="Read aloud">Citire cu voce</span></th><td><kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>L</kbd></td></tr>
+            <tr><th scope="row"><span data-en="Ruler">Riglă</span></th><td><kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>G</kbd></td></tr>
+            <tr><th scope="row"><span data-en="Capture menu">Meniu de captură</span></th><td><kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd></td></tr>
+          </tbody>
+        </table>
+        <p class="note"><span data-en="The first four can be changed in the browser’s shortcut settings; the in-page ones (capture, numbered labels, scanning) are fixed.">Primele patru se pot schimba din setările de scurtături ale browserului; cele din pagină (captură, etichete numerotate, scanare) sunt fixe.</span></p>
+      </div>
+      <div class="card rv" style="--d:.06s">
+        <h3><span data-en="Open code, MIT licence">Cod deschis, licență MIT</span></h3>
+        <p><span data-en="You can read, verify and build the extension yourself. Copyright: Alexandru-Ionuț Chiuță (Alexio).">Poți citi, verifica și construi extensia singur. Drepturi de autor: Alexandru-Ionuț Chiuță (Alexio).</span></p>
+        <p style="margin-top:1rem"><a class="btn" href="https://github.com/chiuta/Claritas" rel="noopener"><span data-en="Code on GitHub">Codul pe GitHub</span></a></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq" class="alt" aria-labelledby="h-faq">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <p class="eyebrow">FAQ</p>
+      <h2 id="h-faq"><span data-en="Frequently asked questions">Întrebări frecvente</span></h2>
+    </div>
+    <div class="faq">
+      <details class="rv"><summary><span data-en="Does it cost anything?">Costă ceva?</span></summary><div class="ans"><p><span data-en="No. Claritas is free and open source (MIT). If it helps you, you can support the work with a coffee, but nothing is needed to use it.">Nu. Claritas e gratuit și cu cod deschis (MIT). Dacă te ajută, poți susține munca printr-o cafea, dar nu e nevoie de nimic ca să-l folosești.</span></p></div></details>
+      <details class="rv"><summary><span data-en="Does it collect data about me?">Colectează date despre mine?</span></summary><div class="ans"><p><span data-en="It has no telemetry, accounts or servers of its own. The exceptions (the definition button, speech recognition in Chrome, optional sync) are described in the privacy section.">Nu are telemetrie, conturi sau servere proprii. Excepțiile (butonul de definiție, recunoașterea vocală din Chrome, sincronizarea opțională) sunt descrise în secțiunea de confidențialitate.</span></p></div></details>
+      <details class="rv"><summary><span data-en="Does contrast fixing break page designs?">Corectarea contrastului strică designul paginilor?</span></summary><div class="ans"><p><span data-en="It adjusts only text with insufficient contrast, not the whole page. Limits: backgrounds that are images (not gradients) cannot be measured, and the high-contrast themes remove them. You can turn the fix off on a given site.">Ajustează doar textul cu contrast insuficient, nu toată pagina. Limite: fundalurile cu imagini (nu gradiente) nu pot fi măsurate, iar temele cu contrast mare le elimină. Poți opri corecția pe un anumit site.</span></p></div></details>
+      <details class="rv"><summary><span data-en="Do summary and simplification use artificial intelligence?">Rezumatul și simplificarea folosesc inteligență artificială?</span></summary><div class="ans"><p><span data-en="Not by default. The summary picks sentences statistically and simplification only splits long sentences. Chrome’s on-device model is used only if you turn it on and it is already available.">Nu implicit. Rezumatul alege propoziții statistic, iar simplificarea doar împarte propozițiile lungi. Modelul local din Chrome se folosește doar dacă îl pornești și e deja disponibil.</span></p></div></details>
+      <details class="rv"><summary><span data-en="Does it work on a phone?">Funcționează pe telefon?</span></summary><div class="ans"><p><span data-en="It depends on the browser: Firefox for Android (via a custom collection), Edge Android and Samsung Internet accept extensions; Chrome, Brave and Opera on Android do not. Safari on iOS/iPadOS needs building on a Mac. See “Compatibility status” for what was verified.">Depinde de browser: Firefox pentru Android (prin colecție personalizată), Edge Android și Samsung Internet acceptă extensii; Chrome, Brave și Opera pe Android nu. Safari pe iOS/iPadOS cere construirea pe un Mac. Vezi „Stare compatibilitate” pentru ce a fost verificat.</span></p></div></details>
+      <details class="rv"><summary><span data-en="Can an organisation use it?">Poate fi folosit într-o organizație?</span></summary><div class="ans"><p><span data-en="Yes, there are enterprise policies (managed storage) with the &lt;code&gt;defaults&lt;/code&gt;, &lt;code&gt;enforce&lt;/code&gt; and &lt;code&gt;sites&lt;/code&gt; properties; enforced settings are locked in the popup. They have not yet been verified on a Chrome with real policies. Safari and Samsung Internet have no policies.">Da, există politici de administrare (managed storage) cu proprietățile <code>defaults</code>, <code>enforce</code> și <code>sites</code>; setările impuse sunt blocate în popup. Nu au fost încă verificate pe un Chrome cu politici reale. Safari și Samsung Internet nu au politici.</span></p></div></details>
+      <details class="rv"><summary><span data-en="Does it replace a full accessibility audit?">Înlocuiește un audit de accesibilitate complet?</span></summary><div class="ans"><p><span data-en="No. Automatic rules find only some problems; the rest need manual evaluation and testing with people. Claritas includes a manual-checks list for exactly that reason.">Nu. Regulile automate găsesc o parte din probleme; restul cer evaluare manuală și testare cu oameni. Claritas include o listă de verificări manuale tocmai pentru asta.</span></p></div></details>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div>
+        <p class="brand" style="margin:0 0 .6rem"><svg viewBox="0 0 34 34" aria-hidden="true" focusable="false"><rect width="34" height="34" rx="9" fill="#0a0f1f"/><circle cx="17" cy="17" r="8.5" fill="none" stroke="#ffcf5c" stroke-width="3"/><path d="M17 8.5a8.5 8.5 0 0 1 0 17z" fill="#ffcf5c"/></svg><span>Claritas</span></p>
+        <p><span data-en="Version 1.7.0 · MIT licence. See more clearly, read more easily, without being tracked.">Versiunea 1.7.0 · Licență MIT. Vezi mai clar, citești mai ușor, fără să te urmărească nimeni.</span></p>
+      </div>
+      <div>
+        <h2><span data-en="Project">Proiect</span></h2>
+        <ul>
+          <li><a href="https://github.com/chiuta/Claritas" rel="noopener"><span data-en="Source code on GitHub">Cod sursă pe GitHub</span></a></li>
+          <li><a href="#instalare"><span data-en="Installation">Instalare</span></a></li>
+          <li><a href="#compatibilitate"><span data-en="Compatibility status">Stare compatibilitate</span></a></li>
+        </ul>
+      </div>
+      <div>
+        <h2><span data-en="Support and contact">Susținere și contact</span></h2>
+        <ul>
+          <li><a href="https://buymeacoffee.com/echo.of.the.strings" rel="noopener"><span data-en="Support the project: Buy Me a Coffee">Susține proiectul: Buy Me a Coffee</span></a></li>
+          <li><a href="mailto:alexio@trom.tf">alexio@trom.tf</a></li>
+        </ul>
+      </div>
+    </div>
+    <p class="fine"><span data-en="Author: Alexandru-Ionuț Chiuță (Alexio). This page is a single static file with no cookies, no trackers and no external resources; it only remembers your chosen theme and language locally.">Autor: Alexandru-Ionuț Chiuță (Alexio). Această pagină e un singur fișier static, fără cookie-uri, fără trackere și fără resurse externe; își amintește local doar tema și limba alese de tine.</span></p>
+  </div>
+</footer>
+
+<script>
+(function(){
+'use strict';
+var D=document,R=D.documentElement;
+function $(s,c){return (c||D).querySelector(s)}
+function $$(s,c){return Array.prototype.slice.call((c||D).querySelectorAll(s))}
+var reduce=window.matchMedia('(prefers-reduced-motion: reduce)');
+var lang=R.lang==='en'?'en':'ro';
+
+/* ---------- i18n ---------- */
+var S={
+ ro:{themeToLight:'Temă închisă. Comută la luminoasă',themeToDark:'Temă luminoasă. Comută la închisă',themeAutoDark:'Temă închisă (după sistem). Comută la luminoasă',themeAutoLight:'Temă luminoasă (după sistem). Comută la închisă',
+  before:'Înainte',after:'După',contrastWord:'contrast',pass:'✓ Trece',fail:'✕ Nu trece',
+  fixed:function(a,b,r){return 'Textul ar deveni '+b+' (era '+a+'), cu raportul '+r+':1.'},
+  fixNone:'Contrastul atinge deja ținta; nu e nimic de corectat.',
+  apply:'Aplică Claritas peste tot',revert:'Arată și „înainte”',
+  cb:{'':'Culorile rămân cum sunt: roșu, verde, albastru, portocaliu, violet.','cb-prot':'Roșul se întunecă și se apropie de verde: culoarea singură nu mai spune „bine” sau „rău”.','cb-deut':'Roșul și verdele se apropie până se confundă; etichetele cu text și simbol rămân clare.','cb-trit':'Albastrul și verdele se apropie; roșul rămâne ușor de recunoscut.','cb-achr':'Totul devine tonuri de gri: contează luminozitatea, nu culoarea.'},
+  rPlay:'Pornește',rPause:'Pauză',rReplay:'Reia de la început',rSpeak:'Citește cu voce',rStop:'Oprește vocea',rNoTts:'Browserul tău nu are citire cu voce.',
+  rsvpOn:'Citire rapidă pornită',rsvpOff:'Citire rapidă oprită',copy:'Copiază',copied:'Copiat',copyFail:'Selectează și copiază manual',
+  dec:',',
+  texts:['Un text se citește mai ușor atunci când literele au loc să respire. Contrastul bun, rândurile mai aerisite și o riglă care te ghidează pot face diferența dintre o pagină obositoare și una pe care o parcurgi cu plăcere.','Nu toți citim la fel. Unii oameni au nevoie de litere mai mari, alții de spații mai late între cuvinte, iar alții de un fundal mai calm. Un instrument bun nu cere să te adaptezi paginii; adaptează pagina la tine.'],
+  ttsLang:'ro-RO',lbTheme:'Temă'},
+ en:{themeToLight:'Dark theme. Switch to light',themeToDark:'Light theme. Switch to dark',themeAutoDark:'Dark theme (system). Switch to light',themeAutoLight:'Light theme (system). Switch to dark',
+  before:'Before',after:'After',contrastWord:'contrast',pass:'✓ Pass',fail:'✕ Fail',
+  fixed:function(a,b,r){return 'The text would become '+b+' (was '+a+'), ratio '+r+':1.'},
+  fixNone:'The contrast already meets the target; nothing to fix.',
+  apply:'Apply Claritas everywhere',revert:'Show “before” too',
+  cb:{'':'Colours stay as they are: red, green, blue, orange, purple.','cb-prot':'Red darkens and moves toward green: colour alone no longer says “good” or “bad”.','cb-deut':'Red and green move close enough to be confused; labels with text and symbols stay clear.','cb-trit':'Blue and green move closer together; red remains easy to recognise.','cb-achr':'Everything becomes shades of grey: lightness matters, not colour.'},
+  rPlay:'Start',rPause:'Pause',rReplay:'Start over',rSpeak:'Read aloud',rStop:'Stop voice',rNoTts:'Your browser has no read-aloud support.',
+  rsvpOn:'Speed reading on',rsvpOff:'Speed reading off',copy:'Copy',copied:'Copied',copyFail:'Select and copy manually',
+  dec:'.',
+  texts:['A text is easier to read when the letters have room to breathe. Good contrast, airier lines and a ruler that guides you can make the difference between a tiring page and one you read with pleasure.','We do not all read the same way. Some people need bigger letters, others wider gaps between words, others a calmer background. A good tool does not ask you to adapt to the page; it adapts the page to you.'],
+  ttsLang:'en-US',lbTheme:'Theme'}
+};
+function T(){return S[lang]}
+function setHtmlTexts(){
+  $$('[data-en]').forEach(function(el){
+    if(el.dataset.ro===undefined)el.dataset.ro=el.innerHTML;
+    el.innerHTML=lang==='en'?el.dataset.en:el.dataset.ro;
+  });
+  $$('*').forEach(function(el){
+    Array.prototype.slice.call(el.attributes).forEach(function(a){
+      if(a.name.indexOf('data-en-')===0){
+        var n=a.name.slice(8),k='ro'+n.replace(/(^|-)(\w)/g,function(m,p,c){return c.toUpperCase()});
+        if(el.dataset[k]===undefined)el.dataset[k]=el.getAttribute(n)||'';
+        el.setAttribute(n,lang==='en'?a.value:el.dataset[k]);
+      }
+    });
+  });
+}
+function fmt(n){return n.toFixed(2).replace('.',T().dec)}
+
+/* ---------- temă ---------- */
+function isDark(){var t=R.getAttribute('data-theme');if(t==='dark')return true;if(t==='light')return false;return window.matchMedia('(prefers-color-scheme: dark)').matches}
+function paintTheme(){
+  var dark=isDark(),t=R.getAttribute('data-theme'),L=T();
+  var msg=t==='auto'?(dark?L.themeAutoDark:L.themeAutoLight):(dark?L.themeToLight:L.themeToDark);
+  var b=$('#themeBtn');b.setAttribute('aria-label',msg);$('#themeTxt').textContent=msg;
+  $('#themeIc use').setAttribute('href',dark?'#i-sun':'#i-moon');
+}
+$('#themeBtn').addEventListener('click',function(){
+  var n=isDark()?'light':'dark';R.setAttribute('data-theme',n);
+  try{localStorage.setItem('claritas-theme',n)}catch(e){}
+  paintTheme();
+});
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',paintTheme);
+
+/* ---------- limbă ---------- */
+function paintLang(){
+  R.lang=lang;setHtmlTexts();
+  var b=$('#langBtn');
+  if(lang==='ro'){b.textContent='EN';b.lang='en';b.setAttribute('aria-label','Switch to English');}
+  else{b.textContent='RO';b.lang='ro';b.setAttribute('aria-label','Schimbă în română');}
+  D.title=lang==='en'?'Claritas — accessibility extension: see more clearly, read more easily':'Claritas — extensie de accesibilitate: vezi mai clar, citește mai ușor';
+  var m=$('meta[name=description]');m.content=lang==='en'?'Claritas: a free accessibility extension for Chromium, Firefox and Safari. Automatic contrast fixing, reader mode, read-aloud, WCAG 2.2 audit. No telemetry.':'Claritas: extensie gratuită de accesibilitate pentru Chromium, Firefox și Safari. Contrast corectat automat, mod cititor, citire cu voce, audit WCAG 2.2. Fără telemetrie.';
+  paintTheme();
+  $('#baToggle').textContent=baAll?T().revert:T().apply;
+  updateBA();updateContrast();updateCb();updateTextDemo();setupReading();
+  $('#copyCi').textContent=T().copy;
+  $$('#rPlay').forEach(function(b){b.textContent=rsvp.on&&rsvp.timer?T().rPause:T().rPlay});
+  if(speaking)$('#rSpeak').textContent=T().rStop;
+}
+$('#langBtn').addEventListener('click',function(){
+  lang=lang==='ro'?'en':'ro';
+  try{localStorage.setItem('claritas-lang',lang)}catch(e){}
+  paintLang();
+});
+
+/* ---------- meniu mobil ---------- */
+var nav=$('#mainnav'),mb=$('#menuBtn');
+function menuMQ(){return window.matchMedia('(max-width:1060px)').matches}
+function setMenu(open){mb.setAttribute('aria-expanded',open?'true':'false');nav.hidden=!open}
+setMenu(false);
+mb.addEventListener('click',function(){setMenu(mb.getAttribute('aria-expanded')!=='true')});
+nav.addEventListener('click',function(e){if(e.target.closest('a')&&menuMQ())setMenu(false)});
+D.addEventListener('keydown',function(e){if(e.key==='Escape'&&mb.getAttribute('aria-expanded')==='true'&&menuMQ()){setMenu(false);mb.focus()}});
+function syncMenu(){if(!menuMQ()){nav.hidden=false}else if(mb.getAttribute('aria-expanded')!=='true'){nav.hidden=true}}
+window.addEventListener('resize',syncMenu);syncMenu();
+
+/* ---------- reveal ---------- */
+(function(){
+  var els=$$('.rv');
+  if(!('IntersectionObserver' in window)||reduce.matches){els.forEach(function(e){e.classList.add('in')});return}
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{rootMargin:'0px 0px -8% 0px',threshold:.08});
+  els.forEach(function(e){io.observe(e)});
+  window.__revealAll=function(){els.forEach(function(e){e.classList.add('in')})};
+})();
+
+/* ---------- culori ---------- */
+function hex2rgb(h){h=h.replace('#','');if(h.length===3)h=h.replace(/./g,'$&$&');return [parseInt(h.substr(0,2),16),parseInt(h.substr(2,2),16),parseInt(h.substr(4,2),16)]}
+function rgb2hex(r){return '#'+r.map(function(v){v=Math.max(0,Math.min(255,Math.round(v)));return (v<16?'0':'')+v.toString(16)}).join('')}
+function lin(v){v/=255;return v<=0.03928?v/12.92:Math.pow((v+0.055)/1.055,2.4)}
+function lum(r){return 0.2126*lin(r[0])+0.7152*lin(r[1])+0.0722*lin(r[2])}
+function ratio(a,b){var l1=lum(a),l2=lum(b);if(l1<l2){var t=l1;l1=l2;l2=t}return (l1+0.05)/(l2+0.05)}
+function rgb2hsl(c){var r=c[0]/255,g=c[1]/255,b=c[2]/255,mx=Math.max(r,g,b),mn=Math.min(r,g,b),h=0,s=0,l=(mx+mn)/2;
+  if(mx!==mn){var d=mx-mn;s=l>.5?d/(2-mx-mn):d/(mx+mn);h=mx===r?(g-b)/d+(g<b?6:0):mx===g?(b-r)/d+2:(r-g)/d+4;h/=6}return [h,s,l]}
+function hsl2rgb(c){var h=c[0],s=c[1],l=c[2];function f(p,q,t){if(t<0)t+=1;if(t>1)t-=1;if(t<1/6)return p+(q-p)*6*t;if(t<1/2)return q;if(t<2/3)return p+(q-p)*(2/3-t)*6;return p}
+  if(s===0)return [l*255,l*255,l*255];var q=l<.5?l*(1+s):l+s-l*s,p=2*l-q;return [f(p,q,h+1/3)*255,f(p,q,h)*255,f(p,q,h-1/3)*255]}
+function fixFg(fg,bg,target){
+  if(ratio(fg,bg)>=target)return null;
+  var hsl=rgb2hsl(fg),best=null;
+  [0,1].forEach(function(end){
+    if(ratio(hsl2rgb([hsl[0],hsl[1],end]),bg)<target)return;
+    var lo=hsl[2],hi=end,i;
+    for(i=0;i<30;i++){var mid=(lo+hi)/2;if(ratio(hsl2rgb([hsl[0],hsl[1],mid]),bg)>=target)hi=mid;else lo=mid}
+    var cand=hsl2rgb([hsl[0],hsl[1],hi]),d=Math.abs(hi-hsl[2]);
+    if(!best||d<best.d)best={d:d,c:cand};
+  });
+  if(!best){var w=ratio([255,255,255],bg),k=ratio([0,0,0],bg);best={c:w>=k?[255,255,255]:[0,0,0]}}
+  return best.c;
+}
+
+/* ---------- demo înainte/după (hero) ---------- */
+var ba=$('#ba'),baR=$('#baRange'),baAll=false,baTouched=false;
+var bad=$('#mockBad');
+bad.innerHTML=$('#mockGood').innerHTML;
+$$('[id]',bad).forEach(function(e){e.removeAttribute('id')});
+function cssRgb(el,prop){var m=getComputedStyle(el)[prop].match(/\d+/g);return m.slice(0,3).map(Number)}
+function updateBA(){
+  var p=+baR.value;ba.style.setProperty('--p',p+'%');
+  var out=$('#baRatios');
+  var gt=$('#mH'),bt=$('.m-h',bad),bgG=cssRgb($('.mock-body',$('#mockGood')),'backgroundColor');
+  var bg=[244,244,244];
+  var rb=ratio(cssRgb(bt,'color'),bg),ra=ratio(cssRgb(gt,'color'),bg);
+  var L=T();
+  out.innerHTML='<span class="r-bad">'+L.before+': '+fmt(Math.floor(rb*100)/100)+':1</span><span class="r-ok">'+L.after+': '+fmt(Math.floor(ra*100)/100)+':1</span>';
+  baR.setAttribute('aria-valuetext',lang==='en'?('Claritas applied to '+(100-p)+'% of the page, from the right'):('Claritas aplicat pe '+(100-p)+'% din pagină, dinspre dreapta'));
+  // "înainte" e în stânga; „după” e restul
+}
+baR.addEventListener('input',function(){baTouched=true;baAll=(+baR.value===0);$('#baToggle').setAttribute('aria-pressed',baAll);updateBA()});
+function animateTo(v,ms,cb){
+  var s=+baR.value,t0=performance.now();
+  if(reduce.matches){baR.value=v;updateBA();if(cb)cb();return}
+  (function step(t){var k=Math.min(1,(t-t0)/ms),e=1-Math.pow(1-k,3);baR.value=Math.round(s+(v-s)*e);updateBA();if(k<1)requestAnimationFrame(step);else if(cb)cb()})(t0);
+}
+$('#baToggle').addEventListener('click',function(){
+  baTouched=true;baAll=!baAll;this.setAttribute('aria-pressed',baAll);this.textContent=baAll?T().revert:T().apply;
+  animateTo(baAll?0:50,700);
+});
+/* intro automat, doar dacă nu e mișcare redusă */
+(function(){
+  if(reduce.matches)return;
+  var seq=[88,18,50],i=0;
+  function next(){if(baTouched||i>=seq.length)return;animateTo(seq[i++],1500,function(){setTimeout(next,350)})}
+  setTimeout(next,900);
+})();
+
+/* ---------- tab-uri ---------- */
+function tabs(listId){
+  var list=$(listId),ts=$$('[role=tab]',list);
+  function sel(t,focus){ts.forEach(function(x){var on=x===t;x.setAttribute('aria-selected',on);x.tabIndex=on?0:-1;$('#'+x.getAttribute('aria-controls')).hidden=!on});if(focus)t.focus()}
+  ts.forEach(function(t,i){
+    t.addEventListener('click',function(){sel(t)});
+    t.addEventListener('keydown',function(e){
+      var n=null;
+      if(e.key==='ArrowRight')n=ts[(i+1)%ts.length];else if(e.key==='ArrowLeft')n=ts[(i-1+ts.length)%ts.length];
+      else if(e.key==='Home')n=ts[0];else if(e.key==='End')n=ts[ts.length-1];
+      if(n){e.preventDefault();sel(n,true)}
+    });
+  });
+}
+tabs('#labTabs');tabs('#insTabs');
+
+/* ---------- contrast ---------- */
+var fgC=$('#fgC'),bgC=$('#bgC');
+function tgt(){return +$('input[name=tgt]:checked').value}
+function updateContrast(){
+  var fg=hex2rgb(fgC.value),bg=hex2rgb(bgC.value),r=ratio(fg,bg),L=T();
+  $('#fgHex').textContent=fgC.value;$('#bgHex').textContent=bgC.value;
+  var pv=$('#cPrev');pv.style.background=bgC.value;pv.style.color=fgC.value;
+  $('#cRatio').textContent=fmt(Math.floor(r*100)/100)+':1';
+  $$('#cRes li').forEach(function(li){
+    var ok=r>=+li.dataset.th,b=$('.badge',li);
+    b.className='badge '+(ok?'b-ok':'b-bad');b.textContent=ok?L.pass:L.fail;
+  });
+}
+[fgC,bgC].forEach(function(i){i.addEventListener('input',function(){$('#fixNote').textContent='';updateContrast()})});
+$$('input[name=tgt]').forEach(function(i){i.addEventListener('change',function(){$('#fixNote').textContent=''})});
+$$('[data-preset]').forEach(function(b){b.addEventListener('click',function(){var p=b.dataset.preset.split(',');fgC.value=p[0];bgC.value=p[1];$('#fixNote').textContent='';updateContrast()})});
+$('#fixBtn').addEventListener('click',function(){
+  var fg=hex2rgb(fgC.value),bg=hex2rgb(bgC.value),n=fixFg(fg,bg,tgt()),L=T();
+  if(!n){$('#fixNote').textContent=L.fixNone;return}
+  var old=fgC.value;fgC.value=rgb2hex(n);updateContrast();
+  $('#fixNote').textContent=L.fixed(old,fgC.value,fmt(Math.floor(ratio(hex2rgb(fgC.value),bg)*100)/100));
+});
+
+/* ---------- daltonism ---------- */
+function updateCb(){
+  var v=($('input[name=cb]:checked')||{}).value||'';
+  $('#cbStage').style.filter=v?'url(#'+v+')':'none';
+  $('#cbSay').textContent=T().cb[v];
+}
+$$('input[name=cb]').forEach(function(i){i.addEventListener('change',updateCb)});
+
+/* ---------- text / dislexie ---------- */
+var tT=$('#tText'),origT='',scrambled=false;
+function hashRnd(seed){return function(){seed=(seed*1664525+1013904223)%4294967296;return seed/4294967296}}
+function scrambleText(s){
+  var rnd=hashRnd(7);
+  return s.replace(/[A-Za-zĂÂÎȘȚăâîșțŞŢşţ]{4,}/g,function(w){
+    var a=w.slice(1,-1).split(''),i,j,t;
+    for(i=a.length-1;i>0;i--){j=Math.floor(rnd()*(i+1));t=a[i];a[i]=a[j];a[j]=t}
+    return w[0]+a.join('')+w[w.length-1];
+  });
+}
+function updateTextDemo(){
+  var L=T();origT=L.texts.join('\n\n');
+  var html='';
+  L.texts.forEach(function(p,i){html+=''});
+  tT.innerHTML='';
+  L.texts.forEach(function(p){
+    var par=D.createElement('p');
+    if(scrambled){
+      var a=D.createElement('span');a.setAttribute('aria-hidden','true');a.textContent=scrambleText(p);
+      var b=D.createElement('span');b.className='sr-only';b.textContent=p;par.appendChild(a);par.appendChild(b);
+    }else par.textContent=p;
+    tT.appendChild(par);
+  });
+  var f=function(id,sep){return +$(id).value};
+  var sz=+$('#tSize').value,lh=+$('#tLh').value,ls=+$('#tLs').value,ws=+$('#tWs').value;
+  var sm=$('#tSample');
+  sm.style.fontSize=(1.0625*sz/100)+'rem';sm.style.lineHeight=lh;sm.style.letterSpacing=ls+'em';sm.style.wordSpacing=ws+'em';
+  sm.style.fontFamily=$('#tFont').value;sm.style.textAlign='left';
+  var dec=lang==='ro';
+  function o(id,v,d){var el=$(id);if(!el)return;var s=(d?(+v).toFixed(d):String(+v));if(dec)s=s.replace('.',',');el.textContent=s;}
+  o('#oSize',sz,0);o('#oSize2',sz,0);o('#oLh',lh,2);o('#oLh2',lh,2);o('#oLs',ls,2);o('#oLs2',ls,2);o('#oWs',ws,2);o('#oWs2',ws,2);
+  sm.lang=lang;
+}
+['#tSize','#tLh','#tLs','#tWs','#tFont'].forEach(function(id){$(id).addEventListener('input',updateTextDemo)});
+$('#tScr').addEventListener('change',function(){scrambled=this.checked;updateTextDemo()});
+$('#tLeft').addEventListener('change',updateTextDemo);
+$('#tWcag').addEventListener('click',function(){$('#tLh').value=1.5;$('#tLs').value=0.12;$('#tWs').value=0.16;updateTextDemo()});
+$('#tReset').addEventListener('click',function(){$('#tSize').value=100;$('#tLh').value=1.65;$('#tLs').value=0;$('#tWs').value=0;$('#tFont').selectedIndex=0;$('#tScr').checked=false;scrambled=false;updateTextDemo()});
+
+/* ---------- mod citire ---------- */
+var box=$('#rBox'),band=$('#rBand'),rText=$('#rText'),rsvpEl=$('#rRsvp');
+var rsvp={on:false,timer:null,words:[],i:0},speaking=false;
+function setWpm(v){['#oWpm','#oWpm2'].forEach(function(i){var e=$(i);if(e)e.textContent=v})}
+function setupReading(){
+  var L=T(),bion=$('#rBion').checked;
+  rText.innerHTML='';
+  L.texts.forEach(function(p){
+    var par=D.createElement('p');
+    if(bion){
+      p.split(' ').forEach(function(w,i,arr){
+        var k=Math.ceil(w.length/2),b=D.createElement('b');b.className='bn';b.textContent=w.slice(0,k);
+        par.appendChild(b);par.appendChild(D.createTextNode(w.slice(k)+(i<arr.length-1?' ':'')));
+      });
+    }else par.textContent=p;
+    rText.appendChild(par);
+  });
+  rText.lang=lang;
+  rsvp.words=L.texts.join(' ').split(/\s+/);
+  setWpm($('#rWpm').value);
+}
+function ruler(){var r=$('#rRuler').checked,m=$('#rMask').checked;box.classList.toggle('ruler',r&&!m);box.classList.toggle('mask',m);if((r||m)&&!band.dataset.y)moveBand(40)}
+function moveBand(y){
+  var bh=band.offsetHeight,max=box.clientHeight-bh;
+  y=Math.max(0,Math.min(max,y-bh/2));band.style.top=y+'px';band.dataset.y=y;
+}
+box.addEventListener('pointermove',function(e){if(box.classList.contains('ruler')||box.classList.contains('mask')){var r=box.getBoundingClientRect();moveBand(e.clientY-r.top)}});
+box.addEventListener('keydown',function(e){
+  if(!(box.classList.contains('ruler')||box.classList.contains('mask')))return;
+  var step=band.offsetHeight*0.8,y=+band.dataset.y||0;
+  if(e.key==='ArrowDown'){e.preventDefault();moveBand(y+band.offsetHeight/2+step)}
+  else if(e.key==='ArrowUp'){e.preventDefault();moveBand(y+band.offsetHeight/2-step)}
+});
+['#rRuler','#rMask'].forEach(function(id){$(id).addEventListener('change',ruler)});
+$('#rBion').addEventListener('change',setupReading);
+$('#rWpm').addEventListener('input',function(){setWpm(this.value);if(rsvp.timer){clearInterval(rsvp.timer);rsvp.timer=setInterval(tick,60000/+this.value)}});
+function showWord(){
+  var sp=D.createElement('span');
+  var w=rsvp.words[rsvp.i]||'';var k=Math.floor((w.length-1)/2);
+  rsvpEl.textContent='';
+  sp.appendChild(D.createTextNode(w.slice(0,k)));
+  var em=D.createElement('em');em.textContent=w.charAt(k);sp.appendChild(em);
+  sp.appendChild(D.createTextNode(w.slice(k+1)));rsvpEl.appendChild(sp);
+}
+function stopRsvp(done){
+  clearInterval(rsvp.timer);rsvp.timer=null;
+  if(done){rsvp.i=0;box.classList.remove('rsvp-on');rsvp.on=false;$('#rPlay').textContent=T().rReplay;$('#rLive').textContent=T().rsvpOff}
+  else $('#rPlay').textContent=T().rPlay;
+}
+function tick(){rsvp.i++;if(rsvp.i>=rsvp.words.length){stopRsvp(true);return}showWord()}
+$('#rPlay').addEventListener('click',function(){
+  if(rsvp.timer){stopRsvp(false);return}
+  rsvp.on=true;box.classList.add('rsvp-on');if(rsvp.i>=rsvp.words.length)rsvp.i=0;showWord();
+  rsvp.timer=setInterval(tick,60000/+$('#rWpm').value);this.textContent=T().rPause;$('#rLive').textContent=T().rsvpOn;
+});
+var synth=window.speechSynthesis;
+if(!synth||!window.SpeechSynthesisUtterance){$('#rSpeak').disabled=true;$('#rSpeakNote').textContent=T().rNoTts;$('#rSpeakNote').removeAttribute('data-en')}
+$('#rSpeak').addEventListener('click',function(){
+  if(!synth)return;
+  if(speaking){synth.cancel();speaking=false;this.textContent=T().rSpeak;return}
+  var u=new SpeechSynthesisUtterance(T().texts.join(' '));u.lang=T().ttsLang;
+  var vs=synth.getVoices().filter(function(v){return v.lang&&v.lang.toLowerCase().indexOf(lang)===0});
+  var loc=vs.filter(function(v){return v.localService})[0]||vs[0];if(loc)u.voice=loc;
+  var btn=this;u.onend=u.onerror=function(){speaking=false;btn.textContent=T().rSpeak};
+  speaking=true;btn.textContent=T().rStop;synth.cancel();synth.speak(u);
+});
+window.addEventListener('pagehide',function(){if(synth)synth.cancel()});
+
+/* ---------- copiere ---------- */
+$$('[data-copy]').forEach(function(b){b.addEventListener('click',function(){
+  var txt=$('#'+b.dataset.copy).textContent;
+  var done=function(m){b.textContent=m;setTimeout(function(){b.textContent=T().copy},1800)};
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).then(function(){done(T().copied)},function(){done(T().copyFail)})}
+  else done(T().copyFail);
+})});
+
+/* ---------- pornire ---------- */
+$('#tFont').addEventListener('change',updateTextDemo);
+paintLang();
+$('#cRes');
+})();
+</script>
+</body>
+</html>
