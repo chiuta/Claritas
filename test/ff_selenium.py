@@ -143,6 +143,14 @@ try:
         d.switch_to.window(PAGE_H); d.get('http://127.0.0.1:8771/mod.html'); time.sleep(3.2)
         alts = d.execute_script("return ['i1','i2','i4'].map(i=>document.getElementById(i).getAttribute('alt'))")
         ok(alts[0] and 'Casa veche din Brașov' in alts[0] and alts[1] and 'Casa din brasov' in alts[1] and alts[2] == 'Grafic vânzări', f'Firefox v1.7: alt imagini {alts}')
+        try:
+            d.set_context('chrome')
+            for fn in ('modules.js', 'modules2.js', 'report.js'):
+                src = open(os.path.join(EXT, fn), encoding='utf8').read()
+                r = d.execute_script("try{ new Function(arguments[0]); return 'ok'; }catch(e){ return String(e)+' @'+e.lineNumber+':'+e.columnNumber; }", src)
+                print('DIAG syntax', fn, r)
+        except Exception as e: print('DIAG syntax err', e)
+        finally: d.set_context('content')
         print('DIAG storage', end=' '); ext_tab(); print(d.execute_async_script("const cb=arguments[arguments.length-1];browser.storage.local.get('settings').then(r=>browser.tabs.query({}).then(t=>cb(JSON.stringify([r,t.map(x=>x.url)]))))")[:400]); d.switch_to.window(PAGE_H)
         def m2(what, **kw):
             ext_tab()
