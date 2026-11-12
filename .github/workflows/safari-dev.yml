@@ -82,8 +82,8 @@ jobs:
                 end try
               end repeat
               log "settings window found: " & (sw is not missing value)
-              repeat with b in (every button of entire contents of sw)
-                  if (name of b) is "Advanced" then
+              repeat with b in (entire contents of sw)
+                  if (role of b) is "AXButton" and (name of b) is "Advanced" then
                     click b
                     exit repeat
                   end if
@@ -91,15 +91,15 @@ jobs:
               delay 2
               log "=== ADV checkboxes"
               try
-                repeat with c in (every checkbox of entire contents of sw)
-                  log "  cb: " & (name of c) & " = " & (value of c)
+                repeat with c in (entire contents of sw)
+                  if (role of c) is "AXCheckBox" then log "  cb: " & (name of c) & " = " & (value of c)
                 end repeat
               on error e
                 log "ERR adv list " & e
               end try
               try
-                repeat with c in (every checkbox of entire contents of sw)
-                  if (name of c) contains "web developer" then
+                repeat with c in (entire contents of sw)
+                  if (role of c) is "AXCheckBox" and (name of c) contains "web developer" then
                     if (value of c) is 0 then click c
                   end if
                 end repeat
@@ -118,8 +118,8 @@ jobs:
                 log "ERR develop " & e
               end try
               try
-                repeat with b in (every button of entire contents of sw)
-                  if (name of b) is "Extensions" then
+                repeat with b in (entire contents of sw)
+                  if (role of b) is "AXButton" and (name of b) is "Extensions" then
                     click b
                     exit repeat
                   end if
@@ -131,8 +131,8 @@ jobs:
               log "=== EXT UI"
               log my dump(window 1, 0, 9)
               try
-                repeat with c in (every checkbox of entire contents of sw)
-                  log "  ext cb: " & (name of c) & " = " & (value of c) & " desc=" & (description of c)
+                repeat with c in (entire contents of sw)
+                  if (role of c) is "AXCheckBox" then log "  ext cb: " & (name of c) & " = " & (value of c) & " desc=" & (description of c)
                 end repeat
               end try
             end tell
