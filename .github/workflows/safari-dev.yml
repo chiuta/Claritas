@@ -1,0 +1,95 @@
+name: safari-dev
+on:
+  push: { branches: [ci/safari] }
+jobs:
+  safari:
+    runs-on: macos-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - run: pip install selenium && python build.py
+      - name: Build + register
+        run: |
+          xcrun safari-web-extension-converter dist/safari --project-location /tmp/saf --app-name Claritas --no-open --no-prompt --macos-only --force 2>&1 | tail -3
+          cd /tmp/saf/Claritas
+          xcodebuild -scheme Claritas -configuration Debug CODE_SIGN_IDENTITY="-" CODE_SIGNING_ALLOWED=YES CODE_SIGNING_REQUIRED=NO build > /tmp/xb.log 2>&1 || true
+          grep -E "\*\* BUILD" /tmp/xb.log
+          APP=$(find ~/Library/Developer/Xcode/DerivedData -path "*Build/Products/Debug/Claritas.app" -maxdepth 6 | head -1)
+          mkdir -p ~/Applications && cp -R "$APP" ~/Applications/ && open ~/Applications/Claritas.app && sleep 6 || true
+          ID=com.yourCompany.Claritas.Extension
+          pluginkit -a ~/Applications/Claritas.app/Contents/PlugIns/*.appex || true
+          pluginkit -e use -i $ID; pluginkit -mAvv -p com.apple.Safari.web-extension | grep -B1 -A6 -i claritas | head -14
+          sudo safaridriver --enable || true
+      - name: UI scripting
+        continue-on-error: true
+        run: |
+          mkdir -p test/results
+          osascript -e 'tell application "Safari" to quit' 2>/dev/null || true; sleep 2
+          open -a Safari; sleep 7
+          cat > /tmp/ui.applescript <<'AS'
+          on dump(el, depth, maxd)
+            tell application "System Events"
+              set out to ""
+              try
+                set kids to UI elements of el
+              on error
+                return ""
+              end try
+              repeat with k in kids
+                set nm to ""
+                set rl to ""
+                try
+                  set rl to role of k
+                end try
+                try
+                  set nm to name of k
+                end try
+                if nm is missing value then set nm to ""
+                set dsc to ""
+                try
+                  set dsc to description of k
+                end try
+                set out to out & (do shell script "printf '%*s' " & (depth * 2) & " ''") & rl & " | " & nm & " | " & dsc & linefeed
+                if depth < maxd then set out to out & my dump(k, depth + 1, maxd)
+              end repeat
+              return out
+            end tell
+          end dump
+          tell application "System Events"
+            tell process "Safari"
+              set frontmost to true
+              delay 1
+              keystroke "," using command down
+              delay 3
+              log "=== settings window: " & (name of every window as string)
+              try
+                click button "Advanced" of toolbar 1 of window 1
+              on error e
+                log "ERR adv " & e
+              end try
+              delay 2
+              log "=== ADVANCED" & linefeed & my dump(window 1, 0, 4)
+              try
+                click (first checkbox of group 1 of group 1 of window 1 whose name contains "web developer")
+              on error e
+                log "ERR devcheck " & e
+              end try
+              delay 2
+              log "=== menus: " & (name of every menu bar item of menu bar 1 as string)
+              try
+                click button "Extensions" of toolbar 1 of window 1
+              on error e
+                log "ERR ext " & e
+              end try
+              delay 3
+              log "=== EXTENSIONS" & linefeed & my dump(window 1, 0, 5)
+            end tell
+          end tell
+          AS
+          osascript /tmp/ui.applescript 2>&1 | head -150
+          screencapture -x test/results/safari-ext.png || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: { name: r-safari-dev, path: test/results }
