@@ -63,7 +63,7 @@ async def main():
         # A) DPR 2 + acoperire
         await goto('/csp.html'); await cap('visible'); path = await save(); im = Image.open(path).convert('RGB')
         cx, cy = await page.evaluate(center, 'mail')
-        print('INFO dimensiune captură', im.size); ok(im.size[0] in (900,1800), 'DPR: dimensiune coerentă cu viewportul'); ok(black(im, cx, cy), 'DPR2: e-mail acoperit în coordonate corecte')
+        print('INFO dimensiune captură', im.size); vw = await page.evaluate('innerWidth'); ok(im.size[0] in (vw, vw * 2), f'DPR: dimensiune coerentă cu viewportul ({im.size[0]} vs {vw})'); ok(black(im, cx, cy), 'DPR2: e-mail acoperit în coordonate corecte')
         
         await page.keyboard.press('Escape')
         # C) CSP strict + font încorporat + captură + descărcare funcționează

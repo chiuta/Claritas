@@ -28,7 +28,7 @@ async def main():
         # 1) zona vizibilă + acoperire automată
         await cap('visible')
         name, path = await save(2, 2500)
-        im = Image.open(path).convert('RGB'); ok(name.endswith('.png') and im.size == (900, 700), f'vizibil: {name} {im.size}')
+        im = Image.open(path).convert('RGB'); vw, vh = await page.evaluate('[innerWidth, innerHeight]'); ok(name.endswith('.png') and im.size == (vw, vh), f'vizibil: {name} {im.size} vs viewport {(vw, vh)}')
         cx, cy = int(mail[0] + mail[2] / 2), int(mail[1] + mail[3] / 2)
         ok(sum(im.getpixel((cx + d, cy)) == (0, 0, 0) for d in range(-10, 11, 5)) >= 3, 'e-mailul este acoperit cu negru în captură')
         await page.keyboard.press('Escape'); await page.wait_for_timeout(300)
@@ -42,7 +42,7 @@ async def main():
         await page.evaluate("window.scrollTo(0,0)"); await cap('full')
         name, path = await save(2, 9000); im = Image.open(path).convert('RGB')
         total = await page.evaluate("document.documentElement.scrollHeight")
-        ok(abs(im.size[1] - total) <= 4 and im.size[0] == 900, f'pagină întreagă {im.size} vs {total}')
+        vw = await page.evaluate('innerWidth'); ok(abs(im.size[1] - total) <= 4 and im.size[0] == vw, f'pagină întreagă {im.size} vs {total}, lățime viewport {vw}')
         # antetul fix (albastru închis #223) trebuie să apară o singură dată pe verticală la x=450
         col = [im.getpixel((450, y)) for y in range(im.size[1])]
         hdr = [y for y, c in enumerate(col) if abs(c[0]-0x22)<4 and abs(c[1]-0x22)<4 and abs(c[2]-0x33)<4]
