@@ -386,7 +386,7 @@ footer{border-top:1px solid var(--soft-line);padding-block:48px;background:var(-
         <li><a href="#faq">FAQ</a></li>
       </ul>
     </nav>
-    <select class="icon-btn lang-sel" id="langSel" aria-label="Schimbă limba"><option value="ro" lang="ro">Română</option><option value="en" lang="en">English</option><option value="de" lang="de">Deutsch</option><option value="es" lang="es">Español</option><option value="fr" lang="fr">Français</option><option value="hu" lang="hu">Magyar</option><option value="it" lang="it">Italiano</option><option value="pt" lang="pt">Português</option></select>
+    <select class="icon-btn lang-sel" id="langSel" aria-label="Schimbă limba"><option value="en" lang="en">English</option><option value="ro" lang="ro">Română</option><option value="fr" lang="fr">Français</option><option value="it" lang="it">Italiano</option><option value="es" lang="es">Español</option><option value="pt" lang="pt">Português</option><option value="de" lang="de">Deutsch</option><option value="hu" lang="hu">Magyar</option></select>
     <button class="icon-btn" id="themeBtn" type="button" aria-label="Temă"><svg class="ic" aria-hidden="true" id="themeIc"><use href="#i-moon"/></svg><span class="sr-only" id="themeTxt"></span></button>
     <button class="icon-btn menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="mainnav" aria-label="Meniu" data-en-aria-label="Menu"><svg class="ic" aria-hidden="true"><use href="#i-menu"/></svg></button>
   </div>
@@ -632,9 +632,7 @@ footer{border-top:1px solid var(--soft-line);padding-block:48px;background:var(-
       <article class="card rv" style="--d:.1s"><div class="ico"><svg aria-hidden="true"><use href="#i-users"/></svg></div><h3><span data-en="Profiles and per-site settings">Profiluri și setări pe site</span></h3><p><span data-en="19 profiles, per-site settings, JSON export/import and enterprise policies (managed storage) for organisations.">19 profiluri, setări pe site, export/import JSON și politici de administrare (managed storage) pentru organizații.</span></p></article>
     </div>
     <h3 style="margin-top:2.5rem" id="h-langs"><span data-en="Interface in 8 languages">Interfață în 8 limbi</span></h3>
-    <ul class="langs" aria-labelledby="h-langs">
-      <li lang="ro">Română</li><li lang="en">English</li><li lang="de">Deutsch</li><li lang="es">Español</li><li lang="fr">Français</li><li lang="hu">Magyar</li><li lang="it">Italiano</li><li lang="pt">Português</li>
-    </ul>
+    <ul class="langs" aria-labelledby="h-langs"><li lang="en">English</li><li lang="ro">Română</li><li lang="fr">Français</li><li lang="it">Italiano</li><li lang="es">Español</li><li lang="pt">Português</li><li lang="de">Deutsch</li><li lang="hu">Magyar</li></ul>
   </div>
 </section>
 
@@ -896,6 +894,7 @@ footer{border-top:1px solid var(--soft-line);padding-block:48px;background:var(-
         </ul>
       </div>
     </div>
+    <p class="fine" id="upd"></p>
     <p class="fine"><span data-en="Author: Alexandru-Ionuț Chiuță (Alexio). This page is a single static file with no cookies, no trackers and no external resources; it only remembers your chosen theme and language locally.">Autor: Alexandru-Ionuț Chiuță (Alexio). Această pagină e un singur fișier static, fără cookie-uri, fără trackere și fără resurse externe; își amintește local doar tema și limba alese de tine.</span></p>
   </div>
 </footer>
@@ -907,7 +906,7 @@ var D=document,R=D.documentElement;
 function $(s,c){return (c||D).querySelector(s)}
 function $$(s,c){return Array.prototype.slice.call((c||D).querySelectorAll(s))}
 var reduce=window.matchMedia('(prefers-reduced-motion: reduce)');
-var LANGS=['ro','en','de','es','fr','hu','it','pt'];
+var LANGS=['en','ro','fr','it','es','pt','de','hu'];
 var lang=LANGS.indexOf(R.lang)>=0?R.lang:'ro';
 
 /* ---------- i18n ---------- */
@@ -999,6 +998,8 @@ function paintLang(){
   var sl=$('#langSel');sl.value=lang;sl.setAttribute('aria-label',T().meta.aria);
   D.title=T().meta.t;
   $('meta[name=description]').content=T().meta.d;
+  var U={en:['Version','Last updated','12 Nov 2026'],ro:['Versiune','Ultima actualizare','12.11.2026'],fr:['Version','Dernière mise à jour','12/11/2026'],it:['Versione','Ultimo aggiornamento','12/11/2026'],es:['Versión','Última actualización','12/11/2026'],pt:['Versão','Última atualização','12/11/2026'],de:['Version','Letzte Aktualisierung','12.11.2026'],hu:['Verzió','Utolsó frissítés','2026. 11. 12.']}[lang];
+  $('#upd').textContent=U[0]+': 1.7.0 · '+U[1]+': '+U[2];
   paintTheme();
   $('#baToggle').textContent=baAll?T().revert:T().apply;
   updateBA();updateContrast();updateCb();updateTextDemo();setupReading();

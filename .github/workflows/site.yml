@@ -2,7 +2,7 @@ name: site
 on:
   push:
     branches: [ci/browser-matrix]
-    paths: ['site/**', 'test/site_cross.py', '.github/workflows/site.yml']
+    paths: ['site/**', 'test/site_cross.py', 'test/site_i18n.py', '.github/workflows/site.yml']
   workflow_dispatch:
 jobs:
   site:
@@ -22,3 +22,4 @@ jobs:
         with: { python-version: '3.12' }
       - run: pip install playwright && python -m playwright install --with-deps ${{ matrix.eng }}
       - run: python test/site_cross.py ${{ matrix.eng }}
+      - run: python test/site_i18n.py

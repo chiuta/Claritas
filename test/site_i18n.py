@@ -1,3 +1,8 @@
+import sys as _s
+try:
+    _s.stdout.reconfigure(encoding='utf-8')
+except Exception:
+    pass
 import sys,json
 from playwright.sync_api import sync_playwright
 import pathlib

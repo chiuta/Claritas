@@ -1,4 +1,9 @@
 """Pagina de prezentare în Chromium/Firefox/WebKit: fără erori JS, fără depășire orizontală, comutator limbă/temă, tab-uri, demo-uri."""
+import sys as _s
+try:
+    _s.stdout.reconfigure(encoding='utf-8')
+except Exception:
+    pass
 import asyncio, pathlib, sys, json
 from playwright.async_api import async_playwright
 URL = (pathlib.Path(__file__).resolve().parent.parent / 'site' / 'index.html').as_uri()
