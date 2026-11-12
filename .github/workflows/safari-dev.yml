@@ -78,11 +78,11 @@ jobs:
               set sw to missing value
               repeat with w in windows
                 try
-                  if exists button "Advanced" of w then set sw to contents of w
+                  if (name of w) is "General" then set sw to contents of w
                 end try
               end repeat
               log "settings window found: " & (sw is not missing value)
-              click button "Advanced" of sw
+              click (first button of entire contents of sw whose name is "Advanced")
               delay 2
               log "=== ADV checkboxes"
               try
@@ -110,7 +110,7 @@ jobs:
                 log "ERR develop " & e
               end try
               try
-                click button "Extensions" of sw
+                click (first button of entire contents of sw whose name is "Extensions")
               on error e
                 log "ERR ext " & e
               end try
