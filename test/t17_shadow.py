@@ -1,7 +1,10 @@
 """Regresie confidențialitate: panourile Claritas nu trebuie să fie citibile de scripturile paginii (shadow DOM closed).
 Rulează pe build-ul implicit (fără CLARITAS_TEST_SHADOW=open)."""
+import io
 import asyncio, pathlib, tempfile, sys
 from playwright.async_api import async_playwright
+import sys as _s
+_s.stdout.reconfigure(encoding='utf-8', errors='replace')
 EXT = str(pathlib.Path(__file__).resolve().parent.parent / 'dist' / 'chromium'); T = tempfile.mkdtemp()
 pathlib.Path(T, 'p.html').write_text('<!doctype html><body><p>x</p></body>')
 if "mode: 'open'" in (pathlib.Path(EXT) / 'modules3.js').read_text(encoding='utf-8') or "attachShadow({ mode: 'open'" in (pathlib.Path(EXT) / 'modules3.js').read_text(encoding='utf-8'):

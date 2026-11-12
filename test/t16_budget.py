@@ -1,6 +1,9 @@
 """Regresie: bugetul de noduri al corectării automate nu trebuie să fie cumulativ (>125k noduri în viața paginii)."""
+import io
 import asyncio, pathlib, tempfile, sys
 from playwright.async_api import async_playwright
+import sys as _s
+_s.stdout.reconfigure(encoding='utf-8', errors='replace')
 EXT = str(pathlib.Path(__file__).resolve().parent.parent / 'dist' / 'chromium')
 T = tempfile.mkdtemp()
 pathlib.Path(T, 'mn.html').write_text('<!doctype html><body style="background:#fff"><div id=c></div></body>')

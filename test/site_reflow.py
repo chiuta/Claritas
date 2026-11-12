@@ -1,6 +1,9 @@
 """Site: reflow la 320 px în toate limbile, fără cereri externe, cu CSP care blochează rețeaua."""
+import io
 import asyncio, pathlib, sys
 from playwright.async_api import async_playwright
+import sys as _s
+_s.stdout.reconfigure(encoding='utf-8', errors='replace')
 URL = (pathlib.Path(__file__).resolve().parent.parent / 'site' / 'index.html').as_uri()
 fails = []
 async def main():

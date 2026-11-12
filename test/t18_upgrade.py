@@ -1,7 +1,10 @@
 """Upgrade: date vechi/corupte din versiuni anterioare nu strică extensia; lista de citit avertizează la limită.
 Necesită build cu CLARITAS_TEST_SHADOW=open (panoul este citit din pagină)."""
+import io
 import asyncio, pathlib, tempfile, sys, time
 from playwright.async_api import async_playwright
+import sys as _s
+_s.stdout.reconfigure(encoding='utf-8', errors='replace')
 EXT = str(pathlib.Path(__file__).resolve().parent.parent / 'dist' / 'chromium'); T = tempfile.mkdtemp()
 pathlib.Path(T, 'p.html').write_text('<!doctype html><html lang="en"><head><title>Upgrade page</title></head><body><main><p style="color:#aaa">Old text</p><p>Body</p></main></body></html>')
 fails = []
