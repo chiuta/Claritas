@@ -26,7 +26,9 @@ jobs:
         continue-on-error: true
         run: |
           mkdir -p test/results
-          sudo dscl . -passwd /Users/runner 'Cl4ritas-CI-9x' || true
+          echo "USER: $(id -un) / $(whoami)"; dscl . -list /Users | grep -v '^_' | tr '\n' ' '
+          sudo sysadminctl -resetPasswordFor "$(id -un)" -newPassword 'Cl4ritasCI9x' -adminUser "$(id -un)" -adminPassword - <<< "" 2>&1 | tail -2 || true
+          sudo defaults write com.apple.Safari AllowUnsignedExtensions -bool true 2>&1 | tail -1 || true
           osascript -e 'tell application "Safari" to quit' 2>/dev/null || true; sleep 2
           open -a Safari; sleep 7
           cat > /tmp/ui.applescript <<'AS'
@@ -136,7 +138,7 @@ jobs:
                       if (value of c) is 0 then click c
                       delay 4
                       delay 3
-                      repeat with pw in {"admin", "anka", "Anka", "runner", "password", "ci", "1234", "github", "actions"}
+                      repeat with pw in {"Cl4ritasCI9x", "", "admin", "anka", "Anka", "runner", "password", "ci", "1234", "github", "actions"}
                         try
                           if (count of sheets of window 1) > 0 then
                             set focused of text field 1 of sheet 1 of window 1 to true
@@ -144,6 +146,7 @@ jobs:
                             keystroke "a" using command down
                             keystroke (contents of pw)
                             delay 1
+                            log "field value length: " & (count of characters of (value of text field 1 of sheet 1 of window 1 as text))
                             keystroke return
                             delay 3
                             log "tried password " & (contents of pw) & " -> sheets: " & (count of sheets of window 1)
