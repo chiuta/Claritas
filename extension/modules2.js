@@ -5,9 +5,9 @@
    modImgAlt   descrieri sugerate pentru imagini fără alt (din legendă/titlu/nume de fișier), marcate „generat automat”
    modCaps     subtitrări live din microfon
    Funcțiile pure (parseVoice, summarize, simplify, glossary, altFromName) sunt exportate în CLR.m2 pentru teste. */
-try { (function () {
+try { (function (GCLR) {
   'use strict';
-  const CLR = (typeof CLR !== 'undefined' ? CLR : (window.CLR = window.CLR || {}));
+  const CLR = GCLR || (window.CLR = window.CLR || {});
   const MAXTXT = 60000;
   let S = null, active = false, ctx = null, doc = document;
   const T = (k, v) => CLR.t(S && S.lang, k, v);
@@ -438,4 +438,4 @@ try { (function () {
 
   CLR.m2 = { onApply, run, parseVoice, summarize, simplify, glossary, altFromName, sentences, supported: () => ({ speech: !!SR() }) };
   if (CLR.ctx) onApply(CLR.ctx.S, CLR.ctx.active);
-})(); } catch (e) { (typeof CLR !== 'undefined' ? CLR : {}).m2err = String(e && e.stack || e); }
+})(typeof CLR !== 'undefined' ? CLR : null); } catch (e) { (typeof CLR !== 'undefined' ? CLR : {}).m2err = String(e && e.stack || e); }

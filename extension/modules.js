@@ -3,9 +3,9 @@
    2) reguli suplimentare de audit
    3) dicționar local importat de utilizator (nimic nu pleacă din browser)
    Fără rețea. Euristic: etichetele sunt orientative, nu analiză lingvistică completă. */
-(function () {
+(function (GCLR) {
   'use strict';
-  const CLR = (typeof CLR !== 'undefined' ? CLR : (window.CLR = window.CLR || {}));
+  const CLR = GCLR || (window.CLR = window.CLR || {});
   const mod = (CLR.mod = CLR.mod || {});
   const api = typeof browser !== 'undefined' ? browser : chrome;
 
@@ -139,4 +139,4 @@
     return alt ? cache[alt] : null;
   };
   try { api.storage.onChanged.addListener((ch, area) => { if (area === 'local' && ch[KEY]) cache = null; }); } catch (e) { }
-})();
+})(typeof CLR !== 'undefined' ? CLR : null);
