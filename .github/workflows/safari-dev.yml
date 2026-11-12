@@ -63,28 +63,46 @@ jobs:
               delay 1
               keystroke "," using command down
               delay 3
-              log "=== settings window: " & (name of every window as string)
-              try
-                click button "Advanced" of toolbar 1 of window 1
-              on error e
-                log "ERR adv " & e
-              end try
+              click button "Advanced" of window 1
               delay 2
-              log "=== ADVANCED" & linefeed & my dump(window 1, 0, 4)
+              log "=== ADV checkboxes"
               try
-                click (first checkbox of group 1 of group 1 of window 1 whose name contains "web developer")
+                repeat with c in (every checkbox of entire contents of window 1)
+                  log "  cb: " & (name of c) & " = " & (value of c)
+                end repeat
+              on error e
+                log "ERR adv list " & e
+              end try
+              try
+                set c to (first checkbox of entire contents of window 1 whose name contains "web developer")
+                if (value of c) is 0 then click c
+                delay 2
               on error e
                 log "ERR devcheck " & e
               end try
-              delay 2
               log "=== menus: " & (name of every menu bar item of menu bar 1 as string)
               try
-                click button "Extensions" of toolbar 1 of window 1
+                log "develop: " & (name of every menu item of menu "Develop" of menu bar item "Develop" of menu bar 1 as string)
+                click menu item "Allow Unsigned Extensions" of menu "Develop" of menu bar item "Develop" of menu bar 1
+                delay 3
+                log "after unsigned windows: " & (name of every window as string)
+                log "after unsigned UI:" & linefeed & my dump(window 1, 0, 3)
+              on error e
+                log "ERR develop " & e
+              end try
+              try
+                click button "Extensions" of window 1
               on error e
                 log "ERR ext " & e
               end try
               delay 3
-              log "=== EXTENSIONS" & linefeed & my dump(window 1, 0, 5)
+              log "=== EXT UI"
+              log my dump(window 1, 0, 9)
+              try
+                repeat with c in (every checkbox of entire contents of window 1)
+                  log "  ext cb: " & (name of c) & " = " & (value of c) & " desc=" & (description of c)
+                end repeat
+              end try
             end tell
           end tell
           AS
