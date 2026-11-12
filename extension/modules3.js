@@ -92,8 +92,12 @@
     const L = String(lang || 'en').slice(0, 2) === 'ro' ? 'ro' : 'en', ro = L === 'ro', ops = MO[L];
     const W = { frac: ro ? ['fracția', 'supra', 'sfârșit de fracție'] : ['the fraction', 'over', 'end fraction'], sq: ro ? 'la pătrat' : 'squared', cu: ro ? 'la cub' : 'cubed', pw: ro ? 'la puterea' : 'to the power', sub: ro ? 'indice' : 'sub', root: ro ? 'rădăcina pătrată din' : 'the square root of', rootN: ro ? 'rădăcina de ordin' : 'the root of order', of: ro ? 'din' : 'of', from: ro ? 'de la' : 'from', to: ro ? 'la' : 'to', end: ro ? 'sfârșit' : 'end' };
     const kids = (n) => Array.from(n.children);
-    function go(n) {
-      if (!n || n.nodeType !== 1) return '';
+    let depth = 0, steps = 0;
+    function go(n) { // limită de adâncime și de pași: MathML ostil nu poate bloca pagina
+      if (!n || n.nodeType !== 1 || depth > 120 || ++steps > 6000) return '';
+      depth++; try { return go0(n); } finally { depth--; }
+    }
+    function go0(n) {
       const t = n.localName, c = kids(n), j = (a) => a.map(go).filter(Boolean).join(' ');
       switch (t) {
         case 'mi': case 'mn': { const s = txt(n); return GREEK[s] ? GREEK[s][ro ? 1 : 0] : s; }

@@ -57,6 +57,9 @@ async def main():
             css2:['a{background-image:image-set("https://evil/x.png" 1x)}','a{background:\\\\75rl(https://evil/x)}','a{background:u\\\\72l(//evil/x)}','a{background:src("https://evil/x")}','a{background:cross-fade(url(//evil/x) 50%,red)}','a{background:-webkit-image-set(url(//evil/x) 1x)}','.md\\\\:flex{display:flex}'].map(M.cleanCss),
             rl:[M.rlClean({url:'javascript:alert(1)'}),M.rlClean({url:'https://a.b/c',title:'T',note:'n'})],
             md:M.rlMarkdown([{url:'https://a.b/c',title:'T [x]',note:'n1\\nn2',sel:'q',read:true},{url:'https://d.e',title:'',note:'',sel:'',read:false}],'List')}}""")
+        rd = await pop.evaluate("""()=>{const M=CLR.m3,NS='http://www.w3.org/1998/Math/MathML';let root=document.createElementNS(NS,'math'),cur=root;for(let i=0;i<30000;i++){const f=document.createElementNS(NS,'mfrac');cur.appendChild(f);const a=document.createElementNS(NS,'mi');a.textContent='a';f.appendChild(a);const n=document.createElementNS(NS,'mrow');f.appendChild(n);cur=n}
+          const t=performance.now();let err=null,out='';try{out=M.mathSpeech(root,'en')}catch(e){err=String(e)}return {err,ms:performance.now()-t,len:out.length}}""")
+        ok(rd['err'] is None and rd['ms'] < 1500, f'MathML ostil (30.000 niveluri): fără excepție, {rd["ms"]:.0f} ms, {rd["len"]} caractere')
         ok(r['n'] == ['Close', 'Save', '', 'Name field', 'Logo', 'Tip', 'Mail'], f'accName {r["n"]}')
         ok(r['role'] == ['button', 'textbox', 'img', 'link'], f'roleOf {r["role"]}')
         ok(r['m1'] == 'the fraction a over 2 end fraction plus x squared equals the square root of pi end', f'mathSpeech EN: {r["m1"]}')

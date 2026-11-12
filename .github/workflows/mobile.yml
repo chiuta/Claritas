@@ -214,14 +214,8 @@ jobs:
                   end try
                 end repeat
                 delay 3
-                set pw to "admin"
-                try
-                  keystroke pw
-                  delay 0.5
-                  keystroke return
-                  delay 4
-                  log "password submitted"
-                end try
+                -- Fără parolă ghicită: dialogul de autentificare nu se completează în CI.
+                log "auth dialog left to user (no password guessing)"
                 log "windows after unsigned: " & (count of windows)
                 repeat with w in windows
                   try

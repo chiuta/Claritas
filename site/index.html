@@ -2,6 +2,8 @@
 <html lang="ro" data-theme="auto">
 <head>
 <meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; font-src data:; media-src data: blob:; connect-src 'none'; base-uri 'none'; form-action 'none'">
+
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Claritas — extensie de accesibilitate: vezi mai clar, citește mai ușor</title>
 <meta name="description" content="Claritas: extensie gratuită de accesibilitate pentru Chromium, Firefox și Safari. Contrast corectat automat, mod cititor, citire cu voce, audit WCAG 2.2. Fără telemetrie.">
@@ -170,7 +172,9 @@ html:not(.js) nav.main ul{flex-wrap:wrap}
 [role=tabpanel][hidden]{display:none}
 .panel-grid{display:grid;gap:clamp(20px,3vw,36px);grid-template-columns:1fr}
 @media (min-width:900px){.panel-grid{grid-template-columns:minmax(0,1fr) minmax(0,1.1fr)}}
-.ctl{display:grid;gap:1rem;align-content:start}
+.ctl{display:grid;gap:1rem;align-content:start;min-width:0}
+.panel-grid>*{min-width:0}
+.ctl input,.ctl select{max-width:100%}
 .ctl label,.ctl legend{font-weight:700;font-size:.98rem}
 fieldset{border:0;padding:0;margin:0;min-width:0}
 .row{display:flex;flex-wrap:wrap;gap:.7rem;align-items:center}
@@ -188,7 +192,7 @@ select{min-height:48px;padding:.4rem .8rem;border-radius:10px;border:2px solid v
 .preview{border-radius:16px;border:1px solid var(--soft-line);padding:clamp(16px,3vw,28px);min-height:190px;display:flex;flex-direction:column;justify-content:center;gap:.6rem}
 .big-ratio{font:700 clamp(2.6rem,7vw,4rem)/1 var(--display)}
 .results{list-style:none;margin:0;padding:0;display:grid;gap:.5rem}
-.results li{display:flex;justify-content:space-between;align-items:center;gap:.8rem;padding:.55rem .9rem;border-radius:12px;background:var(--surface2);font-weight:600;font-size:.97rem}
+.results li{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:.3rem .8rem;min-width:0;overflow-wrap:anywhere;padding:.55rem .9rem;border-radius:12px;background:var(--surface2);font-weight:600;font-size:.97rem}
 .badge{display:inline-flex;align-items:center;gap:.4em;padding:.25rem .75rem;border-radius:99px;font:700 .85rem/1.2 var(--sans);white-space:nowrap}
 .b-ok{background:var(--ok-bg);color:var(--ok)}
 .b-bad{background:var(--bad-bg);color:var(--bad)}
