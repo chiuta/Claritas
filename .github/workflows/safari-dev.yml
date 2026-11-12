@@ -62,7 +62,19 @@ jobs:
               set frontmost to true
               delay 1
               keystroke "," using command down
-              delay 3
+              repeat 15 times
+                if (count of windows) > 0 then exit repeat
+                delay 1
+              end repeat
+              if (count of windows) is 0 then
+                click (first menu item of menu "Safari" of menu bar item "Safari" of menu bar 1 whose name starts with "Settings")
+                repeat 15 times
+                  if (count of windows) > 0 then exit repeat
+                  delay 1
+                end repeat
+              end if
+              delay 2
+              log "windows: " & (count of windows)
               click button "Advanced" of window 1
               delay 2
               log "=== ADV checkboxes"
