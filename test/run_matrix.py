@@ -10,7 +10,7 @@ for f in sorted([x for x in glob.glob('t*.py') if x not in ('t1.py', 't2.py')]):
     t = time.time()
     for attempt in (1, 2):
         try:
-            r = subprocess.run([sys.executable, '-c', code], capture_output=True, text=True, timeout=300)
+            r = subprocess.run([sys.executable, '-c', code], capture_output=True, text=True, timeout=(100 if os.environ.get('BROWSER_CDP') else 300))
             out, rc = r.stdout + r.stderr, r.returncode
         except subprocess.TimeoutExpired as e:
             o = e.stdout or ''

@@ -73,7 +73,7 @@ jobs:
           curl -fsSL https://deb.opera.com/archive.key | sudo gpg --dearmor -o /usr/share/keyrings/opera.gpg
           echo "deb [signed-by=/usr/share/keyrings/opera.gpg] https://deb.opera.com/opera-stable/ stable non-free" | sudo tee /etc/apt/sources.list.d/opera.list
           echo "opera-stable opera-stable/add-deb-source boolean false" | sudo debconf-set-selections
-          for i in 1 2 3 4; do sudo apt-get update && sudo apt-get install -y -o Acquire::Retries=5 opera-stable && break; sleep 20; done
+          for i in 1 2 3 4; do sudo apt-get update && sudo apt-get install -y -o Acquire::Retries=5 opera-stable gsettings-desktop-schemas libglib2.0-bin && break; sleep 20; done
           echo "BROWSER_EXE=/usr/bin/opera" >> $GITHUB_ENV
           echo "BROWSER_CDP=1" >> $GITHUB_ENV
       - name: Diagnostic pornire browser (CDP)
