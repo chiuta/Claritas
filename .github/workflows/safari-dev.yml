@@ -74,19 +74,26 @@ jobs:
                 end repeat
               end if
               delay 2
-              log "windows: " & (count of windows)
-              click button "Advanced" of window 1
+              log "windows: " & (name of every window as string)
+              set sw to missing value
+              repeat with w in windows
+                try
+                  if exists button "Advanced" of w then set sw to contents of w
+                end try
+              end repeat
+              log "settings window found: " & (sw is not missing value)
+              click button "Advanced" of sw
               delay 2
               log "=== ADV checkboxes"
               try
-                repeat with c in (every checkbox of entire contents of window 1)
+                repeat with c in (every checkbox of entire contents of sw)
                   log "  cb: " & (name of c) & " = " & (value of c)
                 end repeat
               on error e
                 log "ERR adv list " & e
               end try
               try
-                set c to (first checkbox of entire contents of window 1 whose name contains "web developer")
+                set c to (first checkbox of entire contents of sw whose name contains "web developer")
                 if (value of c) is 0 then click c
                 delay 2
               on error e
@@ -98,12 +105,12 @@ jobs:
                 click menu item "Allow Unsigned Extensions" of menu "Develop" of menu bar item "Develop" of menu bar 1
                 delay 3
                 log "after unsigned windows: " & (name of every window as string)
-                log "after unsigned UI:" & linefeed & my dump(window 1, 0, 3)
+                log "after unsigned UI:" & linefeed & my dump(sw, 0, 3)
               on error e
                 log "ERR develop " & e
               end try
               try
-                click button "Extensions" of window 1
+                click button "Extensions" of sw
               on error e
                 log "ERR ext " & e
               end try
@@ -111,7 +118,7 @@ jobs:
               log "=== EXT UI"
               log my dump(window 1, 0, 9)
               try
-                repeat with c in (every checkbox of entire contents of window 1)
+                repeat with c in (every checkbox of entire contents of sw)
                   log "  ext cb: " & (name of c) & " = " & (value of c) & " desc=" & (description of c)
                 end repeat
               end try
