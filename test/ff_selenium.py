@@ -148,7 +148,7 @@ try:
             ext_tab()
             r = d.execute_async_script("const [w,kw,cb]=[arguments[0],arguments[1],arguments[arguments.length-1]];browser.tabs.query({url:'http://127.0.0.1/*'}).then(t=>browser.tabs.sendMessage(t[0].id,Object.assign({type:'feat',cmd:'m2',what:w},kw))).then(r=>cb(r),e=>cb({err:String(e)}))", what, kw)
             d.switch_to.window(PAGE_H); return r
-        print('DIAG nextH ->', m2('nextH')); a1 = d.execute_script("return document.activeElement.textContent"); m2('nextH'); a2 = d.execute_script("return document.activeElement.textContent")
+        print('DIAG', m2('diag'));print('DIAG nextH ->', m2('nextH')); a1 = d.execute_script("return document.activeElement.textContent"); m2('nextH'); a2 = d.execute_script("return document.activeElement.textContent")
         ok((a1, a2) == ('Titlu principal', 'Secțiunea doi'), f'Firefox v1.7: navigare titluri {a1!r}, {a2!r}')
         m2('list'); time.sleep(0.4)
         n = d.execute_script("const h=document.getElementById('clr-m2');return h&&h.shadowRoot?h.shadowRoot.querySelectorAll('.pnl li button').length:-1")

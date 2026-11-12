@@ -421,6 +421,7 @@
   function run(msg) {
     if (!active || !S) return { ok: false, inactive: true };
     switch (msg.what) {
+      case 'diag': return { url: String(doc.location && doc.location.href), h: collect('h').length, hAll: doc.querySelectorAll('h1,h2,h3').length, vis: [].map.call(doc.querySelectorAll('h1,h2'), (e) => [vis(e), !!e.checkVisibility, e.getClientRects().length]), imgs: doc.querySelectorAll('img').length, ours0: ours(doc.querySelector('img')), im: !!S.modImgAlt, keys: !!S.modKeys, auto: autoImgs.size, scan: scanImgs() };
       case 'nextH': return { ok: step('h', 1) }; case 'prevH': return { ok: step('h', -1) };
       case 'nextL': return { ok: step('l', 1) }; case 'prevL': return { ok: step('l', -1) };
       case 'list': openList(); return { ok: true };
