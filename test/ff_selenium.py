@@ -147,7 +147,7 @@ try:
             d.set_context('chrome')
             for fn in ('modules.js', 'modules2.js', 'report.js'):
                 src = open(os.path.join(EXT, fn), encoding='utf8').read()
-                r = d.execute_script("try{ new Function(arguments[0]); return 'ok'; }catch(e){ return String(e)+' @'+e.lineNumber+':'+e.columnNumber; }", src)
+                r = d.execute_script("try{ const sb=Components.utils.Sandbox('http://127.0.0.1/',{wantXrays:true}); sb.window=sb; Components.utils.evalInSandbox('(function(){'+arguments[0]+'\n})', sb, 'latest', 'x.js', 1); return 'ok'; }catch(e){ return String(e)+' @'+e.lineNumber+':'+e.columnNumber; }", src)
                 print('DIAG syntax', fn, r)
         except Exception as e: print('DIAG syntax err', e)
         finally: d.set_context('content')
