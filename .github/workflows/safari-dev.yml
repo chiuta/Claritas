@@ -30,6 +30,33 @@ jobs:
           osascript -e 'tell application "Safari" to quit' 2>/dev/null || true; sleep 2
           open -a Safari; sleep 7
           cat > /tmp/ui.applescript <<'AS'
+          on procWins()
+            tell application "System Events"
+              set r to ""
+              repeat with p in (every process whose visible is true or background only is false)
+                try
+                  set r to r & (name of p) & "[" & (count of windows of p) & "] "
+                end try
+              end repeat
+              try
+                tell process "SecurityAgent"
+                  set r to r & linefeed & "SA: " & my dumpSA()
+                end tell
+              end try
+              return r
+            end tell
+          end procWins
+          on dumpSA()
+            tell application "System Events"
+              try
+                tell process "SecurityAgent"
+                  return (name of every window as string) & linefeed & my dump(window 1, 0, 5)
+                end tell
+              on error e
+                return "SA error " & e
+              end try
+            end tell
+          end dumpSA
           on findAll(el, rl)
             tell application "System Events"
               set res to {}
@@ -108,19 +135,11 @@ jobs:
                       log "unsigned cb before: " & (value of c)
                       if (value of c) is 0 then click c
                       delay 4
-                      log "SecurityAgent windows: "
-                      try
-                        tell process "SecurityAgent"
-                          log my dump(window 1, 0, 5)
-                          keystroke "Cl4ritas-CI-9x"
-                          keystroke return
-                        end tell
-                      on error e3
-                        log "no SecurityAgent: " & e3
-                      end try
-                      delay 4
+                      set authInfo to ""
                       log "unsigned cb after: " & (value of c)
                       log "windows now: " & (name of every window as string)
+                      set authInfo to my procWins()
+                      log "PROCS: " & authInfo
                     end if
                   end try
                 end repeat
