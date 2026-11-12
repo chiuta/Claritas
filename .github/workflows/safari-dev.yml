@@ -66,78 +66,36 @@ jobs:
                 if (count of windows) > 0 then exit repeat
                 delay 1
               end repeat
-              if (count of windows) is 0 then
-                click (first menu item of menu "Safari" of menu bar item "Safari" of menu bar 1 whose name starts with "Settings")
-                repeat 15 times
-                  if (count of windows) > 0 then exit repeat
-                  delay 1
-                end repeat
-              end if
               delay 2
-              log "windows: " & (name of every window as string)
-              set sw to missing value
-              set wi to 0
-              repeat with i from 1 to (count of windows)
-                set w to window i
-                try
-                  if (name of w) is "General" then set wi to i
-                end try
-              end repeat
-              log "settings window index: " & wi
-              set sw to window wi
-              try
-                click button "Advanced" of toolbar 1 of sw
-              on error e1
-                log "toolbar click failed: " & e1
-                try
-                  click button "Advanced" of sw
-                on error e2
-                  log "direct click failed: " & e2
-                  log "WINDOW DUMP:" & linefeed & my dump(sw, 0, 4)
-                end try
-              end try
+              click button "Advanced" of toolbar 1 of window 1
               delay 2
-              log "=== ADV checkboxes"
               try
-                repeat with c in (entire contents of window wi)
-                  if (role of c) is "AXCheckBox" then log "  cb: " & (name of c) & " = " & (value of c)
-                end repeat
-              on error e
-                log "ERR adv list " & e
-              end try
-              try
-                repeat with c in (entire contents of window wi)
-                  if (role of c) is "AXCheckBox" and (name of c) contains "web developer" then
-                    if (value of c) is 0 then click c
-                  end if
-                end repeat
+                set c to checkbox "Show features for web developers" of group 1 of group 1 of window 1
+                log "devcheck before: " & (value of c)
+                if (value of c) is 0 then click c
                 delay 2
+                log "devcheck after: " & (value of c)
               on error e
                 log "ERR devcheck " & e
               end try
               log "=== menus: " & (name of every menu bar item of menu bar 1 as string)
               try
-                log "develop: " & (name of every menu item of menu "Develop" of menu bar item "Develop" of menu bar 1 as string)
-                click menu item "Allow Unsigned Extensions" of menu "Develop" of menu bar item "Develop" of menu bar 1
+                log "develop: " & (name of every menu item of menu 1 of menu bar item "Develop" of menu bar 1 as string)
+                click menu item "Allow Unsigned Extensions" of menu 1 of menu bar item "Develop" of menu bar 1
                 delay 3
                 log "after unsigned windows: " & (name of every window as string)
-                log "after unsigned UI:" & linefeed & my dump(sw, 0, 3)
+                log "after unsigned UI:" & linefeed & my dump(window 1, 0, 4)
               on error e
                 log "ERR develop " & e
               end try
               try
-                click button "Extensions" of toolbar 1 of sw
+                click button "Extensions" of toolbar 1 of window 1
               on error e
                 log "ERR ext " & e
               end try
               delay 3
               log "=== EXT UI"
               log my dump(window 1, 0, 9)
-              try
-                repeat with c in (entire contents of window wi)
-                  if (role of c) is "AXCheckBox" then log "  ext cb: " & (name of c) & " = " & (value of c) & " desc=" & (description of c)
-                end repeat
-              end try
             end tell
           end tell
           AS
