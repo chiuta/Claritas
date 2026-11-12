@@ -15,8 +15,10 @@ def ok(c, m):
     print(('PASS ' if c else 'FAIL ') + m); sys.stdout.flush()
     if not c: fails.append(m)
 H = '<!doctype html><html lang="ro"><head><meta charset="utf-8"><title>T</title></head><body>%s</body></html>'
+LONGP = 'Centrul Național de Recunoaștere și Echivalare a Diplomelor (CNRED) este instituția care analizează diplomele; CNRED colaborează cu autoritățile, iar rezultatul analizei se comunică solicitantului în termen legal. Procedura de recunoaștere profesională presupune verificarea documentelor, compararea programelor de studii și evaluarea echivalenței, ceea ce poate dura mai multe săptămâni, deoarece dosarele incomplete sunt returnate. '
 PAGES = {
  '/contrast.html': H % '<h1>Test</h1><p id="p" style="color:#bbbbbb;background:#ffffff">Text pal pe alb</p><input id="d" disabled value="Câmp dezactivat" style="color:#c8c8c8;background:#f0f0f0"><p>Contact: <span id="mail">ion.popescu@example.com</span></p><button id="b1">Buton</button>',
+ '/mod.html': H % ('<header><a href="#c">Sari</a></header><nav aria-label="Principal"><a href="/a">Acasă</a></nav><main id="c"><h1>Titlu principal</h1><p>' + LONGP*3 + '</p><h2>Secțiunea doi</h2><p>' + LONGP*2 + '</p><h3>Subsecțiune</h3><p>' + LONGP*2 + '</p><figure><img id="i1" src="/x/a1.png"><figcaption>Casa veche din Brașov, 1900</figcaption></figure><img id="i2" src="/img/casa-din-brasov-2023.jpg"><img id="i4" src="/q.png" alt="Grafic vânzări"></main><aside aria-label="Lateral"><p>Notă laterală cu text suficient de lung.</p></aside><footer><p>Subsol</p></footer>' + ''.join('<p>umplutură %d</p>' % i for i in range(30))),
  '/outer.html': H % '<h1>Cadru</h1><iframe id="f" src="http://127.0.0.1:8772/inner.html" width="500" height="120"></iframe>',
  '/inner.html': H % '<p>Date: <b>secret.person@example.net</b></p>',
 }
@@ -135,6 +137,35 @@ try:
         blk = sum(1 for xx in range(int(x * s), int((x + w) * s), 3) for yy in range(int(y * s), int((y + h) * s), 3) if im.getpixel((xx, yy))[:3] == (0, 0, 0))
         ok(blk > 150, f'captură Firefox: e-mailul din iframe cross-origin este acoperit ({blk} pixeli negri)')
     capture('http://127.0.0.1:8771/outer.html', 'captură cu iframe cross-origin', chk_frame)
+    # 6) v1.7: module opționale pe Firefox
+    try:
+        ext_set({'enabled': True, 'lang': 'en', 'noMotion': True, 'modKeys': True, 'modSimplify': True, 'modImgAlt': True, 'modVoice': True, 'modCaps': True})
+        d.switch_to.window(PAGE_H); d.get('http://127.0.0.1:8771/mod.html'); time.sleep(3.2)
+        alts = d.execute_script("return ['i1','i2','i4'].map(i=>document.getElementById(i).getAttribute('alt'))")
+        ok(alts[0] and 'Casa veche din Brașov' in alts[0] and alts[1] and 'Casa din brasov' in alts[1] and alts[2] == 'Grafic vânzări', f'Firefox v1.7: alt imagini {alts}')
+        def m2(what, **kw):
+            ext_tab()
+            r = d.execute_async_script("const [w,kw,cb]=[arguments[0],arguments[1],arguments[arguments.length-1]];browser.tabs.query({url:'http://127.0.0.1/*'}).then(t=>browser.tabs.sendMessage(t[0].id,Object.assign({type:'feat',cmd:'m2',what:w},kw))).then(r=>cb(r),e=>cb({err:String(e)}))", what, kw)
+            d.switch_to.window(PAGE_H); return r
+        m2('nextH'); a1 = d.execute_script("return document.activeElement.textContent"); m2('nextH'); a2 = d.execute_script("return document.activeElement.textContent")
+        ok((a1, a2) == ('Titlu principal', 'Secțiunea doi'), f'Firefox v1.7: navigare titluri {a1!r}, {a2!r}')
+        m2('list'); time.sleep(0.4)
+        n = d.execute_script("const h=document.getElementById('clr-m2');return h&&h.shadowRoot?h.shadowRoot.querySelectorAll('.pnl li button').length:-1")
+        ok(n >= 6, f'Firefox v1.7: listă repere/titluri/linkuri ({n})')
+        d.execute_script("document.getElementById('clr-m2').shadowRoot.querySelector('.pnl').dispatchEvent(new KeyboardEvent('keydown',{key:'Escape',bubbles:true}))")
+        m2('panel'); time.sleep(1.2)
+        pt = d.execute_script("const p=document.getElementById('clr-m2').shadowRoot.querySelector('.pnl');return p?[p.textContent,Array.from(p.querySelectorAll('dt')).map(x=>x.textContent)]:null")
+        ok(pt and 'CNRED' in pt[1] and 'Summary' in pt[0], f'Firefox v1.7: rezumat + glosar {pt[1][:3] if pt else None}')
+        vc = m2('voiceCmd', text='zoom in'); time.sleep(0.8)
+        ok(vc.get('id') == 'zin', f'Firefox v1.7: comandă vocală interpretată ({vc})')
+        sp = m2('spot'); ok(sp.get('on') is True, 'Firefox v1.7: spotlight'); m2('spot')
+        vt = m2('voice'); ok('ok' in vt, f'Firefox v1.7: voce nu aruncă ({vt})')
+        ext_tab(); rp = d.execute_script("return CLR.report.build([{rule:'img_alt',sev:'err',label:'<x>'}],{url:'javascript:1',names:{}},'html')")
+        ok('&lt;x&gt;' in rp and 'href=\"#\"' in rp, 'Firefox v1.7: raport HTML escapat'); d.switch_to.window(PAGE_H)
+        ext_set({'enabled': True}); d.switch_to.window(PAGE_H); d.get('http://127.0.0.1:8771/mod.html'); time.sleep(2.2)
+        gone = d.execute_script("return [!!document.getElementById('clr-m2'), document.querySelectorAll('[data-clr-alt]').length, document.getElementById('i1').getAttribute('alt')]")
+        ok(gone == [False, 0, None], f'Firefox v1.7: dezactivarea modulelor restaurează pagina {gone}')
+    except Exception as e: ok(False, f'module v1.7: {e}'); traceback.print_exc()
 except Exception:
     traceback.print_exc()
 finally:

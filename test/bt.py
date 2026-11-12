@@ -26,15 +26,24 @@ PROFILES = {
   'reduced-motion': dict(reduced_motion='reduce'),
   'zoom-200':       dict(viewport={'width': 640, 'height': 480}, device_scale_factor=2),
 }
+_PORT = [9333]
+def _next_port():
+    _PORT[0] += 1; return _PORT[0]
+def _killgrp(proc):
+    import signal
+    try: os.killpg(os.getpgid(proc.pid), signal.SIGKILL)
+    except Exception:
+        try: proc.kill()
+        except Exception: pass
 _orig = BrowserType.launch_persistent_context
 async def _cdp_launch(self, kw):
     import subprocess, socket, time, urllib.request
-    exe = os.environ['BROWSER_EXE']; port = 9333; prof = tempfile.mkdtemp(prefix='clr-cdp-')
+    exe = os.environ['BROWSER_EXE']; port = _next_port(); prof = tempfile.mkdtemp(prefix='clr-cdp-')
     args = [a for a in kw.get('args', []) if not a.startswith('--headless')]
     cmd = [exe, f'--user-data-dir={prof}', f'--remote-debugging-port={port}', '--no-first-run', '--no-default-browser-check', '--no-sandbox',
            '--disable-features=DisableLoadExtensionCommandLineSwitch'] + (['--headless=new'] if not os.environ.get('HEADED') else []) + args + ['about:blank']
     logf = tempfile.NamedTemporaryFile('w+', suffix='.log', delete=False)
-    proc = subprocess.Popen(cmd, stdout=logf, stderr=logf)
+    proc = subprocess.Popen(cmd, stdout=logf, stderr=logf, start_new_session=True)
     for _ in range(60):
         try: urllib.request.urlopen(f'http://127.0.0.1:{port}/json/version', timeout=1); break
         except Exception: time.sleep(0.5)
@@ -42,6 +51,7 @@ async def _cdp_launch(self, kw):
         br = await self.connect_over_cdp(f'http://127.0.0.1:{port}', timeout=90000)
     except Exception:
         print('CDP indisponibil; jurnal browser:', open(logf.name).read()[-800:], 'proces viu:', proc.poll() is None)
+        _killgrp(proc)
         raise
     ctx = br.contexts[0]
     import hashlib
@@ -56,7 +66,7 @@ async def _cdp_launch(self, kw):
     async def close():
         try: await br.close()
         except Exception: pass
-        proc.kill()
+        _killgrp(proc)
     ctx.close = close
     return ctx
 async def _patched(self, user_data_dir, **kw):
