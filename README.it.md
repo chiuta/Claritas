@@ -56,7 +56,7 @@ MIT — copyright Alexandru-Ionuț Chiuță (Alexio).
 
 Se Claritas ti è utile, puoi sostenere il lavoro: [Buy Me a Coffee](https://buymeacoffee.com/echo.of.the.strings).
 
-Stato di verifica (v1.6.0): testato automaticamente in CI su Chromium, Edge, Brave, Firefox (più canali), Safari 27.2 reale su macOS, Safari 26.2 nel simulatore iPhone/iPad, Chrome 113 e Firefox 162 su Android 14 (emulatore). Non verificato: Opera, Vivaldi, Samsung Internet reale, l’estensione attivata in Safari/iOS reali, Chrome di marca. Alt+Shift+O/D/L/G sono modificabili nel browser; P/H/S/M sono fissi. Il pulsante di definizione apre dexonline.ro o Wiktionary solo al clic.
+Stato di verifica (v1.6.0): testato automaticamente in CI su Chromium, Edge, Brave, Firefox (più canali), Safari 27.2 reale su macOS, Safari 26.2 nel simulatore iPhone/iPad, Chrome 113 e Firefox 162 su Android 14 (emulatore). Verificato in CI su Linux per v1.7.0: Opera 140 (tutti i 12 file di test). Non verificato: Vivaldi (si avvia, ma la connessione di debug automatica va in timeout), Samsung Internet reale, l’estensione attivata in Safari/iOS reali, Chrome di marca. Alt+Shift+O/D/L/G sono modificabili nel browser; P/H/S/M sono fissi. Il pulsante di definizione apre dexonline.ro o Wiktionary solo al clic.
 
 ## Moduli opzionali (v1.7)
 Tutti sono disattivati di default (popup → «Altro» → «Moduli opzionali (v1.7)»). Nessuna telemetria; il pulsante «Cosa lascia il browser?» legge il codice dell’estensione ed elenca gli indirizzi e le chiamate di rete trovati.

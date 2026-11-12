@@ -56,7 +56,7 @@ MIT — copyright Alexandru-Ionuț Chiuță (Alexio).
 
 Si Claritas vous aide, vous pouvez soutenir ce travail : [Buy Me a Coffee](https://buymeacoffee.com/echo.of.the.strings).
 
-État de vérification (v1.6.0) : testé automatiquement en CI sur Chromium, Edge, Brave, Firefox (plusieurs canaux), Safari 27.2 réel sur macOS, Safari 26.2 dans le simulateur iPhone/iPad, Chrome 113 et Firefox 162 sur Android 14 (émulateur). Non vérifié : Opera, Vivaldi, Samsung Internet réel, l’extension activée dans Safari/iOS réels, Chrome de marque. Alt+Shift+O/D/L/G sont réassignables dans le navigateur ; P/H/S/M sont fixes. Le bouton de définition n’ouvre dexonline.ro ou Wiktionary qu’au clic.
+État de vérification (v1.6.0) : testé automatiquement en CI sur Chromium, Edge, Brave, Firefox (plusieurs canaux), Safari 27.2 réel sur macOS, Safari 26.2 dans le simulateur iPhone/iPad, Chrome 113 et Firefox 162 sur Android 14 (émulateur). Vérifié en CI sous Linux pour v1.7.0 : Opera 140 (les 12 fichiers de test). Non vérifié : Vivaldi (il démarre, mais la connexion de débogage automatique expire), Samsung Internet réel, l’extension activée dans Safari/iOS réels, Chrome de marque. Alt+Shift+O/D/L/G sont réassignables dans le navigateur ; P/H/S/M sont fixes. Le bouton de définition n’ouvre dexonline.ro ou Wiktionary qu’au clic.
 
 ## Modules facultatifs (v1.7)
 Tous sont désactivés par défaut (popup → « Plus » → « Modules optionnels (v1.7) »). Aucune télémétrie ; le bouton « Que quitte le navigateur ? » lit le code de l’extension et liste les adresses et appels réseau trouvés.

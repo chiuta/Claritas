@@ -56,7 +56,7 @@ MIT — Copyright Alexandru-Ionuț Chiuță (Alexio).
 
 Wenn Claritas Ihnen hilft, können Sie die Arbeit unterstützen: [Buy Me a Coffee](https://buymeacoffee.com/echo.of.the.strings).
 
-Prüfstatus (v1.6.0): automatisch in CI getestet auf Chromium, Edge, Brave, Firefox (mehrere Kanäle), echtem Safari 27.2 (macOS), Safari 26.2 im iPhone/iPad-Simulator, Chrome 113 und Firefox 162 auf Android 14 (Emulator). Nicht verifiziert: Opera, Vivaldi, echtes Samsung Internet, die in echtem Safari/iOS aktivierte Erweiterung, Chrome-Markenversion. Alt+Shift+O/D/L/G sind im Browser änderbar; P/H/S/M sind fest. Die Definitionsschaltfläche öffnet dexonline.ro oder Wiktionary nur auf Klick.
+Prüfstatus (v1.6.0): automatisch in CI getestet auf Chromium, Edge, Brave, Firefox (mehrere Kanäle), echtem Safari 27.2 (macOS), Safari 26.2 im iPhone/iPad-Simulator, Chrome 113 und Firefox 162 auf Android 14 (Emulator). In CI unter Linux für v1.7.0 geprüft: Opera 140 (alle 12 Testdateien). Nicht verifiziert: Vivaldi (startet, aber die automatische Debug-Verbindung läuft in ein Timeout), echtes Samsung Internet, die in echtem Safari/iOS aktivierte Erweiterung, Chrome-Markenversion. Alt+Shift+O/D/L/G sind im Browser änderbar; P/H/S/M sind fest. Die Definitionsschaltfläche öffnet dexonline.ro oder Wiktionary nur auf Klick.
 
 ## Optionale Module (v1.7)
 Alle sind standardmäßig aus (Popup → „Mehr“ → „Optionale Module (v1.7)“). Es gibt keine Telemetrie; die Schaltfläche „Was verlässt den Browser?“ liest den Code der Erweiterung und listet gefundene Adressen und Netzwerkaufrufe.

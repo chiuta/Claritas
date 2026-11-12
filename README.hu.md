@@ -56,7 +56,7 @@ MIT — szerzői jog: Alexandru-Ionuț Chiuță (Alexio).
 
 Ha a Claritas segít Önnek, támogathatja a munkát: [Buy Me a Coffee](https://buymeacoffee.com/echo.of.the.strings).
 
-Ellenőrzési állapot (v1.6.0): automatikusan tesztelve CI-ben: Chromium, Edge, Brave, Firefox (több csatorna), valódi Safari 27.2 macOS-en, Safari 26.2 iPhone/iPad szimulátorban, Chrome 113 és Firefox 162 Android 14-en (emulátor). Nem ellenőrzött: Opera, Vivaldi, valódi Samsung Internet, a valódi Safari/iOS-ben aktivált bővítmény, márkás Chrome. Az Alt+Shift+O/D/L/G a böngészőben átállítható; a P/H/S/M rögzített. A definíció gomb csak kattintásra nyitja meg a dexonline.ro-t vagy a Wiktionaryt.
+Ellenőrzési állapot (v1.6.0): automatikusan tesztelve CI-ben: Chromium, Edge, Brave, Firefox (több csatorna), valódi Safari 27.2 macOS-en, Safari 26.2 iPhone/iPad szimulátorban, Chrome 113 és Firefox 162 Android 14-en (emulátor). CI-ben Linuxon ellenőrizve a v1.7.0-hoz: Opera 140 (mind a 12 tesztfájl). Nem ellenőrzött: Vivaldi (elindul, de az automatikus hibakeresési kapcsolat időtúllépéssel jár), valódi Samsung Internet, a valódi Safari/iOS-ben aktivált bővítmény, márkás Chrome. Az Alt+Shift+O/D/L/G a böngészőben átállítható; a P/H/S/M rögzített. A definíció gomb csak kattintásra nyitja meg a dexonline.ro-t vagy a Wiktionaryt.
 
 ## Választható modulok (v1.7)
 Alapértelmezetten mind ki van kapcsolva (popup → „Továbbiak” → „Opcionális modulok (v1.7)”). Nincs telemetria; a „Mi hagyja el a böngészőt?” gomb beolvassa a bővítmény kódját, és listázza a talált címeket és hálózati hívásokat.

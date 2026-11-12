@@ -55,7 +55,7 @@ MIT — copyright Alexandru-Ionuț Chiuță (Alexio).
 
 If Claritas helps you, you can support the work: [Buy Me a Coffee](https://buymeacoffee.com/echo.of.the.strings).
 
-Verification status (v1.5.5): tested automatically in CI on Chromium, Edge, Brave, Firefox (several channels), real Safari 27.2 on macOS, Safari 26.2 in iPhone/iPad Simulator, Chrome 113 and Firefox 162 on Android 14 (emulator). Not verified: Opera, Vivaldi, real Samsung Internet, the extension activated inside real Safari/iOS, branded Chrome. Shortcuts Alt+Shift+O/D/L/G can be remapped in the browser; P/H/S/M are fixed. The definition button opens dexonline.ro or Wiktionary only when you click it.
+Verification status (v1.5.5): tested automatically in CI on Chromium, Edge, Brave, Firefox (several channels), real Safari 27.2 on macOS, Safari 26.2 in iPhone/iPad Simulator, Chrome 113 and Firefox 162 on Android 14 (emulator). Verified in CI on Linux for v1.7.0: Opera 140 (all 12 test files). Not verified: Vivaldi (it starts, but the automated debugging connection times out), real Samsung Internet, the extension activated inside real Safari/iOS, branded Chrome. Shortcuts Alt+Shift+O/D/L/G can be remapped in the browser; P/H/S/M are fixed. The definition button opens dexonline.ro or Wiktionary only when you click it.
 
 ## Optional modules (v1.7)
 All are off by default (popup → “More” → “Optional modules (v1.7)”). There is no telemetry; the “What leaves the browser?” button reads the extension’s own code and lists the addresses and network calls it finds.
