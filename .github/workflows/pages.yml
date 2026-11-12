@@ -3,7 +3,7 @@ name: pages
 on:
   push:
     branches: [ci/browser-matrix]
-    paths: ['site/**', '.github/workflows/pages.yml']
+    paths: ['site/**', 'install/**', 'extension/**', 'manifests/**', 'build.py', 'modules-src/**', '.github/workflows/pages.yml']
   workflow_dispatch:
 permissions:
   contents: write
@@ -15,6 +15,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - name: Construiește pachetele pentru descărcare directă
+        run: |
+          bash tools/fetch_vendor.sh
+          python build.py
+          mkdir -p site/download
+          cp dist/claritas-chromium.zip dist/claritas-firefox.zip dist/claritas-safari-source.zip site/download/
+          for v in axe pdf; do for f in chromium firefox; do cp dist/claritas-$f-$v.zip site/download/; done; done
+          cp install/install.sh install/install.ps1 site/download/
+          (cd site/download && sha256sum *.zip > SHA256SUMS && ls -la)
+          # fiecare link de descărcare din pagină trebuie să existe
+          for f in $(grep -o 'href="download/[^"]*"' site/index.html | sed 's/href="//;s/"$//' | sort -u); do test -f "site/$f" || { echo "LIPSEȘTE site/$f"; exit 1; }; done
       - name: Publică site/ pe gh-pages
         run: |
           rm -rf /tmp/pub && mkdir /tmp/pub && cp -r site/. /tmp/pub/ && touch /tmp/pub/.nojekyll

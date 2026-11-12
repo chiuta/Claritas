@@ -5,3 +5,4 @@ dist/
 modules-src/ocr/vendor/
 modules-src/axe/vendor/
 modules-src/pdf/vendor/
+download/

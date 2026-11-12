@@ -60,6 +60,8 @@ Politica de confidențialitate: [PRIVACY.ro.md](PRIVACY.ro.md)
 
 Site: https://claritas.chiuta.ro
 
+Install: https://claritas.chiuta.ro/#instalare · `install/install.sh` · `install/install.ps1`
+
 ## Module opționale (v1.8)
 Toate sunt oprite implicit (popup → «Mai mult» → «Module opționale (v1.8)»). Totul rulează local; nimic nu este trimis nicăieri.
 - **Inspector de contrast** (Alt+Shift+I): arăți sau focalizezi un text și vezi culorile reale, raportul, AA/AAA și o corecție sugerată; clic pentru a fixa.
