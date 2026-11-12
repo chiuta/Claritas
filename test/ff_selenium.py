@@ -152,6 +152,7 @@ try:
         except Exception as e: print('DIAG syntax err', e)
         finally: d.set_context('content')
         ext_tab(); print('DIAG manifest', d.execute_script("return JSON.stringify(browser.runtime.getManifest().content_scripts.map(c=>c.js))"), 'EXT=', EXT, sorted(os.listdir(EXT))[:60]); d.switch_to.window(PAGE_H)
+        print('DIAG attrs', d.execute_script("const e=document.documentElement;return ['data-clr-dm1','data-clr-dm2'].map(a=>e.getAttribute(a))"))
         print('DIAG storage', end=' '); ext_tab(); print(d.execute_async_script("const cb=arguments[arguments.length-1];browser.storage.local.get('settings').then(r=>browser.tabs.query({}).then(t=>cb(JSON.stringify([r,t.map(x=>x.url)]))))")[:400]); d.switch_to.window(PAGE_H)
         def m2(what, **kw):
             ext_tab()
