@@ -28,7 +28,11 @@ jobs:
           mkdir -p test/results
           echo "USER: $(id -un) / $(whoami)"; dscl . -list /Users | grep -v '^_' | tr '\n' ' '
           sudo sysadminctl -resetPasswordFor "$(id -un)" -newPassword 'Cl4ritasCI9x' -adminUser "$(id -un)" -adminPassword - <<< "" 2>&1 | tail -2 || true
-          sudo defaults write com.apple.Safari AllowUnsignedExtensions -bool true 2>&1 | tail -1 || true
+          for k in AllowUnsignedExtensions AllowUnsignedWebExtensions; do
+            defaults write ~/Library/Containers/com.apple.Safari/Data/Library/Preferences/com.apple.Safari $k -bool true 2>&1 | tail -1 || true
+            sudo defaults write /Library/Preferences/com.apple.Safari $k -bool true 2>&1 | tail -1 || true
+          done
+          sudo defaults read /Library/Preferences/com.apple.Safari 2>&1 | head -5 || true
           osascript -e 'tell application "Safari" to quit' 2>/dev/null || true; sleep 2
           open -a Safari; sleep 7
           cat > /tmp/ui.applescript <<'AS'
