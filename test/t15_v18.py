@@ -147,15 +147,17 @@ async def main():
         ok('Answer about What?' in res['ans'] and 'Auto-generated' in res['ans'], f'IA (stub): răspuns marcat generat automat: {res["ans"][:80]}')
         ok('A cat on a sofa' in res['desc'] and res['alt'] == 'A cat on a sofa', f'IA (stub): descriere imagine + aplicare alt: {res["alt"]}')
         # ---- D. ghid voci în popup ----
-        await pop.reload(); await pop.wait_for_timeout(900)
-        await pop.evaluate("""()=>{const v=[{name:'Local RO',lang:'ro-RO',localService:true,voiceURI:'l1',default:false},{name:'Online Neural RO',lang:'ro-RO',localService:false,voiceURI:'o1',default:false},{name:'English',lang:'en-US',localService:true,voiceURI:'e1',default:true}];
-          speechSynthesis.getVoices=()=>v; speechSynthesis.dispatchEvent(new Event('voiceschanged'));}""")
-        await pop.evaluate("document.querySelector('select[data-k=lang]').value='ro'; document.querySelector('select[data-k=lang]').dispatchEvent(new Event('change',{bubbles:true}))")
-        await pop.wait_for_timeout(500)
-        await pop.evaluate("document.getElementById('vgBtn').click()"); await pop.wait_for_timeout(400)
-        items = await pop.evaluate("[...document.querySelectorAll('#vgList li')].map(l=>l.textContent)")
-        ok(len(items) == 2 and items[0].startswith('Local RO') and 'locală' in items[0] and 'online' in items[1], f'ghid voci: locale înaintea celor online {items}')
-        await pop.close()
+        if not await pop.evaluate("typeof speechSynthesis!=='undefined'"): print('SKIP ghid voci: browserul nu are speechSynthesis în paginile de extensie')
+        else:
+            await pop.reload(); await pop.wait_for_timeout(900)
+            await pop.evaluate("""()=>{const v=[{name:'Local RO',lang:'ro-RO',localService:true,voiceURI:'l1',default:false},{name:'Online Neural RO',lang:'ro-RO',localService:false,voiceURI:'o1',default:false},{name:'English',lang:'en-US',localService:true,voiceURI:'e1',default:true}];
+              speechSynthesis.getVoices=()=>v; speechSynthesis.dispatchEvent(new Event('voiceschanged'));}""")
+            await pop.evaluate("document.querySelector('select[data-k=lang]').value='ro'; document.querySelector('select[data-k=lang]').dispatchEvent(new Event('change',{bubbles:true}))")
+            await pop.wait_for_timeout(500)
+            await pop.evaluate("document.getElementById('vgBtn').click()"); await pop.wait_for_timeout(400)
+            items = await pop.evaluate("[...document.querySelectorAll('#vgList li')].map(l=>l.textContent)")
+            ok(len(items) == 2 and items[0].startswith('Local RO') and 'locală' in items[0] and 'online' in items[1], f'ghid voci: locale înaintea celor online {items}')
+            await pop.close()
         ok(len(errs) == 0, f'fără erori {errs[:3]}')
         await ctx.close()
         # ---- E. varianta -axe ----
