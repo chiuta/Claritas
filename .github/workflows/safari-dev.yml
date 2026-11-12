@@ -135,11 +135,23 @@ jobs:
                       log "unsigned cb before: " & (value of c)
                       if (value of c) is 0 then click c
                       delay 4
-                      set authInfo to ""
-                      log "unsigned cb after: " & (value of c)
+                      delay 3
+                      repeat with pw in {"admin", "anka", "runner", "password"}
+                        try
+                          if (count of sheets of window 1) > 0 then
+                            set value of text field 1 of sheet 1 of window 1 to (contents of pw)
+                            delay 1
+                            click button "OK" of sheet 1 of window 1
+                            delay 3
+                            log "tried password " & (contents of pw) & " -> sheets: " & (count of sheets of window 1)
+                            if (count of sheets of window 1) is 0 then exit repeat
+                          end if
+                        on error e4
+                          log "pw error " & e4
+                        end try
+                      end repeat
+                      log "unsigned cb final: " & (value of c)
                       log "windows now: " & (name of every window as string)
-                      set authInfo to my procWins()
-                      log "PROCS: " & authInfo
                     end if
                   end try
                 end repeat
