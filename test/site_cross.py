@@ -18,7 +18,7 @@ async def main():
         for w in (320, 390, 768, 1440):
             pg = await b.new_page(viewport={'width': w, 'height': 900}); errs = []
             pg.on('pageerror', lambda e: errs.append(str(e)))
-            pg.on('console', lambda m: errs.append(m.text) if m.type == 'error' else None)
+            pg.on('console', lambda m: errs.append(m.text) if m.type == 'error' and 'unique security origins' not in m.text else None)
             reqs = []; pg.on('request', lambda r: reqs.append(r.url) if not r.url.startswith(('file:', 'data:', 'blob:')) else None)
             await pg.goto(URL); await pg.wait_for_timeout(700)
             over = await pg.evaluate("document.documentElement.scrollWidth - innerWidth")

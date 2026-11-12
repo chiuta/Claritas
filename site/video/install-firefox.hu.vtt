@@ -1,0 +1,25 @@
+WEBVTT
+
+1
+00:00.000 --> 00:05.000
+Töltsd le a Claritas oldaláról a böngésződnek megfelelő csomagot.
+
+2
+00:06.000 --> 00:11.000
+Csomagold ki egy mappába.
+
+3
+00:12.000 --> 00:17.000
+Nyisd meg: about:debugging#/runtime/this-firefox.
+
+4
+00:18.000 --> 00:26.000
+Válaszd a „Load Temporary Add-on” lehetőséget, és jelöld ki a manifest.json fájlt.
+
+5
+00:27.000 --> 00:34.000
+A Claritas betöltve. Nyisd meg az eszköztárról.
+
+6
+00:35.000 --> 00:41.000
+A Firefox újraindításkor eltávolítja az ideiglenes kiegészítőket. Tartós telepítéshez írd alá a csomagot nem listázott kiegészítőként.

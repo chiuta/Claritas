@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <link rel="canonical" href="https://claritas.chiuta.ro/">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; font-src data:; media-src data: blob:; connect-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data:; font-src data:; media-src 'self' data: blob:; connect-src 'none'; base-uri 'none'; form-action 'none'">
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Claritas — extensie de accesibilitate: vezi mai clar, citește mai ușor</title>
@@ -332,7 +332,7 @@ footer{border-top:1px solid var(--soft-line);padding-block:48px;background:var(-
 }
 @media (prefers-contrast:more){:root{--soft-line:var(--line)}}
 @media print{header.top,.cta,.ba-card{display:none}.js .rv{opacity:1;transform:none}}
-</style>
+figure.vid{margin:1.2rem 0 0;max-width:100%}figure.vid video{display:block;width:100%;max-width:100%;height:auto;aspect-ratio:16/9;background:#000;border-radius:10px}.vcap{font-size:.85rem;opacity:.8;margin-top:.4rem}</style>
 </head>
 <body>
 <a class="skip" href="#main"><span data-en="Skip to content">Sari la conținut</span></a>
@@ -844,6 +844,7 @@ powershell -ExecutionPolicy Bypass -File .\install.ps1 chrome</code></p>
           <li><div><span data-en="Turn on &lt;em&gt;Developer mode&lt;/em&gt;.">Activează <em>Mod dezvoltator</em>.</span></div></li>
           <li><div><span data-en="Choose &lt;em&gt;Load unpacked&lt;/em&gt; and select the folder.">Alege <em>Încarcă extensie despachetată</em> și selectează folderul.</span></div></li>
         </ol>
+        <figure class="vid"><video controls preload="none" playsinline poster="video/install-chromium.jpg" data-fam="chromium"><source src="video/install-chromium.mp4" type="video/mp4"><track kind="captions" src="video/install-chromium.ro.vtt" srclang="ro" label="Română" default><track kind="captions" src="video/install-chromium.en.vtt" srclang="en" label="English"><track kind="captions" src="video/install-chromium.fr.vtt" srclang="fr" label="Français"><track kind="captions" src="video/install-chromium.it.vtt" srclang="it" label="Italiano"><track kind="captions" src="video/install-chromium.es.vtt" srclang="es" label="Español"><track kind="captions" src="video/install-chromium.pt.vtt" srclang="pt" label="Português"><track kind="captions" src="video/install-chromium.de.vtt" srclang="de" label="Deutsch"><track kind="captions" src="video/install-chromium.hu.vtt" srclang="hu" label="Magyar"></video><figcaption class="vcap"></figcaption></figure>
       </div>
       <div role="tabpanel" id="ipan-2" aria-labelledby="itab-2" hidden>
         <ol class="steps">
@@ -852,6 +853,7 @@ powershell -ExecutionPolicy Bypass -File .\install.ps1 chrome</code></p>
           <li><div><span data-en="Choose &lt;em&gt;Load Temporary Add-on&lt;/em&gt; and select &lt;code&gt;manifest.json&lt;/code&gt;.">Alege <em>Load Temporary Add-on</em> și selectează <code>manifest.json</code>.</span></div></li>
           <li><div><span data-en="For a permanent install, sign it as an unlisted add-on on addons.mozilla.org (ID &lt;code&gt;claritas@trom.tf&lt;/code&gt;).">Pentru instalare permanentă, semnează-l ca add-on nelistat pe addons.mozilla.org (ID <code>claritas@trom.tf</code>).</span></div></li>
         </ol>
+        <figure class="vid"><video controls preload="none" playsinline poster="video/install-firefox.jpg" data-fam="firefox"><source src="video/install-firefox.mp4" type="video/mp4"><track kind="captions" src="video/install-firefox.ro.vtt" srclang="ro" label="Română" default><track kind="captions" src="video/install-firefox.en.vtt" srclang="en" label="English"><track kind="captions" src="video/install-firefox.fr.vtt" srclang="fr" label="Français"><track kind="captions" src="video/install-firefox.it.vtt" srclang="it" label="Italiano"><track kind="captions" src="video/install-firefox.es.vtt" srclang="es" label="Español"><track kind="captions" src="video/install-firefox.pt.vtt" srclang="pt" label="Português"><track kind="captions" src="video/install-firefox.de.vtt" srclang="de" label="Deutsch"><track kind="captions" src="video/install-firefox.hu.vtt" srclang="hu" label="Magyar"></video><figcaption class="vcap"></figcaption></figure>
       </div>
       <div role="tabpanel" id="ipan-3" aria-labelledby="itab-3" hidden>
         <ol class="steps">
@@ -860,6 +862,7 @@ powershell -ExecutionPolicy Bypass -File .\install.ps1 chrome</code></p>
           <li><div><span data-en="Enable the extension in Safari → Settings → Extensions.">Activează extensia în Safari → Setări → Extensii.</span></div></li>
           <li><div><span data-en="Note: enabling in real Safari is not yet verified by us (see “Compatibility status”).">Reține: activarea în Safari real nu e încă verificată de noi (vezi „Stare compatibilitate”).</span></div></li>
         </ol>
+        <figure class="vid"><video controls preload="none" playsinline poster="video/install-safari.jpg" data-fam="safari"><source src="video/install-safari.mp4" type="video/mp4"><track kind="captions" src="video/install-safari.ro.vtt" srclang="ro" label="Română" default><track kind="captions" src="video/install-safari.en.vtt" srclang="en" label="English"><track kind="captions" src="video/install-safari.fr.vtt" srclang="fr" label="Français"><track kind="captions" src="video/install-safari.it.vtt" srclang="it" label="Italiano"><track kind="captions" src="video/install-safari.es.vtt" srclang="es" label="Español"><track kind="captions" src="video/install-safari.pt.vtt" srclang="pt" label="Português"><track kind="captions" src="video/install-safari.de.vtt" srclang="de" label="Deutsch"><track kind="captions" src="video/install-safari.hu.vtt" srclang="hu" label="Magyar"></video><figcaption class="vcap"></figcaption></figure>
       </div>
     </div>
 
@@ -1295,6 +1298,23 @@ $$('[data-copy]').forEach(function(b){b.addEventListener('click',function(){
 $('#tFont').addEventListener('change',updateTextDemo);
 paintLang();
 $('#cRes');
+})();
+
+/* ---------- clipuri instalare: subtitrări + notă în limba paginii ---------- */
+(function(){
+var CAP={ro:'Ghid ilustrat, nu înregistrare de ecran: interfața e simplificată și poate diferi de versiunea ta de browser. Subtitrări în 8 limbi (butonul CC).',en:'Illustrated guide, not a screen recording: the interface is simplified and may differ from your browser version. Captions in 8 languages (CC button).',fr:'Guide illustré, pas un enregistrement d’écran : l’interface est simplifiée et peut différer de votre version du navigateur. Sous-titres en 8 langues (bouton CC).',it:'Guida illustrata, non una registrazione dello schermo: l’interfaccia è semplificata e può differire dalla tua versione del browser. Sottotitoli in 8 lingue (pulsante CC).',es:'Guía ilustrada, no una grabación de pantalla: la interfaz está simplificada y puede diferir de tu versión del navegador. Subtítulos en 8 idiomas (botón CC).',pt:'Guia ilustrado, não uma gravação de ecrã: a interface está simplificada e pode diferir da sua versão do navegador. Legendas em 8 idiomas (botão CC).',de:'Illustrierte Anleitung, keine Bildschirmaufnahme: Die Oberfläche ist vereinfacht und kann von deiner Browserversion abweichen. Untertitel in 8 Sprachen (CC-Taste).',hu:'Illusztrált útmutató, nem képernyőfelvétel: a felület egyszerűsített, és eltérhet a böngésződ verziójától. Feliratok 8 nyelven (CC gomb).'};
+function sync(){
+  var l=document.documentElement.lang;if(!CAP[l])l='ro';
+  var vs=document.querySelectorAll('figure.vid video');
+  for(var i=0;i<vs.length;i++){
+    var tt=vs[i].textTracks;
+    for(var j=0;j<tt.length;j++)tt[j].mode=(tt[j].language===l)?'showing':'disabled';
+    vs[i].setAttribute('aria-label',({ro:'Clip: instalare pas cu pas',en:'Video: step-by-step install',fr:'Vidéo : installation pas à pas',it:'Video: installazione passo passo',es:'Vídeo: instalación paso a paso',pt:'Vídeo: instalação passo a passo',de:'Video: Installation Schritt für Schritt',hu:'Videó: telepítés lépésről lépésre'})[l]);
+  }
+  var cs=document.querySelectorAll('.vcap');for(var k=0;k<cs.length;k++)cs[k].textContent=CAP[l];
+}
+sync();
+new MutationObserver(sync).observe(document.documentElement,{attributes:true,attributeFilter:['lang']});
 })();
 </script>
 </body>

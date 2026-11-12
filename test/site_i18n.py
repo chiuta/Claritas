@@ -18,7 +18,7 @@ with sync_playwright() as p:
         for w in (320,390,1440):
             pg=b.new_page(viewport={'width':w,'height':900});errs=[]
             pg.on('pageerror',lambda e:errs.append(str(e)))
-            pg.on('console',lambda m:errs.append(m.text) if m.type in('error','warning') else None)
+            pg.on('console',lambda m:errs.append(m.text) if m.type in('error','warning') and 'unique security origins' not in m.text else None)
             pg.goto(URL);pg.wait_for_timeout(250)
             pg.select_option('#langSel',l);pg.wait_for_timeout(250)
             st=pg.evaluate("""()=>({lang:document.documentElement.lang,title:document.title,ov:document.documentElement.scrollWidth-innerWidth,

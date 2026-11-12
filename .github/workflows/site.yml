@@ -2,7 +2,7 @@ name: site
 on:
   push:
     branches: [ci/browser-matrix]
-    paths: ['site/**', 'test/site_cross.py', 'test/site_i18n.py', 'test/site_reflow.py', '.github/workflows/site.yml']
+    paths: ['site/**', 'test/site_cross.py', 'test/site_i18n.py', 'test/site_reflow.py', 'test/site_video.py', '.github/workflows/site.yml']
   workflow_dispatch:
 jobs:
   site:
@@ -25,4 +25,6 @@ jobs:
       - run: python test/site_i18n.py
         if: matrix.eng == 'chromium'
       - run: python test/site_reflow.py
+        if: matrix.eng == 'chromium'
+      - run: python test/site_video.py
         if: matrix.eng == 'chromium'

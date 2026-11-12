@@ -27,7 +27,7 @@ jobs:
           cp install/install.sh install/install.ps1 site/download/
           (cd site/download && sha256sum *.zip > SHA256SUMS && ls -la)
           # fiecare link de descărcare din pagină trebuie să existe
-          for f in $(grep -o 'href="download/[^"]*"' site/index.html | sed 's/href="//;s/"$//' | sort -u); do test -f "site/$f" || { echo "LIPSEȘTE site/$f"; exit 1; }; done
+          for f in $(grep -oE '(href|src)="(download|video)/[^"]*"' site/index.html | sed -E 's/^(href|src)="//;s/"$//' | sort -u); do test -f "site/$f" || { echo "LIPSEȘTE site/$f"; exit 1; }; done
       - name: Publică site/ pe gh-pages
         run: |
           rm -rf /tmp/pub && mkdir /tmp/pub && cp -r site/. /tmp/pub/ && touch /tmp/pub/.nojekyll
