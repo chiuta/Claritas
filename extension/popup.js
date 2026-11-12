@@ -153,8 +153,12 @@
       if (r.na) { i.textContent = tl('m3_ai_na'); return; }
       setTimeout(() => window.close(), 60);
     }));
-    fetch(api.runtime.getURL('vendor/axe.min.js'), { method: 'HEAD' }).then((r) => { if (r.ok) $('#axeBtn').hidden = false; }).catch(() => { });
-    fetch(api.runtime.getURL('pdf.html'), { method: 'HEAD' }).then((r) => { if (r.ok) { const b = $('#pdfOpen'); b.hidden = false; b.addEventListener('click', () => { api.tabs.create({ url: api.runtime.getURL('pdf.html') }); window.close(); }); } }).catch(() => { });
+    /* variantele opționale se recunosc din manifest (fără sonde de rețea/fișiere): -axe adaugă vendor/axe.min.js la scripturile de conținut, -pdf are CSP cu worker-src */
+    try {
+      const mf = api.runtime.getManifest(), csp = mf.content_security_policy, c = typeof csp === 'string' ? csp : (csp && csp.extension_pages) || '';
+      if ((mf.content_scripts || []).some((x) => (x.js || []).indexOf('vendor/axe.min.js') >= 0)) $('#axeBtn').hidden = false;
+      if (/worker-src/.test(c)) { const b = $('#pdfOpen'); b.hidden = false; b.addEventListener('click', () => { api.tabs.create({ url: api.runtime.getURL('pdf.html') }); window.close(); }); }
+    } catch (e) { }
   }
   const send = (msg) => (tabId == null ? Promise.resolve(null) : api.tabs.sendMessage(tabId, msg).catch(() => null));
   const feat = (cmd, extra) => send(Object.assign({ type: 'feat', cmd }, extra || {}));
@@ -281,7 +285,7 @@
       e.target.value = '';
     });
     $('#dictClear').addEventListener('click', async () => { await M.dictClear(); refresh(); });
-    try { const mf = api.runtime.getManifest(), csp = mf.content_security_policy; if (csp && /wasm-unsafe-eval/.test(typeof csp === 'string' ? csp : (csp.extension_pages || ''))) { const b = $('#ocrOpen'); b.hidden = false; b.addEventListener('click', () => api.tabs.create({ url: api.runtime.getURL('ocr.html') })); } } catch (e) { }
+    try { const mf = api.runtime.getManifest(), csp = mf.content_security_policy; if (csp && (() => { const c = typeof csp === 'string' ? csp : (csp.extension_pages || ''); return /wasm-unsafe-eval/.test(c) && !/worker-src/.test(c); })()) { const b = $('#ocrOpen'); b.hidden = false; b.addEventListener('click', () => api.tabs.create({ url: api.runtime.getURL('ocr.html') })); } } catch (e) { }
     try { api.storage.onChanged.addListener((ch, a) => { if (a === 'local' && (ch.syncStatus || ch.dictLocal)) refresh(); }); } catch (e) { }
     refresh();
   }

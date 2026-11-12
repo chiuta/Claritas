@@ -76,7 +76,7 @@ if (axe_src / "axe.min.js").exists():
 # Module opționale: cititor PDF local (pdf.js, Apache-2.0).
 pdf_src = root / "modules-src" / "pdf"
 if (pdf_src / "vendor" / "pdf.min.mjs").exists():
-    CSP = "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'"
+    CSP = "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'; worker-src 'self'"
     for name in ("chromium", "firefox"):
         out = dist / (name + "-pdf")
         shutil.copytree(dist / name, out)
