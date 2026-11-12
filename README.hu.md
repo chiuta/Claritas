@@ -69,7 +69,7 @@ Alapértelmezetten mind ki van kapcsolva (popup → „Továbbiak” → „Opci
 - **Webhelyszabályok**: export/import JSON-ként vagy kikapcsolandó domainek listájaként.
 - **Audit-jelentés**: HTML, CSV vagy JSON WCAG 2.2 / EN 301 549 megfeleltetéssel, javítási javaslatokkal és mentett referenciával való összevetéssel.
 - **CI mód**: `python tools/claritas_ci.py https://example.com --format all --max-errors 0` (1-es kilépési kód a küszöb túllépésekor). Csak a Claritas automatikus szabályait fedi le.
-- **Ellenőrizve (Chromium, valódi bővítmény)**: 36 ellenőrzés a `test/t14_v17.py` fájlban. **Nem ellenőrzött**: beszédfelismerés valódi beszéddel (csak indítás/leállítás és a parancsértelmező), élő feliratok valódi beszéddel, a modulok Firefoxban/Safariban.
+- **Ellenőrizve (Chromium, valódi bővítmény)**: 36 ellenőrzés a `test/t14_v17.py` fájlban. **Nem ellenőrzött**: beszédfelismerés valódi beszéddel (csak indítás/leállítás és a parancsértelmező), élő feliratok valódi beszéddel, a modulok Safariban. A modulok Firefoxban ellenőrzöttek (minden csatorna, Linux/Windows/macOS).
 
 ## Választható modulok (v1.6)
 Mind alapból ki van kapcsolva (felugró ablak → „Választható modulok”); semmi sem hagyja el a böngészőt. Szófajok az Olvasóban (román/angol, heurisztikus), kiegészítő ellenőrzési szabályok (ARIA, űrlapok, main, nagyítás, feliratok), helyi szótár (saját JSON/TSV, max. 4 MB), a beállítások szinkronizálása a böngésző `storage.sync` tárolójával (szótár és felvételek nélkül) és helyi OCR a külön `claritas-*-ocr.zip` csomagban (~20 MB; automatikusan csak Chromiumban ellenőrizve, Firefox/Safari nem ellenőrzött).

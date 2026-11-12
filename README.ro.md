@@ -67,7 +67,7 @@ Toate sunt oprite implicit (popup → «Mai mult» → «Module opționale (v1.7
 - **Reguli pe site**: export/import JSON sau listă de domenii de dezactivat.
 - **Raport de audit**: HTML, CSV sau JSON cu corespondență WCAG 2.2 / EN 301 549, sugestii de reparare și comparare cu o referință salvată.
 - **Mod CI**: `python tools/claritas_ci.py https://exemplu.ro --format all --max-errors 0` (cod de ieșire 1 dacă pragul e depășit). Acoperă doar regulile automate Claritas.
-- **Verificat (Chromium, extensia reală)**: 36 de verificări în `test/t14_v17.py` (navigare, listă, spotlight, parser de comenzi vocale, alt, rezumat/glosar, rapoarte, profiluri, import de reguli, panou de confidențialitate, curățare la dezactivare). **Neverificat**: recunoașterea vocală cu voce reală (doar pornirea/oprirea și parserul de comenzi), subtitrările live cu voce reală, modulele pe Firefox/Safari.
+- **Verificat (Chromium, extensia reală)**: 36 de verificări în `test/t14_v17.py` (navigare, listă, spotlight, parser de comenzi vocale, alt, rezumat/glosar, rapoarte, profiluri, import de reguli, panou de confidențialitate, curățare la dezactivare). **Neverificat**: recunoașterea vocală cu voce reală (doar pornirea/oprirea și parserul de comenzi), subtitrările live cu voce reală, modulele pe Safari. Modulele sunt verificate pe Firefox (toate canalele, Linux/Windows/macOS).
 
 ## Module opționale (v1.6)
 Toate sunt oprite implicit și se pornesc din popup → «Module opționale». Nimic nu trimite date în afara browserului.

@@ -69,7 +69,7 @@ Tous sont désactivés par défaut (popup → « Plus » → « Modules optionne
 - **Règles par site** : export/import JSON ou liste de domaines à désactiver.
 - **Rapport d’audit** : HTML, CSV ou JSON avec correspondance WCAG 2.2 / EN 301 549, corrections suggérées et comparaison à une référence enregistrée.
 - **Mode CI** : `python tools/claritas_ci.py https://example.com --format all --max-errors 0` (code de sortie 1 au-delà du seuil). Ne couvre que les règles automatiques de Claritas.
-- **Vérifié (Chromium, extension réelle)** : 36 contrôles dans `test/t14_v17.py`. **Non vérifié** : reconnaissance vocale avec une vraie voix (seulement démarrage/arrêt et analyseur de commandes), sous-titres en direct avec une vraie voix, les modules sous Firefox/Safari.
+- **Vérifié (Chromium, extension réelle)** : 36 contrôles dans `test/t14_v17.py`. **Non vérifié** : reconnaissance vocale avec une vraie voix (seulement démarrage/arrêt et analyseur de commandes), sous-titres en direct avec une vraie voix, les modules sous Safari. Les modules sont vérifiés sous Firefox (tous les canaux, Linux/Windows/macOS).
 
 ## Modules facultatifs (v1.6)
 Tous désactivés par défaut (popup → « Modules facultatifs ») ; rien ne quitte le navigateur. Catégories grammaticales dans le Lecteur (roumain/anglais, heuristique), règles d’audit supplémentaires (ARIA, formulaires, main, zoom, sous-titres), dictionnaire local (votre propre JSON/TSV, 4 Mo max.), synchronisation des réglages via `storage.sync` du navigateur (sans dictionnaire ni enregistrements) et OCR local dans le paquet séparé `claritas-*-ocr.zip` (~20 Mo ; vérifié automatiquement seulement dans Chromium, Firefox/Safari non vérifiés).
