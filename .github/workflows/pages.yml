@@ -1,26 +1,24 @@
 name: pages
+# Copiază site/ pe ramura gh-pages (Pages: Deploy from a branch → gh-pages / root).
 on:
   push:
     branches: [ci/browser-matrix]
     paths: ['site/**', '.github/workflows/pages.yml']
   workflow_dispatch:
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 concurrency:
   group: pages
   cancel-in-progress: true
 jobs:
-  deploy:
+  publish:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.dep.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
-        with: { path: site }
-      - id: dep
-        uses: actions/deploy-pages@v4
+      - name: Publică site/ pe gh-pages
+        run: |
+          rm -rf /tmp/pub && mkdir /tmp/pub && cp -r site/. /tmp/pub/ && touch /tmp/pub/.nojekyll
+          cd /tmp/pub && git init -q -b gh-pages
+          git config user.name "Alexio" && git config user.email "alexio@trom.tf"
+          git add -A && git commit -q -m "site: ${GITHUB_SHA::7}"
+          git push -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" gh-pages
