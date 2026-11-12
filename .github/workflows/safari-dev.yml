@@ -82,7 +82,12 @@ jobs:
                 end try
               end repeat
               log "settings window found: " & (sw is not missing value)
-              click (first button of entire contents of sw whose name is "Advanced")
+              repeat with b in (every button of entire contents of sw)
+                  if (name of b) is "Advanced" then
+                    click b
+                    exit repeat
+                  end if
+                end repeat
               delay 2
               log "=== ADV checkboxes"
               try
@@ -93,8 +98,11 @@ jobs:
                 log "ERR adv list " & e
               end try
               try
-                set c to (first checkbox of entire contents of sw whose name contains "web developer")
-                if (value of c) is 0 then click c
+                repeat with c in (every checkbox of entire contents of sw)
+                  if (name of c) contains "web developer" then
+                    if (value of c) is 0 then click c
+                  end if
+                end repeat
                 delay 2
               on error e
                 log "ERR devcheck " & e
@@ -110,7 +118,12 @@ jobs:
                 log "ERR develop " & e
               end try
               try
-                click (first button of entire contents of sw whose name is "Extensions")
+                repeat with b in (every button of entire contents of sw)
+                  if (name of b) is "Extensions" then
+                    click b
+                    exit repeat
+                  end if
+                end repeat
               on error e
                 log "ERR ext " & e
               end try
