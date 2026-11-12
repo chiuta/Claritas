@@ -21,15 +21,20 @@ async def main():
             ok(not errs, f'{ENG} {w}px: fără erori JS/consolă {errs[:2]}')
             ok(not reqs, f'{ENG} {w}px: fără cereri externe {reqs[:2]}')
             if w == 1440:
+                await pg.select_option('#langSel', 'ro'); await pg.wait_for_timeout(250)
                 t_before = await pg.evaluate("document.body.innerText.slice(0,400)")
-                btn = pg.locator('button[data-set-lang], #langBtn, button:has-text("EN")').first
-                try:
-                    await btn.click(timeout=2000); await pg.wait_for_timeout(300)
-                    ok(await pg.evaluate("document.body.innerText.slice(0,400)") != t_before, f'{ENG}: comutatorul schimbă textul')
-                    txt = await pg.evaluate("document.body.innerText.length")
-                    ok(txt > 3000, f'{ENG}: conținut prezent după comutare ({txt})')
-                except Exception as e:
-                    ok(False, f'{ENG}: comutator limbă: {str(e)[:80]}')
+                for lg in ('en', 'de', 'es', 'fr', 'hu', 'it', 'pt', 'ro'):
+                    try:
+                        await pg.select_option('#langSel', lg); await pg.wait_for_timeout(250)
+                        t = await pg.evaluate("document.body.innerText.slice(0,400)")
+                        ok(await pg.evaluate("document.documentElement.lang") == lg and t != t_before or lg == 'ro', f'{ENG}: limba {lg} aplicată')
+                        n = await pg.evaluate("document.body.innerText.length")
+                        ok(n > 3000, f'{ENG}: conținut prezent în {lg} ({n})')
+                        ov = await pg.evaluate("document.documentElement.scrollWidth - innerWidth")
+                        ok(ov <= 1, f'{ENG}: fără depășire în {lg} ({ov})')
+                    except Exception as e:
+                        ok(False, f'{ENG}: limba {lg}: {str(e)[:80]}')
+                await pg.select_option('#langSel', 'ro'); await pg.wait_for_timeout(200)
                 tabs = pg.locator('[role=tab]'); nt = await tabs.count()
                 ok(nt >= 4, f'{ENG}: tab-uri demo ({nt})')
                 if nt >= 2:
