@@ -68,7 +68,7 @@ Todos están desactivados por defecto (popup → «Más» → «Módulos opciona
 - **Guía de voces** (popup → Voz): clasifica las voces para tu idioma, locales antes que en línea, con botón de prueba.
 - **IA local** (Alt+Mayús+A, clase B): preguntas sobre la página y descripciones de imágenes sugeridas mediante la Prompt API de Chrome (Chrome 148+ con modelo local). Solo con tu consentimiento; marcadas «generadas automáticamente». No probado con un modelo real.
 - **Paquetes opcionales**: `-axe` añade la auditoría axe-core (MPL-2.0) y `-pdf` un lector PDF local (pdf.js, Apache-2.0: índice, búsqueda, temas, lectura, guardar .txt). Se construyen con `tools/fetch_vendor.sh` y luego `python build.py`.
-- **Verificado (Chromium, extensión real)**: `test/t15_v18.py`. Las comprobaciones de Firefox están en `test/ff_selenium.py`. Sin cubrir: Safari, un modelo local real, la descarga de archivos .md/.json.
+- **Verificado (Chromium, extensión real)**: `test/t15_v18.py`. Las comprobaciones de Firefox están en `test/ff_selenium.py`. Confirmado en CI (12/11/2026): Edge y Opera (Linux) con el mismo archivo, y las comprobaciones de Firefox de `test/ff_selenium.py` en Linux y Windows (estable, ESR, beta, nightly, developer edition); Firefox en macOS no se ejecutó (límite de GitHub). Sin cubrir: Safari, un modelo local real, la descarga de archivos .md/.json.
 
 ## Módulos opcionales (v1.7)
 Todos están desactivados por defecto (popup → «Más» → «Módulos opcionales (v1.7)»). No hay telemetría; el botón «¿Qué sale del navegador?» lee el código de la extensión y enumera las direcciones y llamadas de red que encuentra.

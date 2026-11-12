@@ -68,7 +68,7 @@ Alapértelmezetten mind ki van kapcsolva (felugró ablak → „Több” → „
 - **Hangválasztó** (felugró ablak → Hang): rangsorolja a hangokat a nyelvedhez, a helyiek az online előtt, meghallgatás gombbal.
 - **Helyi MI** (Alt+Shift+A, B osztály): kérdések az oldalról és javasolt képleírások a Chrome Prompt API-ján át (Chrome 148+ helyi modellel). Csak a beleegyezéseddel; „automatikusan generált” jelöléssel. Valódi modellel nem tesztelve.
 - **Opcionális csomagok**: az `-axe` az axe-core vizsgálatot (MPL-2.0), a `-pdf` helyi PDF-olvasót (pdf.js, Apache-2.0: tartalom, keresés, témák, felolvasás, .txt mentés) ad. Építés: `tools/fetch_vendor.sh`, majd `python build.py`.
-- **Ellenőrizve (Chromium, valódi bővítmény)**: `test/t15_v18.py`. A Firefox-ellenőrzések a `test/ff_selenium.py` fájlban vannak. Nem lefedett: Safari, valódi helyi modell, a .md/.json fájlok letöltése.
+- **Ellenőrizve (Chromium, valódi bővítmény)**: `test/t15_v18.py`. A Firefox-ellenőrzések a `test/ff_selenium.py` fájlban vannak. CI-ben megerősítve (2026. 11. 12.): Edge és Opera (Linux) ugyanazzal a fájllal, valamint a `test/ff_selenium.py` Firefox-ellenőrzései Linuxon és Windowson (stabil, ESR, béta, nightly, developer edition); a macOS-es Firefox nem futott le (GitHub-korlát). Nem lefedett: Safari, valódi helyi modell, a .md/.json fájlok letöltése.
 
 ## Választható modulok (v1.7)
 Alapértelmezetten mind ki van kapcsolva (popup → „Továbbiak” → „Opcionális modulok (v1.7)”). Nincs telemetria; a „Mi hagyja el a böngészőt?” gomb beolvassa a bővítmény kódját, és listázza a talált címeket és hálózati hívásokat.

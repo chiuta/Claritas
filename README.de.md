@@ -68,7 +68,7 @@ Alle sind standardmäßig aus (Popup → „Mehr“ → „Optionale Module (v1.
 - **Stimmenführer** (Popup → Stimme): ordnet die Stimmen für Ihre Sprache, lokale vor Online-Stimmen, mit Hörprobe.
 - **Lokale KI** (Alt+Umschalt+A, Klasse B): Fragen zur Seite und vorgeschlagene Bildbeschreibungen über die Prompt API von Chrome (Chrome 148+ mit lokalem Modell). Nur mit Ihrer Zustimmung; als „automatisch erzeugt“ markiert. Nicht mit einem echten Modell getestet.
 - **Optionale Pakete**: `-axe` ergänzt die axe-core-Prüfung (MPL-2.0), `-pdf` einen lokalen PDF-Leser (pdf.js, Apache-2.0: Inhalt, Suche, Designs, Vorlesen, .txt speichern). Erzeugen mit `tools/fetch_vendor.sh`, dann `python build.py`.
-- **Geprüft (Chromium, echte Erweiterung)**: `test/t15_v18.py`. Firefox-Prüfungen stehen in `test/ff_selenium.py`. Nicht abgedeckt: Safari, ein echtes lokales Modell, der Download der .md/.json-Dateien.
+- **Geprüft (Chromium, echte Erweiterung)**: `test/t15_v18.py`. Firefox-Prüfungen stehen in `test/ff_selenium.py`. In CI bestätigt (12.11.2026): Edge und Opera (Linux) mit derselben Datei sowie die Firefox-Prüfungen aus `test/ff_selenium.py` unter Linux und Windows (stabil, ESR, Beta, Nightly, Developer Edition); Firefox unter macOS lief nicht (GitHub-Limit). Nicht abgedeckt: Safari, ein echtes lokales Modell, der Download der .md/.json-Dateien.
 
 ## Optionale Module (v1.7)
 Alle sind standardmäßig aus (Popup → „Mehr“ → „Optionale Module (v1.7)“). Es gibt keine Telemetrie; die Schaltfläche „Was verlässt den Browser?“ liest den Code der Erweiterung und listet gefundene Adressen und Netzwerkaufrufe.

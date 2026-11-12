@@ -66,7 +66,7 @@ Toate sunt oprite implicit (popup → «Mai mult» → «Module opționale (v1.8
 - **Ghid de voci** (popup → Voce): clasează vocile pentru limba ta, cele locale înaintea celor online, cu buton de ascultare.
 - **IA locală** (Alt+Shift+A, clasa B): întrebări despre pagină și descrieri sugerate pentru imagini prin Prompt API din Chrome (Chrome 148+ cu modelul local). Doar cu acordul tău; marcate «generat automat». Netestat cu un model real.
 - **Pachete opționale**: `-axe` adaugă auditul axe-core (MPL-2.0), iar `-pdf` un cititor PDF local (pdf.js, Apache-2.0: cuprins, căutare, teme, citire cu voce, salvare .txt). Se construiesc cu `tools/fetch_vendor.sh`, apoi `python build.py`.
-- **Verificat (Chromium, extensie reală)**: `test/t15_v18.py`. Verificările pentru Firefox sunt în `test/ff_selenium.py`. Neacoperit: Safari, un model local real, descărcarea fișierelor .md/.json.
+- **Verificat (Chromium, extensie reală)**: `test/t15_v18.py`. Verificările pentru Firefox sunt în `test/ff_selenium.py`. Confirmat în CI (12.11.2026): Edge și Opera (Linux) cu același fișier, iar verificările Firefox din `test/ff_selenium.py` pe Linux și Windows (stabil, ESR, beta, nightly, developer edition); Firefox pe macOS nu a rulat (limită GitHub). Neacoperit: Safari, un model local real, descărcarea fișierelor .md/.json.
 
 ## Module opționale (v1.7)
 Toate sunt oprite implicit (popup → «Mai mult» → «Module opționale (v1.7)»). Nu există telemetrie; butonul «Ce părăsește browserul?» citește codul extensiei și listează adresele și apelurile de rețea găsite.

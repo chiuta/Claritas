@@ -67,7 +67,7 @@ All are off by default (popup → “More” → “Optional modules (v1.8)”).
 - **Voice guide** (popup → Voice): ranks the voices for your language, local before online, with a test button.
 - **On-device AI** (Alt+Shift+A, class B): questions about the page and suggested image descriptions through Chrome’s Prompt API (Chrome 148+ with the local model). Only with your consent; marked “auto-generated”. Not tested with a real model.
 - **Optional packages**: `-axe` adds the axe-core audit (MPL-2.0) and `-pdf` a local PDF reader (pdf.js, Apache-2.0: contents, search, themes, read aloud, save .txt). Build them with `tools/fetch_vendor.sh` then `python build.py`.
-- **Verified (Chromium, real extension)**: `test/t15_v18.py`. Firefox checks are in `test/ff_selenium.py`. Not covered: Safari, a real on-device model, the .md/.json file download.
+- **Verified (Chromium, real extension)**: `test/t15_v18.py`. Firefox checks are in `test/ff_selenium.py`. Confirmed in CI (12 Nov 2026): Edge and Opera (Linux) with the same file, and the Firefox checks in `test/ff_selenium.py` on Linux and Windows (stable, ESR, beta, nightly, developer edition); macOS Firefox did not run (GitHub rate limit). Not covered: Safari, a real on-device model, the .md/.json file download.
 
 ## Optional modules (v1.7)
 All are off by default (popup → “More” → “Optional modules (v1.7)”). There is no telemetry; the “What leaves the browser?” button reads the extension’s own code and lists the addresses and network calls it finds.

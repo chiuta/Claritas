@@ -68,7 +68,7 @@ Todos estão desligados por predefinição (popup → «Mais» → «Módulos op
 - **Guia de vozes** (popup → Voz): classifica as vozes para a sua língua, locais antes das online, com botão de teste.
 - **IA local** (Alt+Shift+A, classe B): perguntas sobre a página e descrições de imagens sugeridas através da Prompt API do Chrome (Chrome 148+ com modelo local). Só com o seu consentimento; marcadas «geradas automaticamente». Não testado com um modelo real.
 - **Pacotes opcionais**: `-axe` acrescenta a auditoria axe-core (MPL-2.0) e `-pdf` um leitor PDF local (pdf.js, Apache-2.0: índice, pesquisa, temas, leitura, guardar .txt). Constroem-se com `tools/fetch_vendor.sh` e depois `python build.py`.
-- **Verificado (Chromium, extensão real)**: `test/t15_v18.py`. As verificações do Firefox estão em `test/ff_selenium.py`. Sem cobertura: Safari, um modelo local real, a transferência dos ficheiros .md/.json.
+- **Verificado (Chromium, extensão real)**: `test/t15_v18.py`. As verificações do Firefox estão em `test/ff_selenium.py`. Confirmado em CI (12/11/2026): Edge e Opera (Linux) com o mesmo ficheiro, e as verificações do Firefox de `test/ff_selenium.py` em Linux e Windows (estável, ESR, beta, nightly, developer edition); o Firefox no macOS não correu (limite do GitHub). Sem cobertura: Safari, um modelo local real, a transferência dos ficheiros .md/.json.
 
 ## Módulos opcionais (v1.7)
 Todos estão desativados por predefinição (popup → «Mais» → «Módulos opcionais (v1.7)»). Não há telemetria; o botão «O que sai do navegador?» lê o código da extensão e lista os endereços e chamadas de rede encontrados.
