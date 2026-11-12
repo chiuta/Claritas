@@ -4,7 +4,7 @@
   dist/claritas-firefox.zip       Firefox (desktop+Android), LibreWolf, Zen, Floorp, Waterfox, Tor Browser, Mullvad Browser (Gecko)
   dist/claritas-safari-source.zip sursa + script pentru conversie Xcode (macOS/iOS) — necesită Mac
 """
-import json, shutil, zipfile, pathlib
+import json, shutil, zipfile, pathlib, os
 root = pathlib.Path(__file__).parent
 ext, dist = root / "extension", root / "dist"
 shutil.rmtree(dist, ignore_errors=True)
@@ -18,6 +18,12 @@ def make_zip(src, zippath, prefix=""):
 for name, mf in (("chromium", "chrome.json"), ("firefox", "firefox.json"), ("safari", "safari.json")):
     out = dist / name
     shutil.copytree(ext, out)
+    # Versiunea livrată are shadow DOM „closed” (o pagină nu poate citi panourile). Doar pentru teste automate
+    # (care evaluează în lumea paginii) se poate cere CLARITAS_TEST_SHADOW=open.
+    if os.environ.get("CLARITAS_TEST_SHADOW") == "open":
+        for f in ("modules2.js", "modules3.js"):
+            t = (out / f).read_text(encoding="utf-8")
+            (out / f).write_text(t.replace("'closed' /*@SH*/", "'open'"), encoding="utf-8")
     shutil.copy(root / "manifests" / mf, out / "manifest.json")
     json.load(open(out / "manifest.json"))
 

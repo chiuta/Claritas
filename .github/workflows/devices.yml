@@ -6,6 +6,7 @@ on:
 permissions:
   contents: read
 env:
+  CLARITAS_TEST_SHADOW: open
   PYTHONUTF8: '1'
   PYTHONIOENCODING: utf-8
 jobs:

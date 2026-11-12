@@ -6,6 +6,7 @@ on:
 permissions:
   contents: read
 env:
+  CLARITAS_TEST_SHADOW: open
   PYTHONUTF8: '1'
   PYTHONIOENCODING: utf-8
 jobs:
@@ -472,6 +473,26 @@ jobs:
         if: always()
         with: { name: r-safari-real, path: test/results }
 
+  privacy-shadow:
+    name: 'confidențialitate și buget (build livrat, Chromium)'
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    timeout-minutes: 15
+    env:
+      CLARITAS_TEST_SHADOW: ''
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - run: pip install playwright pillow imageio-ffmpeg && python -m playwright install chromium ffmpeg
+      - run: python build.py
+      - name: t17 (build implicit, shadow DOM closed)
+        env: { BROWSER_CHANNEL: chromium }
+        run: python test/run_matrix.py privacy-shadow t17_shadow.py t16_budget.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: { name: r-privacy-shadow, path: test/results }
+
   ocr-module:
     name: modul OCR local (Chromium)
     runs-on: ubuntu-latest
@@ -523,7 +544,7 @@ jobs:
         with: { name: r-ci-mode, path: test/results }
 
   publish:
-    needs: [ci-mode, ocr-module, lint, chromium-family, firefox, engines, safari-convert, samsung-emulation, chrome-for-testing, browser-profiles, firefox-android, ios-ipados, safari-real]
+    needs: [ci-mode, ocr-module, privacy-shadow, lint, chromium-family, firefox, engines, safari-convert, samsung-emulation, chrome-for-testing, browser-profiles, firefox-android, ios-ipados, safari-real]
     if: always()
     runs-on: ubuntu-latest
     permissions:

@@ -117,7 +117,7 @@
   function ensureUI() {
     if (host && host.isConnected) return;
     host = doc.createElement('div'); host.id = 'clr-m2'; host.style.cssText = 'all:initial';
-    root = host.attachShadow({ mode: 'open' });
+    root = host.attachShadow({ mode: 'closed' /*@SH*/ });
     const st = doc.createElement('style'); st.textContent = CSS; root.appendChild(st);
     live = doc.createElement('div'); live.className = 'sr'; live.setAttribute('role', 'status'); live.setAttribute('aria-live', 'polite'); root.appendChild(live);
     chip = doc.createElement('div'); chip.className = 'chip'; chip.hidden = true; root.appendChild(chip);

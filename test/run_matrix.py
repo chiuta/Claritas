@@ -6,6 +6,7 @@ only = sys.argv[2:]
 res = {}
 for f in sorted([x for x in glob.glob('t*.py') if x not in ('t1.py', 't2.py')]):
     if only and f not in only: continue
+    if not only and f in ('t16_budget.py', 't17_shadow.py'): continue  # rulate doar în jobul dedicat (build livrat)
     code = "import bt,runpy,sys;sys.argv=['%s'];runpy.run_path('%s',run_name='__main__')" % (f, f)
     t = time.time()
     for attempt in (1, 2):
