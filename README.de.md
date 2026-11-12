@@ -2,7 +2,7 @@
 
 [English](README.md) · [Română](README.ro.md) · [Français](README.fr.md) · [Italiano](README.it.md) · [Español](README.es.md) · [Português](README.pt.md) · **Deutsch** · [Magyar](README.hu.md)
 
-**Version: 1.7.0 · Letzte Aktualisierung: 12.11.2026**
+**Version: 1.8.0 · Letzte Aktualisierung: 12.11.2026**
 
 Kostenlose Barrierefreiheits-Erweiterung „Alles in einem“. Keine Telemetrie, kein Netzwerk, keine Konten: Alles bleibt in Ihrem Browser.
 
@@ -58,6 +58,18 @@ Wenn Claritas Ihnen hilft, können Sie die Arbeit unterstützen: [Buy Me a Coffe
 
 Prüfstatus (v1.6.0): automatisch in CI getestet auf Chromium, Edge, Brave, Firefox (mehrere Kanäle), echtem Safari 27.2 (macOS), Safari 26.2 im iPhone/iPad-Simulator, Chrome 113 und Firefox 162 auf Android 14 (Emulator). In CI unter Linux für v1.7.0 geprüft: Opera 140 (alle 12 Testdateien). Nicht verifiziert: Vivaldi (startet, aber die automatische Debug-Verbindung läuft in ein Timeout), echtes Samsung Internet, die in echtem Safari/iOS aktivierte Erweiterung, Chrome-Markenversion. Alt+Shift+O/D/L/G sind im Browser änderbar; P/H/S/M sind fest. Die Definitionsschaltfläche öffnet dexonline.ro oder Wiktionary nur auf Klick.
 
+## Optionale Module (v1.8)
+Alle sind standardmäßig aus (Popup → „Mehr“ → „Optionale Module (v1.8)“). Alles läuft lokal; nichts wird irgendwohin gesendet.
+- **Kontrastprüfer** (Alt+Umschalt+I): Text anzeigen oder fokussieren und echte Farben, Verhältnis, AA/AAA und einen Korrekturvorschlag sehen; Klick fixiert.
+- **Tab-Reihenfolge** (Alt+Umschalt+T): nummerierte Marken in Tab-Reihenfolge, zugänglicher Name und Rolle jedes Elements, mit Problemen (ohne Namen, positiver tabindex, aria-hidden an fokussierbarem Element, Rücksprünge).
+- **Leseliste und Notizen** (Alt+Umschalt+B): speichert Seiten, markierten Text und Notizen im Browser; Export als Markdown/JSON, Import von JSON.
+- **Eigenes CSS pro Website** (Alt+Umschalt+U): lokal gespeichert; `@import` und externe URLs werden entfernt; Vorlagen (keine festen Leisten, unterstrichene Links, Abstand, Banner ausblenden).
+- **Formeln** (Alt+Umschalt+Q): gesprochene Beschreibungen für MathML (Brüche, Potenzen, Wurzeln, Summen, griechische Buchstaben; Rumänisch und Englisch) und Vorlesen.
+- **Stimmenführer** (Popup → Stimme): ordnet die Stimmen für Ihre Sprache, lokale vor Online-Stimmen, mit Hörprobe.
+- **Lokale KI** (Alt+Umschalt+A, Klasse B): Fragen zur Seite und vorgeschlagene Bildbeschreibungen über die Prompt API von Chrome (Chrome 148+ mit lokalem Modell). Nur mit Ihrer Zustimmung; als „automatisch erzeugt“ markiert. Nicht mit einem echten Modell getestet.
+- **Optionale Pakete**: `-axe` ergänzt die axe-core-Prüfung (MPL-2.0), `-pdf` einen lokalen PDF-Leser (pdf.js, Apache-2.0: Inhalt, Suche, Designs, Vorlesen, .txt speichern). Erzeugen mit `tools/fetch_vendor.sh`, dann `python build.py`.
+- **Geprüft (Chromium, echte Erweiterung)**: `test/t15_v18.py`. Firefox-Prüfungen stehen in `test/ff_selenium.py`. Nicht abgedeckt: Safari, ein echtes lokales Modell, der Download der .md/.json-Dateien.
+
 ## Optionale Module (v1.7)
 Alle sind standardmäßig aus (Popup → „Mehr“ → „Optionale Module (v1.7)“). Es gibt keine Telemetrie; die Schaltfläche „Was verlässt den Browser?“ liest den Code der Erweiterung und listet gefundene Adressen und Netzwerkaufrufe.
 - **Schnellnavigation**: Alt+Umschalt+J/K nächste/vorherige Überschrift, M/N nächster/vorheriger Bereich, L filterbare Liste von Bereichen, Überschriften und Links, G Absatz-Spotlight; größerer sichtbarer Fokus.
@@ -69,7 +81,7 @@ Alle sind standardmäßig aus (Popup → „Mehr“ → „Optionale Module (v1.
 - **Website-Regeln**: Export/Import als JSON oder Liste zu deaktivierender Domains.
 - **Audit-Bericht**: HTML, CSV oder JSON mit Zuordnung zu WCAG 2.2 / EN 301 549, Korrekturvorschlägen und Vergleich mit einer gespeicherten Referenz.
 - **CI-Modus**: `python tools/claritas_ci.py https://example.com --format all --max-errors 0` (Exit-Code 1 bei Überschreitung). Deckt nur die automatischen Regeln von Claritas ab.
-- **Geprüft (Chromium, echte Erweiterung)**: 36 Prüfungen in `test/t14_v17.py`. **Nicht geprüft**: Spracherkennung mit echter Sprache (nur Start/Stopp und Befehlsparser), Live-Untertitel mit echter Sprache, die Module in Safari. Die Module sind in Firefox bestätigt (alle Kanäle, Linux/Windows/macOS).
+- **Geprüft (Chromium, echte Erweiterung)**: 36 Prüfungen in `test/t14_v17.py`. **Nicht geprüft**: Spracherkennung mit echter Sprache (nur Start/Stopp und Befehlsparser), Live-Untertitel mit echter Sprache, die Module in Firefox/Safari.
 
 ## Optionale Module (v1.6)
 Alle sind standardmäßig aus (Popup → „Optionale Module“); nichts verlässt den Browser. Wortarten im Leser (Rumänisch/Englisch, heuristisch), zusätzliche Prüfregeln (ARIA, Formulare, main, Zoom, Untertitel), lokales Wörterbuch (eigene JSON-/TSV-Datei, max. 4 MB), Einstellungs-Sync über `storage.sync` des Browsers (ohne Wörterbuch und Aufnahmen) und lokale OCR im separaten Paket `claritas-*-ocr.zip` (~20 MB; nur in Chromium automatisch geprüft, Firefox/Safari nicht geprüft).

@@ -2,7 +2,7 @@
 
 **English** · [Română](README.ro.md) · [Français](README.fr.md) · [Italiano](README.it.md) · [Español](README.es.md) · [Português](README.pt.md) · [Deutsch](README.de.md) · [Magyar](README.hu.md)
 
-**Version: 1.7.0 · Last updated: 12 Nov 2026**
+**Version: 1.8.0 · Last updated: 12 Nov 2026**
 
 Free all-in-one accessibility extension. No telemetry, no network, no accounts: everything stays in your browser.
 
@@ -55,7 +55,19 @@ MIT — copyright Alexandru-Ionuț Chiuță (Alexio).
 
 If Claritas helps you, you can support the work: [Buy Me a Coffee](https://buymeacoffee.com/echo.of.the.strings).
 
-Verification status (v1.5.5 baseline; v1.7.0 where stated): tested automatically in CI on Chromium, Edge, Brave, Firefox (several channels), real Safari 27.2 on macOS, Safari 26.2 in iPhone/iPad Simulator, Chrome 113 and Firefox 162 on Android 14 (emulator). Verified in CI on Linux for v1.7.0: Opera 140 (all 12 test files). Not verified: Vivaldi (it starts, but the automated debugging connection times out), real Samsung Internet, the extension activated inside real Safari/iOS, branded Chrome. Shortcuts Alt+Shift+O/D/L/G can be remapped in the browser; P/H/S/M are fixed. The definition button opens dexonline.ro or Wiktionary only when you click it.
+Verification status (v1.5.5): tested automatically in CI on Chromium, Edge, Brave, Firefox (several channels), real Safari 27.2 on macOS, Safari 26.2 in iPhone/iPad Simulator, Chrome 113 and Firefox 162 on Android 14 (emulator). Verified in CI on Linux for v1.7.0: Opera 140 (all 12 test files). Not verified: Vivaldi (it starts, but the automated debugging connection times out), real Samsung Internet, the extension activated inside real Safari/iOS, branded Chrome. Shortcuts Alt+Shift+O/D/L/G can be remapped in the browser; P/H/S/M are fixed. The definition button opens dexonline.ro or Wiktionary only when you click it.
+
+## Optional modules (v1.8)
+All are off by default (popup → “More” → “Optional modules (v1.8)”). Everything runs locally; nothing is sent anywhere.
+- **Contrast inspector** (Alt+Shift+I): point at or focus any text to see its real colours, ratio, AA/AAA and a suggested fix; click to pin.
+- **Tab-order map** (Alt+Shift+T): numbered badges in tab order, accessible name and role of each control, with problems (no name, positive tabindex, aria-hidden on a focusable element, focus jumping back).
+- **Reading list and notes** (Alt+Shift+B): saves pages, selected text and notes in the browser; export to Markdown/JSON, import JSON.
+- **Your own CSS per site** (Alt+Shift+U): stored locally; `@import` and external URLs are removed; starter snippets (static bars, underlined links, looser spacing, hide banners).
+- **Formulas** (Alt+Shift+Q): spoken descriptions for MathML (fractions, powers, roots, sums, Greek letters; Romanian and English) and reading aloud.
+- **Voice guide** (popup → Voice): ranks the voices for your language, local before online, with a test button.
+- **On-device AI** (Alt+Shift+A, class B): questions about the page and suggested image descriptions through Chrome’s Prompt API (Chrome 148+ with the local model). Only with your consent; marked “auto-generated”. Not tested with a real model.
+- **Optional packages**: `-axe` adds the axe-core audit (MPL-2.0) and `-pdf` a local PDF reader (pdf.js, Apache-2.0: contents, search, themes, read aloud, save .txt). Build them with `tools/fetch_vendor.sh` then `python build.py`.
+- **Verified (Chromium, real extension)**: `test/t15_v18.py`. Firefox checks are in `test/ff_selenium.py`. Not covered: Safari, a real on-device model, the .md/.json file download.
 
 ## Optional modules (v1.7)
 All are off by default (popup → “More” → “Optional modules (v1.7)”). There is no telemetry; the “What leaves the browser?” button reads the extension’s own code and lists the addresses and network calls it finds.
@@ -68,7 +80,7 @@ All are off by default (popup → “More” → “Optional modules (v1.7)”).
 - **Site rules**: export/import as JSON or a list of domains to disable.
 - **Audit report**: HTML, CSV or JSON with WCAG 2.2 / EN 301 549 mapping, fix suggestions and comparison with a saved baseline.
 - **CI mode**: `python tools/claritas_ci.py https://example.com --format all --max-errors 0` (exit code 1 above the threshold). Covers only Claritas’s automatic rules.
-- **Verified (Chromium, real extension)**: 36 checks in `test/t14_v17.py` (navigation, list, spotlight, voice-command parser, alt, summary/glossary, reports, profiles, rule import, privacy panel, cleanup on disable). **Not verified**: speech recognition with real speech (only start/stop and the command parser), live captions with real speech, the modules on Safari. The modules are verified on Firefox (all channels, Linux/Windows/macOS).
+- **Verified (Chromium, real extension)**: 36 checks in `test/t14_v17.py` (navigation, list, spotlight, voice-command parser, alt, summary/glossary, reports, profiles, rule import, privacy panel, cleanup on disable). **Not verified**: speech recognition with real speech (only start/stop and the command parser), live captions with real speech, the modules on Firefox/Safari.
 
 ## Optional modules (v1.6)
 All are off by default; switch them on in the popup → “Optional modules”. Nothing sends data outside the browser.

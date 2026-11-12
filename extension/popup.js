@@ -115,6 +115,46 @@
       sel.value = Array.from(sel.options).some((o) => o.value === keep) ? keep : '';
     };
     fill(); speechSynthesis.onvoiceschanged = fill;
+    bindVoiceGuide(sel);
+  }
+  /* Ghid de voci: clasează vocile pentru limba paginii/interfeței (locale înaintea celor online) */
+  function vgScore(v, L) {
+    const lg = (v.lang || '').toLowerCase().replace('_', '-'); let s = 0;
+    if (lg.startsWith(L)) s += 8; else return -1;
+    if (v.localService) s += 6;
+    if (/natural|neural|premium|enhanced|siri|studio|online/i.test(v.name)) s += 3;
+    if (v.default) s += 1;
+    return s;
+  }
+  function bindVoiceGuide(sel) {
+    const btn = $('#vgBtn'), box = $('#vgBox'), ul = $('#vgList'), info = $('#vgInfo'); if (!btn) return;
+    btn.addEventListener('click', async () => {
+      if (!box.hidden) { box.hidden = true; return; }
+      let L = CLR.langCode(lang()).slice(0, 2); try { const pi = await pageInfo(); if (pi && pi.lang && /^[a-z]{2}/i.test(pi.lang)) L = pi.lang.slice(0, 2).toLowerCase(); } catch (e) { }
+      const vs = speechSynthesis.getVoices().map((v) => ({ v, s: vgScore(v, L) })).filter((x) => x.s >= 0).sort((a, b) => b.s - a.s).slice(0, 12);
+      ul.textContent = ''; info.textContent = vs.length ? '' : t(lang(), 'vg_none');
+      vs.forEach(({ v }) => {
+        const li = document.createElement('li'); li.textContent = v.name + ' (' + v.lang + ') · ' + t(lang(), v.localService ? 'vg_local' : 'vg_online') + ' ';
+        const a = document.createElement('button'); a.type = 'button'; a.textContent = t(lang(), 'vg_test');
+        a.addEventListener('click', () => { try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(t(lang(), 'vg_sample')); u.voice = v; u.lang = v.lang; speechSynthesis.speak(u); } catch (e) { } });
+        const b = document.createElement('button'); b.type = 'button'; b.textContent = t(lang(), 'vg_use');
+        b.addEventListener('click', () => { sel.value = v.voiceURI; sel.dispatchEvent(new Event('change', { bubbles: true })); info.textContent = t(lang(), 'vg_used'); });
+        li.append(a, b); ul.appendChild(li);
+      });
+      box.hidden = false;
+    });
+  }
+  function bindModules3() {
+    $$('[data-m3]').forEach((b) => b.addEventListener('click', async () => {
+      const r = await feat('m3', { what: b.dataset.m3 }), i = $('#m3Info');
+      if (!r || r.inactive) { i.textContent = tl('inactive'); return; }
+      if (r.off) { i.textContent = tl('m_modules3'); return; }
+      if (r.na && b.dataset.m3 === 'axe') { i.textContent = tl('m3_axe_na'); return; }
+      if (r.na) { i.textContent = tl('m3_ai_na'); return; }
+      setTimeout(() => window.close(), 60);
+    }));
+    fetch(api.runtime.getURL('vendor/axe.min.js'), { method: 'HEAD' }).then((r) => { if (r.ok) $('#axeBtn').hidden = false; }).catch(() => { });
+    fetch(api.runtime.getURL('pdf.html'), { method: 'HEAD' }).then((r) => { if (r.ok) { const b = $('#pdfOpen'); b.hidden = false; b.addEventListener('click', () => { api.tabs.create({ url: api.runtime.getURL('pdf.html') }); window.close(); }); } }).catch(() => { });
   }
   const send = (msg) => (tabId == null ? Promise.resolve(null) : api.tabs.sendMessage(tabId, msg).catch(() => null));
   const feat = (cmd, extra) => send(Object.assign({ type: 'feat', cmd }, extra || {}));
@@ -213,7 +253,7 @@
     fillVoices();
     bind();
     bindTools();
-    bindModules(); bindModules2();
+    bindModules(); bindModules2(); bindModules3();
     render();
     refreshStats(); refreshZoom();
     setTimeout(refreshStats, 900);

@@ -2,7 +2,7 @@
 
 [English](README.md) · [Română](README.ro.md) · [Français](README.fr.md) · **Italiano** · [Español](README.es.md) · [Português](README.pt.md) · [Deutsch](README.de.md) · [Magyar](README.hu.md)
 
-**Versione: 1.7.0 · Ultimo aggiornamento: 12/11/2026**
+**Versione: 1.8.0 · Ultimo aggiornamento: 12/11/2026**
 
 Estensione di accessibilità tutto-in-uno, gratuita. Nessuna telemetria, nessuna rete, nessun account: tutto resta nel tuo browser.
 
@@ -58,6 +58,18 @@ Se Claritas ti è utile, puoi sostenere il lavoro: [Buy Me a Coffee](https://buy
 
 Stato di verifica (v1.6.0): testato automaticamente in CI su Chromium, Edge, Brave, Firefox (più canali), Safari 27.2 reale su macOS, Safari 26.2 nel simulatore iPhone/iPad, Chrome 113 e Firefox 162 su Android 14 (emulatore). Verificato in CI su Linux per v1.7.0: Opera 140 (tutti i 12 file di test). Non verificato: Vivaldi (si avvia, ma la connessione di debug automatica va in timeout), Samsung Internet reale, l’estensione attivata in Safari/iOS reali, Chrome di marca. Alt+Shift+O/D/L/G sono modificabili nel browser; P/H/S/M sono fissi. Il pulsante di definizione apre dexonline.ro o Wiktionary solo al clic.
 
+## Moduli opzionali (v1.8)
+Tutti disattivati per impostazione predefinita (popup → «Altro» → «Moduli opzionali (v1.8)»). Tutto funziona in locale; nulla viene inviato altrove.
+- **Ispettore del contrasto** (Alt+Maiusc+I): passa sopra o dai il focus a un testo per vedere colori reali, rapporto, AA/AAA e una correzione suggerita; clic per bloccare.
+- **Mappa dell’ordine di tabulazione** (Alt+Maiusc+T): badge numerati nell’ordine di tabulazione, nome accessibile e ruolo di ogni controllo, con i problemi (senza nome, tabindex positivo, aria-hidden su elemento focalizzabile, salti indietro).
+- **Lista di lettura e note** (Alt+Maiusc+B): salva pagine, testo selezionato e note nel browser; esporta in Markdown/JSON, importa JSON.
+- **CSS personale per sito** (Alt+Maiusc+U): salvato localmente; `@import` e URL esterni rimossi; modelli (barre non fisse, link sottolineati, spaziatura, nascondi banner).
+- **Formule** (Alt+Maiusc+Q): descrizioni parlate per MathML (frazioni, potenze, radici, somme, lettere greche; rumeno e inglese) e lettura ad alta voce.
+- **Guida alle voci** (popup → Voce): classifica le voci per la tua lingua, locali prima delle online, con pulsante di ascolto.
+- **IA locale** (Alt+Maiusc+A, classe B): domande sulla pagina e descrizioni di immagini suggerite tramite la Prompt API di Chrome (Chrome 148+ con modello locale). Solo con il tuo consenso; contrassegnate «generate automaticamente». Non testato con un modello reale.
+- **Pacchetti opzionali**: `-axe` aggiunge l’audit axe-core (MPL-2.0) e `-pdf` un lettore PDF locale (pdf.js, Apache-2.0: indice, ricerca, temi, lettura, salva .txt). Si creano con `tools/fetch_vendor.sh` e poi `python build.py`.
+- **Verificato (Chromium, estensione reale)**: `test/t15_v18.py`. I controlli per Firefox sono in `test/ff_selenium.py`. Non coperti: Safari, un modello locale reale, il download dei file .md/.json.
+
 ## Moduli opzionali (v1.7)
 Tutti sono disattivati di default (popup → «Altro» → «Moduli opzionali (v1.7)»). Nessuna telemetria; il pulsante «Cosa lascia il browser?» legge il codice dell’estensione ed elenca gli indirizzi e le chiamate di rete trovati.
 - **Navigazione rapida**: Alt+Maiusc+J/K titolo successivo/precedente, M/N regione successiva/precedente, L elenco filtrabile di regioni, titoli e link, G spotlight sul paragrafo; focus ingrandito e visibile.
@@ -69,7 +81,7 @@ Tutti sono disattivati di default (popup → «Altro» → «Moduli opzionali (v
 - **Regole per sito**: esporta/importa JSON o elenco di domini da disattivare.
 - **Rapporto di audit**: HTML, CSV o JSON con corrispondenza WCAG 2.2 / EN 301 549, correzioni suggerite e confronto con un riferimento salvato.
 - **Modalità CI**: `python tools/claritas_ci.py https://example.com --format all --max-errors 0` (codice di uscita 1 oltre la soglia). Copre solo le regole automatiche di Claritas.
-- **Verificato (Chromium, estensione reale)**: 36 controlli in `test/t14_v17.py`. **Non verificato**: riconoscimento vocale con voce reale (solo avvio/arresto e parser dei comandi), sottotitoli dal vivo con voce reale, i moduli su Safari. I moduli sono verificati su Firefox (tutti i canali, Linux/Windows/macOS).
+- **Verificato (Chromium, estensione reale)**: 36 controlli in `test/t14_v17.py`. **Non verificato**: riconoscimento vocale con voce reale (solo avvio/arresto e parser dei comandi), sottotitoli dal vivo con voce reale, i moduli su Firefox/Safari.
 
 ## Moduli opzionali (v1.6)
 Tutti disattivati di default (popup → «Moduli opzionali»); nulla esce dal browser. Parti del discorso nel Lettore (rumeno/inglese, euristico), regole di audit aggiuntive (ARIA, moduli, main, zoom, sottotitoli), dizionario locale (tuo JSON/TSV, max 4 MB), sincronizzazione delle impostazioni con `storage.sync` del browser (senza dizionario né registrazioni) e OCR locale nel pacchetto separato `claritas-*-ocr.zip` (~20 MB; verificato automaticamente solo in Chromium, Firefox/Safari non verificati).

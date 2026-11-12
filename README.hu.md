@@ -2,7 +2,7 @@
 
 [English](README.md) · [Română](README.ro.md) · [Français](README.fr.md) · [Italiano](README.it.md) · [Español](README.es.md) · [Português](README.pt.md) · [Deutsch](README.de.md) · **Magyar**
 
-**Verzió: 1.7.0 · Utolsó frissítés: 2026. 11. 12.**
+**Verzió: 1.8.0 · Utolsó frissítés: 2026. 11. 12.**
 
 Ingyenes, mindent egyben tartalmazó akadálymentesítő bővítmény. Nincs telemetria, nincs hálózat, nincs fiók: minden a böngészőjében marad.
 
@@ -58,6 +58,18 @@ Ha a Claritas segít Önnek, támogathatja a munkát: [Buy Me a Coffee](https://
 
 Ellenőrzési állapot (v1.6.0): automatikusan tesztelve CI-ben: Chromium, Edge, Brave, Firefox (több csatorna), valódi Safari 27.2 macOS-en, Safari 26.2 iPhone/iPad szimulátorban, Chrome 113 és Firefox 162 Android 14-en (emulátor). CI-ben Linuxon ellenőrizve a v1.7.0-hoz: Opera 140 (mind a 12 tesztfájl). Nem ellenőrzött: Vivaldi (elindul, de az automatikus hibakeresési kapcsolat időtúllépéssel jár), valódi Samsung Internet, a valódi Safari/iOS-ben aktivált bővítmény, márkás Chrome. Az Alt+Shift+O/D/L/G a böngészőben átállítható; a P/H/S/M rögzített. A definíció gomb csak kattintásra nyitja meg a dexonline.ro-t vagy a Wiktionaryt.
 
+## Opcionális modulok (v1.8)
+Alapértelmezetten mind ki van kapcsolva (felugró ablak → „Több” → „Opcionális modulok (v1.8)”). Minden helyben fut; semmi sem kerül máshová.
+- **Kontrasztvizsgáló** (Alt+Shift+I): mutass egy szövegre vagy fókuszáld, és látod a valódi színeket, az arányt, az AA/AAA-t és egy javasolt javítást; kattintással rögzíthető.
+- **Tabulátorsorrend-térkép** (Alt+Shift+T): számozott jelvények tabulátorsorrendben, minden vezérlő elérhető neve és szerepe, a hibákkal (név nélkül, pozitív tabindex, aria-hidden fókuszálható elemen, visszaugrások).
+- **Olvasólista és jegyzetek** (Alt+Shift+B): oldalakat, kijelölt szöveget és jegyzeteket ment a böngészőben; exportálás Markdown/JSON, importálás JSON.
+- **Saját CSS oldalanként** (Alt+Shift+U): helyben tárolva; az `@import` és a külső URL-ek törlődnek; kezdő minták (nem rögzített sávok, aláhúzott hivatkozások, térköz, szalagok elrejtése).
+- **Képletek** (Alt+Shift+Q): felolvasott leírás MathML-hez (törtek, hatványok, gyökök, összegek, görög betűk; román és angol) és felolvasás.
+- **Hangválasztó** (felugró ablak → Hang): rangsorolja a hangokat a nyelvedhez, a helyiek az online előtt, meghallgatás gombbal.
+- **Helyi MI** (Alt+Shift+A, B osztály): kérdések az oldalról és javasolt képleírások a Chrome Prompt API-ján át (Chrome 148+ helyi modellel). Csak a beleegyezéseddel; „automatikusan generált” jelöléssel. Valódi modellel nem tesztelve.
+- **Opcionális csomagok**: az `-axe` az axe-core vizsgálatot (MPL-2.0), a `-pdf` helyi PDF-olvasót (pdf.js, Apache-2.0: tartalom, keresés, témák, felolvasás, .txt mentés) ad. Építés: `tools/fetch_vendor.sh`, majd `python build.py`.
+- **Ellenőrizve (Chromium, valódi bővítmény)**: `test/t15_v18.py`. A Firefox-ellenőrzések a `test/ff_selenium.py` fájlban vannak. Nem lefedett: Safari, valódi helyi modell, a .md/.json fájlok letöltése.
+
 ## Választható modulok (v1.7)
 Alapértelmezetten mind ki van kapcsolva (popup → „Továbbiak” → „Opcionális modulok (v1.7)”). Nincs telemetria; a „Mi hagyja el a böngészőt?” gomb beolvassa a bővítmény kódját, és listázza a talált címeket és hálózati hívásokat.
 - **Gyors navigáció**: Alt+Shift+J/K következő/előző címsor, M/N következő/előző tájékozódási pont, L szűrhető lista pontokból, címsorokból és linkekből, G bekezdés-reflektor; nagyobb, látható fókusz.
@@ -69,7 +81,7 @@ Alapértelmezetten mind ki van kapcsolva (popup → „Továbbiak” → „Opci
 - **Webhelyszabályok**: export/import JSON-ként vagy kikapcsolandó domainek listájaként.
 - **Audit-jelentés**: HTML, CSV vagy JSON WCAG 2.2 / EN 301 549 megfeleltetéssel, javítási javaslatokkal és mentett referenciával való összevetéssel.
 - **CI mód**: `python tools/claritas_ci.py https://example.com --format all --max-errors 0` (1-es kilépési kód a küszöb túllépésekor). Csak a Claritas automatikus szabályait fedi le.
-- **Ellenőrizve (Chromium, valódi bővítmény)**: 36 ellenőrzés a `test/t14_v17.py` fájlban. **Nem ellenőrzött**: beszédfelismerés valódi beszéddel (csak indítás/leállítás és a parancsértelmező), élő feliratok valódi beszéddel, a modulok Safariban. A modulok Firefoxban ellenőrzöttek (minden csatorna, Linux/Windows/macOS).
+- **Ellenőrizve (Chromium, valódi bővítmény)**: 36 ellenőrzés a `test/t14_v17.py` fájlban. **Nem ellenőrzött**: beszédfelismerés valódi beszéddel (csak indítás/leállítás és a parancsértelmező), élő feliratok valódi beszéddel, a modulok Firefoxban/Safariban.
 
 ## Választható modulok (v1.6)
 Mind alapból ki van kapcsolva (felugró ablak → „Választható modulok”); semmi sem hagyja el a böngészőt. Szófajok az Olvasóban (román/angol, heurisztikus), kiegészítő ellenőrzési szabályok (ARIA, űrlapok, main, nagyítás, feliratok), helyi szótár (saját JSON/TSV, max. 4 MB), a beállítások szinkronizálása a böngésző `storage.sync` tárolójával (szótár és felvételek nélkül) és helyi OCR a külön `claritas-*-ocr.zip` csomagban (~20 MB; automatikusan csak Chromiumban ellenőrizve, Firefox/Safari nem ellenőrzött).

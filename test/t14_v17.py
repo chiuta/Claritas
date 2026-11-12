@@ -50,7 +50,7 @@ async def main():
         ok(r['alt'][4].startswith('Biblioteca'), 'alt: decodare URL')
         # --- B. raport ---
         rp = await pop.evaluate("""()=>{const R=CLR.report; const items=[{rule:'img_alt',sev:'err',label:'<img onerror=1>'},{rule:'form_label',sev:'err',label:'=HYPERLINK("x")'},{rule:'h_skip',sev:'warn',label:'h4'}];
-          const meta={url:'javascript:alert(1)',title:'<b>T</b>',version:'1.7.0',names:{img_alt:'Imagine fără alt'}};
+          const meta={url:'javascript:alert(1)',title:'<b>T</b>',version:'1.8.0',names:{img_alt:'Imagine fără alt'}};
           const html=R.build(items,meta,'html'), csv=R.build(items,meta,'csv'), js=JSON.parse(R.build(items,meta,'json'));
           const d=R.diff(R.keys(items.slice(0,2)).concat(['old|x']), items);
           const miss=Object.keys(R.MAP).filter(k=>CLR.t('ro','a_'+k)==='a_'+k||CLR.t('en','a_'+k)==='a_'+k);

@@ -57,5 +57,37 @@ if (ocr_src / "vendor" / "tesseract.min.js").exists():
         make_zip(out, dist / ("claritas-%s-ocr.zip" % name))
         shutil.rmtree(out)
 
+# Module opționale: axe-core (MPL-2.0) – audit WCAG suplimentar. Necesită tools/fetch_vendor.sh.
+axe_src = root / "modules-src" / "axe" / "vendor"
+if (axe_src / "axe.min.js").exists():
+    for name in ("chromium", "firefox"):
+        out = dist / (name + "-axe")
+        shutil.copytree(dist / name, out)
+        (out / "vendor").mkdir(exist_ok=True)
+        shutil.copy(axe_src / "axe.min.js", out / "vendor" / "axe.min.js")
+        shutil.copy(axe_src / "LICENSE-axe-core.txt", out / "vendor" / "LICENSE-axe-core.txt")
+        mf = json.load(open(out / "manifest.json"))
+        for cs in mf["content_scripts"]:
+            if "modules3.js" in cs["js"]:
+                cs["js"].insert(cs["js"].index("modules3.js"), "vendor/axe.min.js")
+        json.dump(mf, open(out / "manifest.json", "w"), indent=2, ensure_ascii=False)
+        make_zip(out, dist / ("claritas-%s-axe.zip" % name))
+        shutil.rmtree(out)
+# Module opționale: cititor PDF local (pdf.js, Apache-2.0).
+pdf_src = root / "modules-src" / "pdf"
+if (pdf_src / "vendor" / "pdf.min.mjs").exists():
+    CSP = "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'"
+    for name in ("chromium", "firefox"):
+        out = dist / (name + "-pdf")
+        shutil.copytree(dist / name, out)
+        shutil.copy(pdf_src / "pdf.html", out / "pdf.html")
+        shutil.copy(pdf_src / "pdf.js", out / "pdf.js")
+        shutil.copytree(pdf_src / "vendor", out / "vendor")
+        mf = json.load(open(out / "manifest.json"))
+        mf["content_security_policy"] = {"extension_pages": CSP}
+        json.dump(mf, open(out / "manifest.json", "w"), indent=2, ensure_ascii=False)
+        make_zip(out, dist / ("claritas-%s-pdf.zip" % name))
+        shutil.rmtree(out)
+
 for z in sorted(dist.glob("*.zip")):
     print("OK", z.name, z.stat().st_size, "B")

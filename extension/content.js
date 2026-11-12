@@ -528,11 +528,11 @@
   function apply() {
     const r = resolve(G, SITES[CLR.siteKey(SITES, HOST)]);
     S = r.s; active = r.active;
-    if (isTop) { const lc = CLR.langCode(S.lang); if (!CLR.I18N[lc]) CLR.loadLang(lc).then(() => { if (alive() && S) { if (CLR.feat) CLR.feat.onApply(S, active); if (CLR.x) CLR.x.onApply(S, active); if (CLR.m2) CLR.m2.onApply(S, active); } }); }
+    if (isTop) { const lc = CLR.langCode(S.lang); if (!CLR.I18N[lc]) CLR.loadLang(lc).then(() => { if (alive() && S) { if (CLR.feat) CLR.feat.onApply(S, active); if (CLR.x) CLR.x.onApply(S, active); if (CLR.m2) CLR.m2.onApply(S, active); if (CLR.m3) CLR.m3.onApply(S, active); } }); }
     if (S.autoMode !== 'off' && autoNight(S)) S = Object.assign({}, S, { theme: S.autoTheme });
     S = CLR.osAdjust(S, osMedia());
     autoTimer();
-    if (!active) { teardown(); CLR.ctx = { S, active, HOST, isTop, doc, alive, api, write, command }; if (CLR.feat) CLR.feat.onApply(S, false); if (CLR.x) CLR.x.onApply(S, false); if (CLR.m2) CLR.m2.onApply(S, false); return; }
+    if (!active) { teardown(); CLR.ctx = { S, active, HOST, isTop, doc, alive, api, write, command }; if (CLR.feat) CLR.feat.onApply(S, false); if (CLR.x) CLR.x.onApply(S, false); if (CLR.m2) CLR.m2.onApply(S, false); if (CLR.m3) CLR.m3.onApply(S, false); return; }
     ensureStyle().textContent = buildCSS(S, 'doc');
     const sc = buildCSS(S, 'shadow');
     shadowStyles.forEach((s) => { s.textContent = sc; });
@@ -540,7 +540,7 @@
     updateOverlay();
     CLR.ctx = { S, active, HOST, isTop, doc, alive, api, write, command };
     if (CLR.feat) CLR.feat.onApply(S, active);
-    if (CLR.x) CLR.x.onApply(S, active); if (CLR.m2) CLR.m2.onApply(S, active);
+    if (CLR.x) CLR.x.onApply(S, active); if (CLR.m2) CLR.m2.onApply(S, active); if (CLR.m3) CLR.m3.onApply(S, active);
 
     fixOn = !!S.autoFix && (S.theme === 'none' || S.theme === 'dark');
     tsOn = S.textScale !== 100;

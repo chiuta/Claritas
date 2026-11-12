@@ -19,6 +19,7 @@ LONGP = 'Centrul Național de Recunoaștere și Echivalare a Diplomelor (CNRED) 
 PAGES = {
  '/contrast.html': H % '<h1>Test</h1><p id="p" style="color:#bbbbbb;background:#ffffff">Text pal pe alb</p><input id="d" disabled value="Câmp dezactivat" style="color:#c8c8c8;background:#f0f0f0"><p>Contact: <span id="mail">ion.popescu@example.com</span></p><button id="b1">Buton</button>',
  '/mod.html': H % ('<header><a href="#c">Sari</a></header><nav aria-label="Principal"><a href="/a">Acasă</a></nav><main id="c"><h1>Titlu principal</h1><p>' + LONGP*3 + '</p><h2>Secțiunea doi</h2><p>' + LONGP*2 + '</p><h3>Subsecțiune</h3><p>' + LONGP*2 + '</p><figure><img id="i1" src="/x/a1.png"><figcaption>Casa veche din Brașov, 1900</figcaption></figure><img id="i2" src="/img/casa-din-brasov-2023.jpg"><img id="i4" src="/q.png" alt="Grafic vânzări"></main><aside aria-label="Lateral"><p>Notă laterală cu text suficient de lung.</p></aside><footer><p>Subsol</p></footer>' + ''.join('<p>umplutură %d</p>' % i for i in range(30))),
+ '/v18.html': H % '<main><h1>V18</h1><p id="low" style="color:#aaaaaa;background:#ffffff">Text slab</p><button id="b1" tabindex="3">Pozitiv</button><button id="b2"></button><math id="mm"><mfrac><mi>a</mi><mn>2</mn></mfrac><mo>=</mo><mn>3</mn></math><p id="sel">Propoziție pentru lista de citit.</p></main>',
  '/outer.html': H % '<h1>Cadru</h1><iframe id="f" src="http://127.0.0.1:8772/inner.html" width="500" height="120"></iframe>',
  '/inner.html': H % '<p>Date: <b>secret.person@example.net</b></p>',
 }
@@ -166,6 +167,38 @@ try:
         gone = d.execute_script("return [!!document.getElementById('clr-m2'), document.querySelectorAll('[data-clr-alt]').length, document.getElementById('i1').getAttribute('alt')]")
         ok(gone == [False, 0, None], f'Firefox v1.7: dezactivarea modulelor restaurează pagina {gone}')
     except Exception as e: ok(False, f'module v1.7: {e}'); traceback.print_exc()
+    # 7) v1.8: inspector, hartă tab, listă de citit, CSS pe site, formule
+    try:
+        ext_set({'enabled': True, 'lang': 'en', 'autoFix': False, 'noMotion': True, 'modInspect': True, 'modOrder': True, 'modReadList': True, 'modSiteCss': True, 'modMath': True})
+        d.switch_to.window(PAGE_H); d.get('http://127.0.0.1:8771/v18.html'); time.sleep(3)
+        al = d.execute_script("return document.getElementById('mm').getAttribute('aria-label')")
+        ok(al and 'fraction a over 2' in al, f'Firefox v1.8: formulă cu descriere vorbită ({al})')
+        def m3(what):
+            ext_tab()
+            r = d.execute_async_script("const [w,cb]=[arguments[0],arguments[arguments.length-1]];browser.tabs.query({url:'http://127.0.0.1/*'}).then(t=>browser.tabs.sendMessage(t[0].id,{type:'feat',cmd:'m3',what:w})).then(r=>cb(r),e=>cb({err:String(e)}))", what)
+            d.switch_to.window(PAGE_H); return r
+        SH3 = "const h=document.getElementById('clr-m3');const r=h&&h.shadowRoot;"
+        ok(m3('inspect').get('on') is True, 'Firefox v1.8: inspector pornit')
+        ActionChains(d).move_to_element(d.find_element('id', 'low')).perform(); time.sleep(0.6)
+        tip = d.execute_script(SH3 + "const t=r&&r.querySelector('.tip');return t?t.textContent:null")
+        ok(tip and '#aaaaaa' in tip and 'AA ✗' in tip, f'Firefox v1.8: inspector contrast {tip}')
+        m3('inspect')
+        m3('order'); time.sleep(0.5)
+        sm = d.execute_script(SH3 + "const p=r&&r.querySelector('.pnl p');return p?p.textContent:null")
+        ok(sm and '2 focusable' in sm and '1 with errors' in sm, f'Firefox v1.8: hartă tab {sm}')
+        d.execute_script(SH3 + "r.querySelector('.pnl').dispatchEvent(new KeyboardEvent('keydown',{key:'Escape',bubbles:true}))"); m3('order'); m3('order')
+        d.execute_script("getSelection().selectAllChildren(document.getElementById('sel'))")
+        m3('readlist'); time.sleep(0.5)
+        d.execute_script(SH3 + "r.querySelector('.pnl textarea').value='notă';[...r.querySelectorAll('.pnl button')].find(b=>b.textContent.startsWith('Save this page')).click()"); time.sleep(0.8)
+        ext_tab(); rl = d.execute_async_script("const cb=arguments[arguments.length-1];browser.storage.local.get('readList').then(r=>cb(r.readList),e=>cb(null))"); d.switch_to.window(PAGE_H)
+        ok(rl and rl[0]['note'] == 'notă' and 'Propoziție' in rl[0]['sel'], f'Firefox v1.8: listă de citit {rl}')
+        ext_tab(); d.execute_async_script("const cb=arguments[arguments.length-1];browser.storage.local.set({siteCss:{'127.0.0.1':'#low{outline:3px solid rgb(9,8,7)!important}'}}).then(()=>cb(1))"); d.switch_to.window(PAGE_H); time.sleep(1.2)
+        oc = d.execute_script("return getComputedStyle(document.getElementById('low')).outlineColor")
+        ok(rgb(oc) == (9, 8, 7), f'Firefox v1.8: CSS pe site aplicat ({oc})')
+        ext_set({'enabled': True}); d.switch_to.window(PAGE_H); d.get('http://127.0.0.1:8771/v18.html'); time.sleep(2.2)
+        gone = d.execute_script("return [!!document.getElementById('clr-m3'), !!document.getElementById('clr-m3-css'), document.getElementById('mm').getAttribute('aria-label')]")
+        ok(gone == [False, False, None], f'Firefox v1.8: dezactivarea modulelor restaurează pagina {gone}')
+    except Exception as e: ok(False, f'module v1.8: {e}'); traceback.print_exc()
 except Exception:
     traceback.print_exc()
 finally:

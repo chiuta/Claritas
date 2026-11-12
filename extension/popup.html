@@ -142,6 +142,8 @@
     <label class="slider"><span data-i18n="tts_rate"></span><input type="range" data-k="ttsRate" min="0.5" max="2" step="0.1"><output></output></label>
     <label class="slider"><span data-i18n="ttsPitch"></span><input type="range" data-k="ttsPitch" min="0.5" max="2" step="0.1"><output></output></label>
     <label class="field"><span data-i18n="ttsVoice"></span><select data-k="ttsVoice" id="voiceSel"></select></label>
+    <div class="profiles"><button type="button" id="vgBtn" data-i18n="vg_btn"></button></div>
+    <div id="vgBox" hidden><h3 data-i18n="vg_title"></h3><ul id="vgList" class="list"></ul><p class="hint" id="vgInfo" role="status"></p></div>
   </fieldset>
 </section>
 
@@ -222,6 +224,25 @@
   </div>
   <p class="hint" id="sitesInfo" role="status"></p>
   <ul id="privList" class="list" aria-live="polite"></ul>
+  </fieldset>
+  <fieldset id="mod3Fs"><legend data-i18n="m_modules3"></legend>
+  <label class="row"><input type="checkbox" data-k="modInspect"><span data-i18n="modInspect"></span></label>
+  <label class="row"><input type="checkbox" data-k="modOrder"><span data-i18n="modOrder"></span></label>
+  <label class="row"><input type="checkbox" data-k="modReadList"><span data-i18n="modReadList"></span></label>
+  <label class="row"><input type="checkbox" data-k="modSiteCss"><span data-i18n="modSiteCss"></span></label>
+  <label class="row"><input type="checkbox" data-k="modMath"><span data-i18n="modMath"></span></label>
+  <label class="row"><input type="checkbox" data-k="modAI"><span data-i18n="modAI"></span></label>
+  <div class="profiles">
+    <button type="button" data-m3="inspect" data-i18n="m3b_inspect"></button>
+    <button type="button" data-m3="order" data-i18n="m3b_order"></button>
+    <button type="button" data-m3="readlist" data-i18n="m3b_readlist"></button>
+    <button type="button" data-m3="css" data-i18n="m3b_css"></button>
+    <button type="button" data-m3="math" data-i18n="m3b_math"></button>
+    <button type="button" data-m3="ai" data-i18n="m3b_ai"></button>
+    <button type="button" data-m3="axe" id="axeBtn" data-i18n="m3b_axe" hidden></button>
+    <button type="button" id="pdfOpen" data-i18n="pdf_open" hidden></button>
+  </div>
+  <p class="hint" id="m3Info" role="status"></p>
   </fieldset>
   <fieldset><legend data-i18n="m_calm"></legend>
   <label class="row"><input type="checkbox" data-k="calm"><span data-i18n="calm"></span></label>

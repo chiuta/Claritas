@@ -3,3 +3,5 @@ test/__pycache__/
 *.png
 dist/
 modules-src/ocr/vendor/
+modules-src/axe/vendor/
+modules-src/pdf/vendor/

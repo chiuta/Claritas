@@ -2,7 +2,7 @@
 
 [English](README.md) · **Română** · [Français](README.fr.md) · [Italiano](README.it.md) · [Español](README.es.md) · [Português](README.pt.md) · [Deutsch](README.de.md) · [Magyar](README.hu.md)
 
-**Versiune: 1.7.0 · Ultima actualizare: 12.11.2026**
+**Versiune: 1.8.0 · Ultima actualizare: 12.11.2026**
 
 Extensie gratuită de accesibilitate all-in-one. Fără telemetrie, fără rețea, fără conturi: totul rămâne în browserul tău.
 
@@ -56,6 +56,18 @@ MIT — drepturi de autor Alexandru-Ionuț Chiuță (Alexio).
 
 Dacă Claritas te ajută, poți sprijini munca: [Buy Me a Coffee](https://buymeacoffee.com/echo.of.the.strings).
 
+## Module opționale (v1.8)
+Toate sunt oprite implicit (popup → «Mai mult» → «Module opționale (v1.8)»). Totul rulează local; nimic nu este trimis nicăieri.
+- **Inspector de contrast** (Alt+Shift+I): arăți sau focalizezi un text și vezi culorile reale, raportul, AA/AAA și o corecție sugerată; clic pentru a fixa.
+- **Harta ordinii de tab** (Alt+Shift+T): insigne numerotate în ordinea tab, nume accesibil și rol pentru fiecare control, cu probleme (fără nume, tabindex pozitiv, aria-hidden pe element focalizabil, salturi înapoi).
+- **Listă de citit și note** (Alt+Shift+B): salvează pagini, text selectat și note în browser; export Markdown/JSON, import JSON.
+- **CSS propriu pe site** (Alt+Shift+U): stocat local; `@import` și adresele externe sunt eliminate; fragmente de pornire (bare statice, linkuri subliniate, spațiere, ascunde bannere).
+- **Formule** (Alt+Shift+Q): descrieri vorbite pentru MathML (fracții, puteri, radicali, sume, litere grecești; română și engleză) și citire cu voce.
+- **Ghid de voci** (popup → Voce): clasează vocile pentru limba ta, cele locale înaintea celor online, cu buton de ascultare.
+- **IA locală** (Alt+Shift+A, clasa B): întrebări despre pagină și descrieri sugerate pentru imagini prin Prompt API din Chrome (Chrome 148+ cu modelul local). Doar cu acordul tău; marcate «generat automat». Netestat cu un model real.
+- **Pachete opționale**: `-axe` adaugă auditul axe-core (MPL-2.0), iar `-pdf` un cititor PDF local (pdf.js, Apache-2.0: cuprins, căutare, teme, citire cu voce, salvare .txt). Se construiesc cu `tools/fetch_vendor.sh`, apoi `python build.py`.
+- **Verificat (Chromium, extensie reală)**: `test/t15_v18.py`. Verificările pentru Firefox sunt în `test/ff_selenium.py`. Neacoperit: Safari, un model local real, descărcarea fișierelor .md/.json.
+
 ## Module opționale (v1.7)
 Toate sunt oprite implicit (popup → «Mai mult» → «Module opționale (v1.7)»). Nu există telemetrie; butonul «Ce părăsește browserul?» citește codul extensiei și listează adresele și apelurile de rețea găsite.
 - **Navigare rapidă**: Alt+Shift+J/K titlu următor/anterior, M/N reper următor/anterior, L listă filtrabilă de repere, titluri și linkuri, G spotlight pe paragraf; focus mărit și vizibil.
@@ -67,7 +79,7 @@ Toate sunt oprite implicit (popup → «Mai mult» → «Module opționale (v1.7
 - **Reguli pe site**: export/import JSON sau listă de domenii de dezactivat.
 - **Raport de audit**: HTML, CSV sau JSON cu corespondență WCAG 2.2 / EN 301 549, sugestii de reparare și comparare cu o referință salvată.
 - **Mod CI**: `python tools/claritas_ci.py https://exemplu.ro --format all --max-errors 0` (cod de ieșire 1 dacă pragul e depășit). Acoperă doar regulile automate Claritas.
-- **Verificat (Chromium, extensia reală)**: 36 de verificări în `test/t14_v17.py` (navigare, listă, spotlight, parser de comenzi vocale, alt, rezumat/glosar, rapoarte, profiluri, import de reguli, panou de confidențialitate, curățare la dezactivare). **Neverificat**: recunoașterea vocală cu voce reală (doar pornirea/oprirea și parserul de comenzi), subtitrările live cu voce reală, modulele pe Safari. Modulele sunt verificate pe Firefox (toate canalele, Linux/Windows/macOS).
+- **Verificat (Chromium, extensia reală)**: 36 de verificări în `test/t14_v17.py` (navigare, listă, spotlight, parser de comenzi vocale, alt, rezumat/glosar, rapoarte, profiluri, import de reguli, panou de confidențialitate, curățare la dezactivare). **Neverificat**: recunoașterea vocală cu voce reală (doar pornirea/oprirea și parserul de comenzi), subtitrările live cu voce reală, modulele pe Firefox/Safari.
 
 ## Module opționale (v1.6)
 Toate sunt oprite implicit și se pornesc din popup → «Module opționale». Nimic nu trimite date în afara browserului.
