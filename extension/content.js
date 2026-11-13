@@ -136,6 +136,7 @@
     /* reguli pentru atributele puse de motorul de contrast */
     out.push(`${R} [data-clr-c]{color:var(--clr-c)!important}`);
     out.push(`${R} [data-clr-o]{opacity:1!important}`);
+    out.push(`${R} [data-clr-h]{text-shadow:var(--clr-sh)!important}`);
     out.push(`${R} [data-clr-fs]{font-size:var(--clr-fs)!important}`);
     out.push(`${R} [data-clr-b]{box-shadow:inset 0 0 0 2px var(--clr-b)!important}`);
     out.push(`${R} [data-clr-p]::placeholder{color:var(--clr-ph)!important;opacity:1!important}`);
@@ -199,6 +200,37 @@
     const st = m ? m.map(parseColor).filter(Boolean) : [];
     return st.length ? st : null;
   }
+  /* culoarea medie a unei imagini de fundal (dacă pagina o permite); altfel null. Rezultatul declanșează o nouă trecere pe element. */
+  const imgAvg = new Map(), imgWait = new Map();
+  function sampleImg(url, el) {
+    if (imgAvg.has(url)) return imgAvg.get(url);
+    let w = imgWait.get(url);
+    if (!w) {
+      w = new Set(); imgWait.set(url, w);
+      const done = (v) => { imgAvg.set(url, v); const ws = imgWait.get(url); imgWait.delete(url); if (ws) ws.forEach((e) => { try { if (e.isConnected) enqueue(e); } catch (x) { } }); };
+      try {
+        const abs = new URL(url, doc.baseURI).href;
+        if (/^data:image\/svg/i.test(abs) || /\.svg(\?|#|$)/i.test(abs)) { done(null); }
+        else {
+          const im = new Image(); im.crossOrigin = 'anonymous'; im.decoding = 'async';
+          im.onload = () => {
+            try {
+              const cv = doc.createElement('canvas'); cv.width = cv.height = 8;
+              const cx = cv.getContext('2d', { willReadFrequently: true }); cx.drawImage(im, 0, 0, 8, 8);
+              const d = cx.getImageData(0, 0, 8, 8).data; let r = 0, g = 0, b = 0, n = 0;
+              for (let i = 0; i < d.length; i += 4) { if (d[i + 3] < 8) continue; r += d[i]; g += d[i + 1]; b += d[i + 2]; n++; }
+              done(n ? { r: Math.round(r / n), g: Math.round(g / n), b: Math.round(b / n), a: 1 } : null);
+            } catch (e) { done(null); }
+          };
+          im.onerror = () => done(null);
+          im.src = abs;
+          setTimeout(() => { if (!imgAvg.has(url)) done(null); }, 4000);
+        }
+      } catch (e) { done(null); }
+    }
+    w.add(el);
+    return undefined;
+  }
   function bgStep(el, pb) {
     const cs = getComputedStyle(el);
     const c = parseColor(cs.backgroundColor);
@@ -206,10 +238,14 @@
     if (cs.backgroundImage !== 'none') {
       const gs = gradientStops(cs.backgroundImage);
       if (gs) { const stops = gs.map((g) => over(g, pb.c)); res = { c: stops[0], stops, img: false }; }
-      else { const cc = c && c.a > 0 ? over(c, pb.c) : pb.c; res = { c: cc, stops: [cc], img: true }; }
+      else {
+        const cc = c && c.a > 0 ? over(c, pb.c) : pb.c;
+        const um = /url\(\s*(?:"([^"]+)"|'([^']+)'|([^)"']+))\s*\)/.exec(cs.backgroundImage);
+        res = { c: cc, stops: [cc], img: true, url: um ? (um[1] || um[2] || um[3]) : null, solid: !!(c && c.a >= 1) && !/cover/.test(cs.backgroundSize) };
+      }
     } else if (c && c.a > 0) {
       const stops = c.a >= 1 ? [over(c, pb.c)] : pb.stops.map((x) => over(c, x));
-      res = { c: stops[0], stops, img: pb.img };
+      res = { c: stops[0], stops, img: pb.img, url: c.a >= 1 ? null : pb.url, solid: c.a >= 1 ? true : pb.solid };
     }
     return res;
   }
@@ -231,10 +267,12 @@
   function clearFix(el) {
     if (el.hasAttribute('data-clr-c')) el.removeAttribute('data-clr-c');
     if (el.hasAttribute('data-clr-o')) el.removeAttribute('data-clr-o');
+    if (el.hasAttribute('data-clr-h')) el.removeAttribute('data-clr-h');
   }
 
   function fixText(el, control) {
     if (el.hasAttribute('data-clr-c')) el.removeAttribute('data-clr-c'); // citim culoarea originală
+    if (el.hasAttribute('data-clr-h')) el.removeAttribute('data-clr-h');
     if (el.hasAttribute('data-clr-o')) el.removeAttribute('data-clr-o');   // și opacitatea originală (altfel decizia alternează la fiecare trecere)
     const cs = getComputedStyle(el);
     /* tranziții CSS (color/opacity): după scoaterea atributului, valoarea calculată rămâne la cea corectată până la prima cadră → decizia ar fi greșită și corecția pierdută */
@@ -244,16 +282,37 @@
     /* text transparent intenționat (gradient cu background-clip:text, straturi de editor, înlocuire cu imagine): nu se atinge */
     const fill = parseColor(cs.webkitTextFillColor);
     if (fg.a === 0 || (fill && fill.a === 0) || /text/.test(cs.webkitBackgroundClip || cs.backgroundClip || '')) { clearFix(el); return; }
-    const bi = effBg(el);
-    if (bi.img) { clearFix(el); return; }
+    let bi = effBg(el);
+    let onImg = false;
+    if (bi.img) {
+      /* text pe imagine de fundal: media imaginii (dacă e citibilă) sau, la nevoie, o decizie prudentă + halou */
+      const avg = bi.url ? sampleImg(bi.url, el) : null;
+      if (bi.solid) { clearFix(el); return; } /* culoare opacă + pictogramă/ornament (nu acoperă tot): ca înainte */
+      if (avg) { bi = { c: avg, stops: [avg], img: true }; onImg = true; }
+      else if (avg === undefined) { clearFix(el); return; } /* culoare opacă sub imagine (ca înainte) sau încă se măsoară; revenim după */
+      else onImg = 'unknown';
+    }
     const op = parseFloat(cs.opacity);
     const dimmed = op < 1 && op >= 0.3;
     const a = fg.a * (dimmed ? op : 1);
     const fs = parseFloat(cs.fontSize) || 16;
     const large = fs >= 24 || (fs >= 18.66 && parseInt(cs.fontWeight, 10) >= 700);
-    const need = S.target >= 7 ? (large ? 4.5 : 7) : (large ? 3 : 4.5);
+    const need0 = S.target >= 7 ? (large ? 4.5 : 7) : (large ? 3 : 4.5);
+    const need = onImg === true ? Math.max(need0, large ? 4.5 : 7) : need0; /* media imaginii e aproximativă: marjă mai mare */
     const worst = (col, alpha) => Math.min(...bi.stops.map((st) => ratio(over({ r: col.r, g: col.g, b: col.b, a: alpha }, st), st)));
-    if (worst(fg, a) >= need) { if (el.hasAttribute('data-clr-o')) el.removeAttribute('data-clr-o'); return; }
+    if (onImg === 'unknown') {
+      /* imagine nemăsurabilă (CORS) și fără culoare opacă: alegem alb/negru după culoarea originală + halou de contrast */
+      const L = lum(fg);
+      const keep = L < 0.04 || L > 0.6;
+      const tc = keep ? { r: fg.r, g: fg.g, b: fg.b } : (L > 0.18 ? { r: 255, g: 255, b: 255 } : { r: 0, g: 0, b: 0 });
+      const light = lum(tc) > 0.4;
+      el.style.setProperty('--clr-c', rgbStr(tc));
+      el.style.setProperty('--clr-sh', light ? '0 0 1px #000,0 0 3px #000,0 0 6px rgba(0,0,0,.9)' : '0 0 1px #fff,0 0 3px #fff,0 0 6px rgba(255,255,255,.9)');
+      el.setAttribute('data-clr-c', control ? 'f' : '1'); el.setAttribute('data-clr-h', '1');
+      if (dimmed) el.setAttribute('data-clr-o', '1');
+      return;
+    }
+    if (worst(fg, a) >= need && !onImg) { if (el.hasAttribute('data-clr-o')) el.removeAttribute('data-clr-o'); return; }
     if (dimmed) el.setAttribute('data-clr-o', '1');
     const cands = bi.stops.map((st) => fixColor({ r: fg.r, g: fg.g, b: fg.b }, st, need + 0.15));
     cands.push({ r: 0, g: 0, b: 0 }, { r: 255, g: 255, b: 255 });
@@ -262,6 +321,12 @@
     const nc = ok.length ? ok[0] : cands.sort((x, y) => worst(y, 1) - worst(x, 1))[0];
     el.style.setProperty('--clr-c', rgbStr(nc));
     el.setAttribute('data-clr-c', control ? 'f' : '1');
+    if (onImg) haloFor(el, bi.c);
+  }
+  function haloFor(el, bgc) { /* haloul ia culoarea fundalului (închis → negru, deschis → alb): crește contrastul local fără să-l scadă */
+    const H = lum(bgc) > 0.4 ? '#fff' : '#000';
+    el.style.setProperty('--clr-sh', `0 0 1px ${H},0 0 3px ${H},0 0 6px ${H}`);
+    el.setAttribute('data-clr-h', '1');
   }
 
   function scaleText(el) {
@@ -386,9 +451,9 @@
     walkers = [];
     const roots = [doc, ...shadowStyles.map((s) => s.getRootNode())];
     roots.forEach((root) => {
-      root.querySelectorAll('[data-clr-c],[data-clr-fs],[data-clr-o],[data-clr-b],[data-clr-p]').forEach((e) => {
-        ['data-clr-c', 'data-clr-fs', 'data-clr-o', 'data-clr-b', 'data-clr-p'].forEach((a) => e.removeAttribute(a));
-        ['--clr-c', '--clr-fs', '--clr-b', '--clr-ph'].forEach((p) => e.style.removeProperty(p));
+      root.querySelectorAll('[data-clr-c],[data-clr-fs],[data-clr-o],[data-clr-b],[data-clr-p],[data-clr-h]').forEach((e) => {
+        ['data-clr-c', 'data-clr-fs', 'data-clr-o', 'data-clr-b', 'data-clr-p', 'data-clr-h'].forEach((a) => e.removeAttribute(a));
+        ['--clr-c', '--clr-fs', '--clr-b', '--clr-ph', '--clr-sh'].forEach((p) => e.style.removeProperty(p));
       });
     });
     origFs = new WeakMap(); nodeCount = 0;

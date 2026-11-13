@@ -510,7 +510,7 @@ jobs:
       - run: python build.py && mkdir dist/chromium-ocr-unz && unzip -q dist/claritas-chromium-ocr.zip -d dist/chromium-ocr-unz
       - name: Teste module opționale (inclusiv OCR)
         env: { BROWSER_CHANNEL: chromium }
-        run: python test/run_matrix.py ocr-module t13_modules.py t15_v18.py t18_upgrade.py
+        run: python test/run_matrix.py ocr-module t13_modules.py t15_v18.py t18_upgrade.py t19_bgimage.py
       - uses: actions/upload-artifact@v4
         if: always()
         with: { name: r-ocr-module, path: test/results }
