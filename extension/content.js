@@ -15,6 +15,7 @@
   const alive = () => { try { return !!(api.runtime && api.runtime.id); } catch (e) { return false; } };
   const MAX_NODES = 250000;
   let nodeCount = 0;
+  let skipped = [];
   const doc = document;
 
   let G = {}, SITES = {}, S = null, active = false;
@@ -418,7 +419,7 @@
     if (root.nodeType === 3) root = root.parentElement;
     if (!root) return;
     if (nodeCount > MAX_NODES) return;
-    for (const w of walkers) if (!w.started && (w.root === root || (w.root.contains && w.root.contains(root)))) return;
+    for (const w of walkers) if (!w.started && (w.root === root || (w.root.contains && w.root.contains(root)))) { skipped.push(root); if (skipped.length > 200) skipped.shift(); return; } /* inclus într-o parcurgere încă neînceput: o reținem, în caz că aceea e abandonată de plafon (păstrăm ultimele 200: cele mai recente contează) */
     if (walkers.length > 300) { walkers = walkers.filter((w) => w.started); root = doc.documentElement; }
     walkers.push({ root, tw: doc.createTreeWalker(root, NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_TEXT), started: false });
     schedule();
@@ -440,12 +441,12 @@
         if (!w.started) { w.started = true; if (w.root.nodeType !== 11) visit(w.root); }
         const n = w.tw.nextNode();
         if (!n) { walkers.shift(); continue; }
-        if (++nodeCount > MAX_NODES) { walkers = []; nodeCount = 0; break; } /* plafonul se aplică unei singure rafale; contorul nu mai crește pe viața paginii */
+        if (++nodeCount > MAX_NODES) { walkers.shift(); nodeCount = 0; walkers = walkers.filter((w) => w.started ? false : (w.root !== doc.documentElement && w.root !== doc.body && w.root.childElementCount < 200)); const sk = skipped; skipped = []; sk.forEach((r) => { if (r.isConnected && r !== doc.documentElement && r !== doc.body && r.childElementCount < 200) walkers.push({ root: r, tw: doc.createTreeWalker(r, NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_TEXT), started: false }); }); break; } /* abandonăm doar parcurgerea curentă; rafalele din coadă (ex. conținut apărut între timp) rămân */ /* plafonul se aplică unei singure rafale; contorul nu mai crește pe viața paginii */
         try { visit(n); } catch (e) { /* nod dispărut sau inaccesibil: îl săr */ }
       }
     } catch (e) { walkers.shift(); }
     if (doc.querySelector('video[autoplay]') && S.noMotion) doc.querySelectorAll('video[autoplay]').forEach((v) => { try { v.autoplay = false; v.pause(); } catch (e) { } });
-    if (walkers.length) schedule(); else nodeCount = 0;
+    if (walkers.length) schedule(); else { nodeCount = 0; skipped = []; }
   }
 
   function onMutations(records) {

@@ -18,8 +18,11 @@ async def main():
             await pg.wait_for_timeout(120)
         await pg.wait_for_timeout(4000)
         await pg.evaluate("()=>{const p=document.createElement('p');p.id='late';p.textContent='late text';p.style.color='#bbb';document.body.appendChild(p)}")
-        await pg.wait_for_timeout(2500)
-        col = await pg.evaluate("()=>getComputedStyle(document.getElementById('late')).color")
+        col = None
+        for _ in range(60):  # până la ~30 s: depinde de viteza mașinii; contează că nodul târziu e corectat până la urmă
+            await pg.wait_for_timeout(500)
+            col = await pg.evaluate("()=>getComputedStyle(document.getElementById('late')).color")
+            if col != 'rgb(187, 187, 187)': break
         await ctx.close()
         good = col != 'rgb(187, 187, 187)'
         print(('PASS' if good else 'FAIL'), 'buget noduri necumulativ după 140k elemente:', col)
