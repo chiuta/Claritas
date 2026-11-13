@@ -4,6 +4,8 @@ from playwright.async_api import async_playwright
 EXT = str(pathlib.Path('../dist/chromium').resolve())
 PAGE = 'file://' + str(pathlib.Path('page4.html').resolve())
 async def main():
+    import os
+    if os.environ.get('BROWSER_CDP'): print('SKIP înregistrare: selectorul de sursă nu poate fi acceptat automat într-un browser pornit prin CDP (verificat în Chromium/Chrome)'); return
     async with async_playwright() as p:
         ctx = await p.chromium.launch_persistent_context('/tmp/prof9', channel='chrome', headless=True, accept_downloads=True,
             args=[f'--disable-extensions-except={EXT}', f'--load-extension={EXT}', '--headless=new', '--no-sandbox',
