@@ -16,8 +16,18 @@ input[type=color]{padding:2px;height:36px;width:100%}
 button{cursor:pointer;font-weight:600;overflow-wrap:anywhere;hyphens:auto}
 button:hover{border-color:var(--fg)}
 :focus-visible{outline:3px solid var(--acc);outline-offset:2px}
-.tabs{display:flex;gap:4px;margin:6px 0 10px;flex-wrap:wrap}
-.tabs button{flex:1;padding:6px 4px;font-size:14px}
+.sticky{position:sticky;top:0;z-index:5;background:var(--bg);margin:0 -12px 8px;padding:6px 12px 0;border-bottom:2px solid var(--line)}
+.tabs{display:flex;gap:4px;margin:6px 0 8px;flex-wrap:wrap}
+.tabs button{flex:1 1 auto;padding:5px 8px;font-size:14px;white-space:nowrap;min-height:34px}
+.tabs.searching{opacity:.45}
+.search{position:relative}
+.search input{width:100%;font:inherit;color:var(--fg);background:var(--card);border:2px solid var(--line);border-radius:6px;padding:8px 36px 8px 10px}
+.search #qClear{position:absolute;right:3px;top:3px;bottom:3px;padding:0 10px;border:0;background:transparent;font-size:16px}
+.quick{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 10px}
+.quick button{flex:1 1 120px;padding:7px 8px;font-size:14px;min-height:40px}
+.quick #qMinus,.quick #qPlus{flex:0 0 52px;padding:7px 0}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.sx-hide{display:none!important}
 .tabs button[aria-selected=true]{background:var(--acc);color:var(--accfg);border-color:var(--acc)}
 .slider{display:grid;grid-template-columns:1fr 56px;gap:2px 8px;margin:10px 0;align-items:center}
 .slider span{grid-column:1}

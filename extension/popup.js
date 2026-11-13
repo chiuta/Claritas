@@ -63,6 +63,8 @@
     if (!CLR.I18N[CLR.langCode(L)]) CLR.loadLang(L).then(() => translate());
     $$('[data-i18n]').forEach((el) => { el.textContent = t(L, el.dataset.i18n); });
     $$('[data-i18n-title]').forEach((el) => { el.title = t(L, el.dataset.i18nTitle); if (el.matches("button[data-tts]")) el.setAttribute("aria-label", el.title); });
+    $$('[data-i18n-aria]').forEach((el) => { const v = t(L, el.dataset.i18nAria); el.setAttribute('aria-label', v); if (el.tagName === 'BUTTON') el.title = v; });
+    $$('[data-i18n-ph]').forEach((el) => { const v = t(L, el.dataset.i18nPh); el.placeholder = v + '…'; el.setAttribute('aria-label', v); });
     document.documentElement.lang = (window.CLR && CLR.langCode) ? CLR.langCode(L) : (L === 'auto' ? (navigator.language || 'en').slice(0, 2) : L);
   }
 
@@ -370,9 +372,74 @@
 
   function bind() {
     /* tab-uri */
-    $$('.tabs [role=tab]').forEach((tab) => tab.addEventListener('click', () => {
-      $$('.tabs [role=tab]').forEach((x) => { const on = x === tab; x.setAttribute('aria-selected', String(on)); $('#' + x.getAttribute('aria-controls')).hidden = !on; });
-    }));
+    const TABS = $$('.tabs [role=tab]');
+    const showTab = (tab, focus) => {
+      TABS.forEach((x) => { const on = x === tab; x.setAttribute('aria-selected', String(on)); x.tabIndex = on ? 0 : -1; $('#' + x.getAttribute('aria-controls')).hidden = !on; });
+      try { tab.scrollIntoView({ block: 'nearest', inline: 'nearest' }); } catch (e) { }
+      if (focus) tab.focus();
+      try { api.storage.local.set({ uiTab: tab.id }); } catch (e) { }
+    };
+    TABS.forEach((tab, i) => {
+      tab.tabIndex = tab.getAttribute('aria-selected') === 'true' ? 0 : -1;
+      tab.addEventListener('click', () => showTab(tab, false));
+      tab.addEventListener('keydown', (e) => {
+        const n = TABS.length; let j = -1;
+        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') j = (i + 1) % n;
+        else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') j = (i - 1 + n) % n;
+        else if (e.key === 'Home') j = 0; else if (e.key === 'End') j = n - 1;
+        if (j >= 0) { e.preventDefault(); showTab(TABS[j], true); }
+      });
+    });
+    try { api.storage.local.get('uiTab').then((r) => { const tb = r && r.uiTab && document.getElementById(r.uiTab); if (tb && tb.getAttribute('aria-selected') !== 'true' && !$('#q').value) showTab(tb, false); }); } catch (e) { }
+    /* căutare în setări (toate tab-urile) */
+    const norm = (s) => String(s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    const qIn = $('#q');
+    const searchUnits = () => $$('main label, main fieldset > .btns > button, main > section > button, main details > summary').filter((el) => !el.closest('.custom, .timeRow, .list'));
+    const runSearch = () => {
+      const raw = qIn.value.trim(), words = norm(raw).split(/\s+/).filter(Boolean);
+      $('#qClear').hidden = !raw;
+      const panels = $$('main > section[role=tabpanel]'), tabsEl = $('.tabs');
+      $$('.sx-hide').forEach((e) => e.classList.remove('sx-hide'));
+      if (!words.length) {
+        tabsEl.classList.remove('searching'); $('#searchLive').textContent = '';
+        const sel = TABS.find((x) => x.getAttribute('aria-selected') === 'true') || TABS[0];
+        panels.forEach((pn) => { pn.hidden = pn.id !== sel.getAttribute('aria-controls'); });
+        return;
+      }
+      tabsEl.classList.add('searching');
+      const units = searchUnits(); let hits = 0;
+      const hitSet = new Set();
+      units.forEach((u) => {
+        let txt = norm(u.textContent); const nx = u.nextElementSibling; if (nx && nx.classList.contains('hint')) txt += ' ' + norm(nx.textContent);
+        const ok = words.every((w) => txt.includes(w));
+        if (ok) { hits++; hitSet.add(u); } else u.classList.add('sx-hide');
+      });
+      /* indiciile (.hint) urmează unitatea; containerele fără rezultate dispar */
+      $$('main .hint').forEach((hp) => { const pv = hp.previousElementSibling; if (!(pv && hitSet.has(pv))) hp.classList.add('sx-hide'); });
+      panels.forEach((pn) => {
+        $$('fieldset, details', pn).forEach((f) => { if (!$$('label, button', f).some((x) => hitSet.has(x) && !x.classList.contains('sx-hide'))) f.classList.add('sx-hide'); });
+        const any = units.some((u) => pn.contains(u) && hitSet.has(u));
+        pn.hidden = !any;
+        $$('details', pn).forEach((d) => { if (!d.classList.contains('sx-hide')) d.open = true; });
+      });
+      $('#searchLive').textContent = hits ? tl('ui_found', { n: hits }) : tl('ui_none', { q: raw });
+    };
+    qIn.addEventListener('input', runSearch);
+    qIn.addEventListener('keydown', (e) => { if (e.key === 'Escape' && qIn.value) { e.preventDefault(); e.stopPropagation(); qIn.value = ''; runSearch(); } });
+    $('#qClear').addEventListener('click', () => { qIn.value = ''; runSearch(); qIn.focus(); });
+    document.addEventListener('keydown', (e) => {
+      const typing = /^(INPUT|SELECT|TEXTAREA)$/.test((e.target && e.target.tagName) || '');
+      if ((e.key === '/' && !typing) || ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k')) { e.preventDefault(); qIn.focus(); qIn.select(); }
+    });
+    /* acțiuni rapide */
+    const qLive = (m) => { $('#qLive').textContent = ''; setTimeout(() => { $('#qLive').textContent = m; }, 30); };
+    $('#qTheme').addEventListener('click', () => {
+      const order = THEME_ORDER.filter((x) => x !== 'custom'), now = cur().s.theme, nx = order[(Math.max(0, order.indexOf(now)) + 1) % order.length];
+      patch({ theme: nx }); qLive(tl('ui_theme_now', { t: tl('th_' + nx) }));
+    });
+    $('#qRead').addEventListener('click', () => { send({ type: 'tts', mode: 'toggle' }); });
+    $('#qPlus').addEventListener('click', () => zoomBy(0.1));
+    $('#qMinus').addEventListener('click', () => zoomBy(-0.1));
     /* comutatoare */
     $('#enabled').addEventListener('change', (e) => save({ settings: Object.assign({}, G, { enabled: e.target.checked }) }));
     $('#siteOn').addEventListener('change', (e) => {

@@ -2,12 +2,12 @@
 
 [English](README.md) · **Română** · [Français](README.fr.md) · [Italiano](README.it.md) · [Español](README.es.md) · [Português](README.pt.md) · [Deutsch](README.de.md) · [Magyar](README.hu.md)
 
-**Versiune: 1.8.1 · Ultima actualizare: 13.11.2026**
+**Versiune: 1.9.0 · Ultima actualizare: 14.11.2026**
 
 Extensie gratuită de accesibilitate all-in-one. Fără telemetrie, fără rețea, fără conturi: totul rămâne în browserul tău.
 
 ## Ce face
-- **Corecție automată a contrastului (WCAG AA/AAA)**: măsoară contrastul real text/fundal și ajustează doar textul insuficient, inclusiv câmpurile dezactivate. Din 1.8.1 tratează și textul de pe imagini de fundal (culoarea medie a imaginilor de pe aceeași origine sau data:, altfel alb/negru prudent plus halou); pictogramele mici nu sunt tratate ca fundal.
+- **Corecție automată a contrastului (WCAG AA/AAA)**: măsoară contrastul real text/fundal și ajustează doar textul insuficient, inclusiv câmpurile dezactivate. Din 1.8.1 tratează și textul de pe imagini de fundal (culoarea medie a imaginilor de pe aceeași origine sau data:, altfel alb/negru prudent plus halou); pictogramele mici nu sunt tratate ca fundal. Popup (1.9): căutare în toate setările (`/` sau Ctrl+K), acțiuni rapide (tema următoare, citire cu voce tare, mărime text), bară de tab-uri lipicioasă cu navigare din săgeți, ultimul tab reținut.
 - **Teme cu contrast mare**, filtre de culoare, **daltonism** (corecție și simulare), filtru de lumină albastră, simulator de vedere.
 - **Text**: zoom pagină, mărime, spațieri, fonturi (prietenos cu dislexia, Lexend, Atkinson Hyperlegible), aliniere la stânga.
 - **Citire**: riglă, mască, lupă, mod cititor, citire rapidă, citire cu voce (voci locale), evidențieri cu export.

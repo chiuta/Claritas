@@ -2,12 +2,12 @@
 
 [English](README.md) · [Română](README.ro.md) · [Français](README.fr.md) · [Italiano](README.it.md) · [Español](README.es.md) · [Português](README.pt.md) · [Deutsch](README.de.md) · **Magyar**
 
-**Verzió: 1.8.1 · Utolsó frissítés: 2026. 11. 13.**
+**Verzió: 1.9.0 · Utolsó frissítés: 2026. 11. 14.**
 
 Ingyenes, mindent egyben tartalmazó akadálymentesítő bővítmény. Nincs telemetria, nincs hálózat, nincs fiók: minden a böngészőjében marad.
 
 ## Mit tud
-- **Automatikus kontrasztjavítás (WCAG AA/AAA)**: méri a valódi szöveg/háttér kontrasztot, és csak a nem elégséges szöveget igazítja, a letiltott mezőket is. Az 1.8.1-től a háttérképen lévő szöveget is kezeli (az azonos eredetű vagy data: képek átlagszíne, egyébként óvatos fehér/fekete választás körvonallal); a kis ikonokat nem tekinti háttérnek.
+- **Automatikus kontrasztjavítás (WCAG AA/AAA)**: méri a valódi szöveg/háttér kontrasztot, és csak a nem elégséges szöveget igazítja, a letiltott mezőket is. Az 1.8.1-től a háttérképen lévő szöveget is kezeli (az azonos eredetű vagy data: képek átlagszíne, egyébként óvatos fehér/fekete választás körvonallal); a kis ikonokat nem tekinti háttérnek. Popup (1.9): keresés minden beállításban (`/` vagy Ctrl+K), gyorsműveletek (következő téma, felolvasás, szövegméret), rögzített fülsáv nyílbillentyűs navigációval, az utolsó fül megjegyzése.
 - **Nagy kontrasztú témák**, színszűrők, **színtévesztés** (korrekció és szimuláció), kékfényszűrő, látásszimulátor.
 - **Szöveg**: nagyítás, méret, térközök, betűtípusok (diszlexiabarát, Lexend, Atkinson Hyperlegible), balra igazítás.
 - **Olvasás**: vonalzó, maszk, nagyító, olvasó mód, gyorsolvasás, felolvasás (helyi hangok), exportálható kiemelések.

@@ -1,6 +1,6 @@
 # Claritas — Privacy policy
 
-**Version 1.8.1 · Last updated: 13 Nov 2026** · Romanian version: [PRIVACY.ro.md](PRIVACY.ro.md)
+**Version 1.9.0 · Last updated: 14 Nov 2026** · Romanian version: [PRIVACY.ro.md](PRIVACY.ro.md)
 
 Claritas is a free, open-source (MIT) accessibility extension. It has **no telemetry, no analytics, no accounts and no servers of its own**. This document says exactly what it stores and the few cases where your browser (not Claritas) talks to a third party.
 

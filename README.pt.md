@@ -2,12 +2,12 @@
 
 [English](README.md) · [Română](README.ro.md) · [Français](README.fr.md) · [Italiano](README.it.md) · [Español](README.es.md) · **Português** · [Deutsch](README.de.md) · [Magyar](README.hu.md)
 
-**Versão: 1.8.1 · Última atualização: 13/11/2026**
+**Versão: 1.9.0 · Última atualização: 14/11/2026**
 
 Extensão de acessibilidade tudo em um, gratuita. Sem telemetria, sem rede, sem contas: tudo fica no seu navegador.
 
 ## O que faz
-- **Correção automática do contraste (WCAG AA/AAA)**: mede o contraste real texto/fundo e ajusta apenas o texto insuficiente, incluindo campos desativados. Desde a 1.8.1 também trata texto sobre imagens de fundo (cor média das imagens da mesma origem ou data:, caso contrário escolha prudente branco/preto com um halo); ícones pequenos não são tratados como fundos.
+- **Correção automática do contraste (WCAG AA/AAA)**: mede o contraste real texto/fundo e ajusta apenas o texto insuficiente, incluindo campos desativados. Desde a 1.8.1 também trata texto sobre imagens de fundo (cor média das imagens da mesma origem ou data:, caso contrário escolha prudente branco/preto com um halo); ícones pequenos não são tratados como fundos. Popup (1.9): pesquisa em todas as definições (`/` ou Ctrl+K), ações rápidas (tema seguinte, leitura em voz alta, tamanho do texto), barra de separadores fixa com navegação por setas, último separador memorizado.
 - **Temas de alto contraste**, filtros de cor, **daltonismo** (correção e simulação), filtro de luz azul, simulador de visão.
 - **Texto**: zoom, tamanho, espaçamento, tipos de letra (adequado à dislexia, Lexend, Atkinson Hyperlegible), alinhamento à esquerda.
 - **Leitura**: régua, máscara, lupa, modo de leitura, leitura rápida, leitura em voz alta (vozes locais), realces com exportação.

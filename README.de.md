@@ -2,12 +2,12 @@
 
 [English](README.md) · [Română](README.ro.md) · [Français](README.fr.md) · [Italiano](README.it.md) · [Español](README.es.md) · [Português](README.pt.md) · **Deutsch** · [Magyar](README.hu.md)
 
-**Version: 1.8.1 · Letzte Aktualisierung: 13.11.2026**
+**Version: 1.9.0 · Letzte Aktualisierung: 14.11.2026**
 
 Kostenlose Barrierefreiheits-Erweiterung „Alles in einem“. Keine Telemetrie, kein Netzwerk, keine Konten: Alles bleibt in Ihrem Browser.
 
 ## Funktionen
-- **Automatische Kontrastkorrektur (WCAG AA/AAA)**: misst den tatsächlichen Text-/Hintergrundkontrast und passt nur unzureichenden Text an, auch deaktivierte Felder. Seit 1.8.1 behandelt sie auch Text auf Hintergrundbildern (Durchschnittsfarbe von Bildern gleicher Herkunft oder data:, sonst vorsichtige Wahl Weiß/Schwarz mit Halo); kleine Icons gelten nicht als Hintergrund.
+- **Automatische Kontrastkorrektur (WCAG AA/AAA)**: misst den tatsächlichen Text-/Hintergrundkontrast und passt nur unzureichenden Text an, auch deaktivierte Felder. Seit 1.8.1 behandelt sie auch Text auf Hintergrundbildern (Durchschnittsfarbe von Bildern gleicher Herkunft oder data:, sonst vorsichtige Wahl Weiß/Schwarz mit Halo); kleine Icons gelten nicht als Hintergrund. Popup (1.9): Suche in allen Einstellungen (`/` oder Strg+K), Schnellaktionen (nächstes Design, Vorlesen, Textgröße), fixierte Tab-Leiste mit Pfeiltasten-Navigation, letzter Tab wird gemerkt.
 - **Hochkontrast-Designs**, Farbfilter, **Farbenblindheit** (Korrektur und Simulation), Blaulichtfilter, Sehsimulator.
 - **Text**: Seitenzoom, Größe, Abstände, Schriften (legasthenie-freundlich, Lexend, Atkinson Hyperlegible), Linksausrichtung.
 - **Lesen**: Lineal, Maske, Lupe, Lesemodus, Schnelllesen, Vorlesen (lokale Stimmen), Markierungen mit Export.

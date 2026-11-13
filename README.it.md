@@ -2,12 +2,12 @@
 
 [English](README.md) · [Română](README.ro.md) · [Français](README.fr.md) · **Italiano** · [Español](README.es.md) · [Português](README.pt.md) · [Deutsch](README.de.md) · [Magyar](README.hu.md)
 
-**Versione: 1.8.1 · Ultimo aggiornamento: 13/11/2026**
+**Versione: 1.9.0 · Ultimo aggiornamento: 14/11/2026**
 
 Estensione di accessibilità tutto-in-uno, gratuita. Nessuna telemetria, nessuna rete, nessun account: tutto resta nel tuo browser.
 
 ## Cosa fa
-- **Correzione automatica del contrasto (WCAG AA/AAA)**: misura il contrasto reale testo/sfondo e regola solo il testo insufficiente, compresi i campi disabilitati. Dalla 1.8.1 gestisce anche il testo su immagini di sfondo (colore medio delle immagini della stessa origine o data:, altrimenti scelta prudente bianco/nero con alone); le piccole icone non sono trattate come sfondi.
+- **Correzione automatica del contrasto (WCAG AA/AAA)**: misura il contrasto reale testo/sfondo e regola solo il testo insufficiente, compresi i campi disabilitati. Dalla 1.8.1 gestisce anche il testo su immagini di sfondo (colore medio delle immagini della stessa origine o data:, altrimenti scelta prudente bianco/nero con alone); le piccole icone non sono trattate come sfondi. Popup (1.9): ricerca in tutte le impostazioni (`/` o Ctrl+K), azioni rapide (tema successivo, lettura ad alta voce, dimensione del testo), barra delle schede fissa con navigazione da frecce, ultima scheda ricordata.
 - **Temi ad alto contrasto**, filtri colore, **daltonismo** (correzione e simulazione), filtro luce blu, simulatore di visione.
 - **Testo**: zoom, dimensione, spaziatura, caratteri (adatto alla dislessia, Lexend, Atkinson Hyperlegible), allineamento a sinistra.
 - **Lettura**: righello, maschera, lente, modalità lettura, lettura veloce, lettura ad alta voce (voci locali), evidenziazioni con esportazione.

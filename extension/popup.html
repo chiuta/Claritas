@@ -12,6 +12,14 @@
   <p id="fixedInfo" class="muted" role="status"></p>
 </header>
 
+<div class="quick" role="group" id="quick" data-i18n-aria="ui_quick">
+  <button type="button" id="qTheme"><span aria-hidden="true">◐</span> <span data-i18n="ui_theme_next"></span></button>
+  <button type="button" id="qRead"><span aria-hidden="true">🔊</span> <span data-i18n="ui_read"></span></button>
+  <button type="button" id="qMinus" aria-label="" data-i18n-aria="ui_smaller" title=""><span aria-hidden="true">A−</span></button>
+  <button type="button" id="qPlus" aria-label="" data-i18n-aria="ui_bigger" title=""><span aria-hidden="true">A+</span></button>
+</div>
+<p id="qLive" class="sr" role="status" aria-live="polite"></p>
+
 <section class="switches" aria-label="Activare">
   <label class="row"><input type="checkbox" id="enabled"><span data-i18n="on_all"></span></label>
   <label class="row"><input type="checkbox" id="siteOn"><span data-i18n="on_site"></span></label>
@@ -20,6 +28,12 @@
 </section>
 <p id="unsupported" role="status" aria-live="polite" class="warn" hidden data-i18n="unsupported"></p>
 
+<div class="sticky">
+<div class="search" role="search">
+  <input type="search" id="q" autocomplete="off" spellcheck="false" data-i18n-ph="ui_search" aria-controls="searchLive">
+  <button type="button" id="qClear" hidden data-i18n-aria="ui_clear" aria-label="">✕</button>
+</div>
+<p id="searchLive" class="sr" role="status" aria-live="polite"></p>
 <div class="tabs" role="tablist">
   <button role="tab" aria-selected="true" aria-controls="p-contrast" id="t-contrast" data-i18n="tab_contrast"></button>
   <button role="tab" aria-selected="false" aria-controls="p-color" id="t-color" data-i18n="tab_color"></button>
@@ -28,6 +42,7 @@
   <button role="tab" aria-selected="false" aria-controls="p-tools" id="t-tools" data-i18n="tab_tools"></button>
   <button role="tab" aria-selected="false" aria-controls="p-more" id="t-more" data-i18n="tab_more"></button>
   <button role="tab" aria-selected="false" aria-controls="p-prof" id="t-prof" data-i18n="tab_prof"></button>
+</div>
 </div>
 
 <main>

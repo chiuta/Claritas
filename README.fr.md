@@ -2,12 +2,12 @@
 
 [English](README.md) · [Română](README.ro.md) · **Français** · [Italiano](README.it.md) · [Español](README.es.md) · [Português](README.pt.md) · [Deutsch](README.de.md) · [Magyar](README.hu.md)
 
-**Version: 1.8.1 · Dernière mise à jour: 13/11/2026**
+**Version: 1.9.0 · Dernière mise à jour: 14/11/2026**
 
 Extension d’accessibilité tout-en-un, gratuite. Sans télémétrie, sans réseau, sans compte : tout reste dans votre navigateur.
 
 ## Fonctionnalités
-- **Correction automatique du contraste (WCAG AA/AAA)** : mesure le contraste réel texte/arrière-plan et n’ajuste que le texte insuffisant, y compris les champs désactivés. Depuis la 1.8.1, il traite aussi le texte sur des images d’arrière-plan (couleur moyenne des images de même origine ou data:, sinon choix prudent blanc/noir avec un halo) ; les petites icônes ne sont pas considérées comme des arrière-plans.
+- **Correction automatique du contraste (WCAG AA/AAA)** : mesure le contraste réel texte/arrière-plan et n’ajuste que le texte insuffisant, y compris les champs désactivés. Depuis la 1.8.1, il traite aussi le texte sur des images d’arrière-plan (couleur moyenne des images de même origine ou data:, sinon choix prudent blanc/noir avec un halo) ; les petites icônes ne sont pas considérées comme des arrière-plans. Popup (1.9) : recherche dans tous les réglages (`/` ou Ctrl+K), actions rapides (thème suivant, lecture à voix haute, taille du texte), barre d’onglets fixe avec navigation aux flèches, dernier onglet mémorisé.
 - **Thèmes à fort contraste**, filtres de couleur, **daltonisme** (correction et simulation), filtre de lumière bleue, simulateur de vision.
 - **Texte** : zoom, taille, espacements, polices (adaptée à la dyslexie, Lexend, Atkinson Hyperlegible), alignement à gauche.
 - **Lecture** : règle, masque, loupe, mode lecture, lecture rapide, lecture à voix haute (voix locales), surlignages exportables.
