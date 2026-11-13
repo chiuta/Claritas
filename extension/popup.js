@@ -357,7 +357,7 @@
     for (const f of files) {
       let src = ''; try { src = await (await self[F](api.runtime.getURL(f))).text(); } catch (e) { continue; }
       (src.match(/https?:\/\/[a-z0-9.-]+\.[a-z]{2,}/gi) || []).forEach((u) => { const h = u.replace(/^https?:\/\//i, '').toLowerCase(); if (!/(^|\.)w3\.org$|^example\.|^claude\.|^github\.com|buymeacoffee|patreon|trom\.tf/.test(h)) (hosts[h] = hosts[h] || new Set()).add(f); });
-      const re = new RegExp('(?:\\b' + F + '|sendBeacon|new\\s+WebSocket|new\\s+EventSource|new\\s+XMLHttpRequest|importScripts)\\s*\\(([^)]{0,90})', 'g'); let m;
+      const re = new RegExp('(?:\\b' + F + '|sendBeacon|new\\s+WebSocket|new\\s+EventSource|new\\s+XMLHttpRequest|new\\s+Image|importScripts)\\s*\\(([^)]{0,90})', 'g'); let m;
       while ((m = re.exec(src))) { if (/getURL/.test(m[1]) || /getURL|data:image/.test(src.slice(Math.max(0, m.index - 420), m.index + m[0].length))) loc.push(f); else ext.push(f + ': ' + m[0].slice(0, 70).replace(/\s+/g, ' ')); }
     }
     add(tl('priv_perm', { p: (mf.permissions || []).concat(mf.host_permissions || []).join(', ') || '—' }));

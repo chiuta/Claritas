@@ -2,12 +2,12 @@
 
 [English](README.md) · [Română](README.ro.md) · [Français](README.fr.md) · [Italiano](README.it.md) · **Español** · [Português](README.pt.md) · [Deutsch](README.de.md) · [Magyar](README.hu.md)
 
-**Versión: 1.8.0 · Última actualización: 12/11/2026**
+**Versión: 1.8.1 · Última actualización: 13/11/2026**
 
 Extensión de accesibilidad todo en uno, gratuita. Sin telemetría, sin red, sin cuentas: todo se queda en tu navegador.
 
 ## Qué hace
-- **Corrección automática del contraste (WCAG AA/AAA)**: mide el contraste real texto/fondo y ajusta solo el texto insuficiente, incluidos los campos deshabilitados.
+- **Corrección automática del contraste (WCAG AA/AAA)**: mide el contraste real texto/fondo y ajusta solo el texto insuficiente, incluidos los campos deshabilitados. Desde la 1.8.1 también trata el texto sobre imágenes de fondo (color medio de las imágenes del mismo origen o data:, si no, elección prudente blanco/negro con un halo); los iconos pequeños no se tratan como fondos.
 - **Temas de alto contraste**, filtros de color, **daltonismo** (corrección y simulación), filtro de luz azul, simulador de visión.
 - **Texto**: zoom, tamaño, espaciado, fuentes (apta para dislexia, Lexend, Atkinson Hyperlegible), alineación a la izquierda.
 - **Lectura**: regla, máscara, lupa, modo lectura, lectura rápida, lectura en voz alta (voces locales), resaltados con exportación.

@@ -1,6 +1,6 @@
 # Claritas — Politica de confidențialitate
 
-**Versiunea 1.8.0 · Ultima actualizare: 12 nov. 2026** · Versiunea în engleză: [PRIVACY.md](PRIVACY.md)
+**Versiunea 1.8.1 · Ultima actualizare: 13 nov. 2026** · Versiunea în engleză: [PRIVACY.md](PRIVACY.md)
 
 Claritas este o extensie gratuită, open-source (MIT), de accesibilitate. **Nu are telemetrie, analitice, conturi sau servere proprii.** Documentul spune exact ce păstrează și puținele cazuri în care browserul (nu Claritas) comunică cu un terț.
 
@@ -15,6 +15,8 @@ Poți exporta sau șterge totul din fereastra extensiei sau eliminând extensia.
 
 ## Ce citește Claritas
 Ca să-și facă treaba (corectarea contrastului, citirea cu voce, auditul etc.), scriptul de conținut citește paginile vizitate **în interiorul browserului**. Conținutul paginii nu este trimis nicăieri de Claritas. Butonul „Ce pleacă din browser?” din panoul de module opționale citește codul extensiei și listează fiecare apel de rețea găsit, ca să verifici singur.
+
+Pentru a estima contrastul textului pus peste o imagine de fundal, scriptul de conținut poate decoda local acea imagine (un canvas mic) dacă este `data:`/`blob:` sau provine de pe același site ca pagina (de obicei deja în cache-ul browserului). Imaginile de pe alte site-uri nu sunt descărcate niciodată de Claritas, iar nimic despre imagine nu se stochează și nu se trimite.
 
 ## Cazuri în care datele pot ieși din browser
 Nu sunt niciodată pornite implicit sau se întâmplă doar la acțiunea ta explicită:

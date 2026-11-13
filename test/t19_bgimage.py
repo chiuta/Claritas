@@ -16,6 +16,9 @@ body{{margin:0;background:#fff;font:20px sans-serif}} .hero{{padding:30px;backgr
 <div class="hero" style="background-image:url({LIGHT})"><h1 id="b" style="color:#bbbbbb">Text deschis pe imagine deschisă</h1></div>
 <div class="hero" style="background-image:url(/nope.png)"><h1 id="c" style="color:#8a8a60">Imagine nemăsurabilă</h1></div>
 <div class="hero" style="background:#fff url({DARK}) no-repeat right"><h1 id="d" style="color:#000">Negru pe alb cu pictogramă</h1></div>
+<p id="e" style="color:#8a8a60;background:url({DARK}) no-repeat right center;padding-right:30px;margin:10px">Legătură cu pictogramă mică (nu e fundal)</p>
+<div class="hero" style="background-image:url({DARK})"><div id="cardw" style="background:#fff;padding:10px"><p id="f" style="color:#aaa;margin:0">Text gri pe card alb peste imagine</p></div></div>
+<div class="hero" style="background-image:url(http://example.invalid/x.jpg);background-size:cover"><h1 id="g" style="color:#8a8a60">Imagine pe altă origine</h1></div>
 </body></html>"""
 class H(BaseHTTPRequestHandler):
     def do_GET(self):
@@ -33,9 +36,9 @@ async def main():
             args=[f'--disable-extensions-except={EXT}', f'--load-extension={EXT}', '--headless=new', '--no-sandbox'], viewport={'width': 900, 'height': 700})
         sw = ctx.service_workers[0] if ctx.service_workers else await ctx.wait_for_event('serviceworker', timeout=8000)
         await sw.evaluate("async()=>{await chrome.storage.local.clear();await chrome.storage.local.set({settings:{enabled:true}})}")
-        pg = await ctx.new_page(); errs = []; pg.on('pageerror', lambda e: errs.append(str(e)))
+        pg = await ctx.new_page(); errs = []; reqs = []; pg.on('request', lambda r: reqs.append(r.url)); pg.on('pageerror', lambda e: errs.append(str(e)))
         await pg.goto('http://localhost:8771/'); await pg.wait_for_timeout(2500)
-        g = await pg.evaluate("""()=>Object.fromEntries(['a','b','c','d'].map(i=>{const e=document.getElementById(i),c=getComputedStyle(e);return [i,{col:c.color,sh:c.textShadow,h:e.hasAttribute('data-clr-h')}]}))""")
+        g = await pg.evaluate("""()=>Object.fromEntries(['a','b','c','d','e','f','g'].map(i=>{const e=document.getElementById(i),c=getComputedStyle(e);return [i,{col:c.color,sh:c.textShadow,h:e.hasAttribute('data-clr-h')}]}))""")
         print(g)
         rgb = lambda s: [int(x) for x in s[s.index('(')+1:s.index(')')].split(',')[:3]]
         lum = lambda c: sum(w * (((v/255)/12.92) if v/255 <= .03928 else (((v/255)+.055)/1.055)**2.4) for w, v in zip((.2126, .7152, .0722), c))
@@ -44,6 +47,10 @@ async def main():
         cb = rgb(g['b']['col']); ok(ratio(cb, (235, 240, 245)) >= 4.5, f'b: text deschis pe imagine deschisă → contrast {ratio(cb,(235,240,245)):.1f}')
         cc = rgb(g['c']['col']); ok(lum(cc) > 0.5 and g['c']['h'] and g['c']['sh'] != 'none', f'c: imagine nemăsurabilă → alb + halou {g["c"]}')
         ok(rgb(g['d']['col']) == [0, 0, 0] and not g['d']['h'], f'd: fundal alb opac + pictogramă → neatins {g["d"]}')
+        ok(rgb(g['e']['col']) == [138, 138, 96] and not g['e']['h'], f'e: pictogramă mică no-repeat → neatins {g["e"]}')
+        cf = rgb(g['f']['col']); ok(ratio(cf, (255, 255, 255)) >= 4.5 and not g['f']['h'], f'f: card alb opac peste imagine → corectat față de alb {ratio(cf,(255,255,255)):.1f}')
+        cg = rgb(g['g']['col']); ok(lum(cg) > 0.5 and g['g']['h'], f'g: imagine pe altă origine (nu se descarcă) → alb + halou {g["g"]}')
+        ok(sum('example.invalid' in r for r in reqs) <= 1, f'nicio cerere suplimentară către alte origini {reqs}')
         ok(not errs, f'fără erori {errs}')
         await ctx.close()
 asyncio.run(main()); sys.exit(1 if fails else 0)

@@ -74,7 +74,7 @@
     if (!masked) { masked = true; try { await api.runtime.sendMessage({ type: 'cap-mask', on: true }); } catch (e) { } await sleep(160); }
     let r; try { r = await api.runtime.sendMessage({ type: 'cap-visible' }); } finally { lastCap = Date.now(); }
     if (!r || !r.url) throw new Error((r && r.err) || 'capture');
-    return new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = () => rej(new Error('img')); i.src = r.url; });
+    return new Promise((res, rej) => { /* local: data:image din captureVisibleTab */ const i = new Image(); i.onload = () => res(i); i.onerror = () => rej(new Error('img')); i.src = r.url; });
   }
   const hideUi = () => { if (host) host.style.setProperty('display', 'none', 'important'); doc.querySelectorAll('#clr-x').forEach((e) => { e.style.visibility = 'hidden'; }); };
   const showUi = () => { if (host) host.style.setProperty('display', 'block', 'important'); doc.querySelectorAll('#clr-x').forEach((e) => { e.style.visibility = ''; }); };

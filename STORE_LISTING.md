@@ -1,6 +1,6 @@
 # Claritas — store listing (Chrome Web Store, Edge Add-ons, Firefox AMO)
 
-*Version 1.8.0 · 12 Nov 2026. Draft text to paste into the stores; nothing here claims a store listing exists yet.*
+*Version 1.8.1 · 13 Nov 2026. Draft text to paste into the stores; nothing here claims a store listing exists yet.*
 
 ## Name
 Claritas — accessibility

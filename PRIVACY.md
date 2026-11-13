@@ -1,6 +1,6 @@
 # Claritas — Privacy policy
 
-**Version 1.8.0 · Last updated: 12 Nov 2026** · Romanian version: [PRIVACY.ro.md](PRIVACY.ro.md)
+**Version 1.8.1 · Last updated: 13 Nov 2026** · Romanian version: [PRIVACY.ro.md](PRIVACY.ro.md)
 
 Claritas is a free, open-source (MIT) accessibility extension. It has **no telemetry, no analytics, no accounts and no servers of its own**. This document says exactly what it stores and the few cases where your browser (not Claritas) talks to a third party.
 
@@ -15,6 +15,8 @@ You can export or delete all of this from the popup, or by removing the extensio
 
 ## What Claritas reads
 To do its job (fix contrast, read aloud, audit, etc.) the content script reads the pages you visit **inside your browser**. The page content is not sent anywhere by Claritas. The "What leaves the browser?" button in the optional-modules panel reads the extension's own code and lists every network call it finds, so you can check this yourself.
+
+To estimate the contrast of text placed over a background image, the content script can decode that image locally (a small canvas) when it is a `data:`/`blob:` image or comes from the same site as the page (normally already in the browser cache). Images from other sites are never fetched by Claritas, and nothing about the image is stored or sent.
 
 ## Cases where data can leave your browser
 These are never on by default or only on your explicit action:

@@ -2,12 +2,12 @@
 
 **English** · [Română](README.ro.md) · [Français](README.fr.md) · [Italiano](README.it.md) · [Español](README.es.md) · [Português](README.pt.md) · [Deutsch](README.de.md) · [Magyar](README.hu.md)
 
-**Version: 1.8.0 · Last updated: 12 Nov 2026**
+**Version: 1.8.1 · Last updated: 13 Nov 2026**
 
 Free all-in-one accessibility extension. No telemetry, no network, no accounts: everything stays in your browser.
 
 ## What it does
-- **Automatic contrast fix (WCAG AA/AAA)**: measures the real text/background contrast and adjusts only insufficient text, including disabled fields.
+- **Automatic contrast fix (WCAG AA/AAA)**: measures the real text/background contrast and adjusts only insufficient text, including disabled fields. Since 1.8.1 it also handles text over background images (average colour of images from the same origin or data: URLs, otherwise a cautious white/black choice plus a halo); small icons are not treated as backgrounds.
 - **High-contrast themes**, colour filters, **colour-blindness** correction and simulation, blue-light filter, vision simulator.
 - **Text**: page zoom, text size, spacing, fonts (dyslexia-friendly, Lexend, Atkinson Hyperlegible), left alignment.
 - **Reading**: ruler, mask, magnifier, reader mode, speed reading, read aloud (local voices), highlights with export.

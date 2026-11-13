@@ -202,34 +202,49 @@
   }
   /* culoarea medie a unei imagini de fundal (dacă pagina o permite); altfel null. Rezultatul declanșează o nouă trecere pe element. */
   const imgAvg = new Map(), imgWait = new Map();
+  let imgSamples = 0;
+  /* culoarea medie a unei imagini de fundal. Fără rețea suplimentară: doar data:/blob: și imagini de pe aceeași origine (deja în cache-ul paginii);
+     imaginile de pe alte origini nu se descarcă de extensie → null (decizie prudentă + halou). Rezultatul declanșează o nouă trecere pe element. */
   function sampleImg(url, el) {
     if (imgAvg.has(url)) return imgAvg.get(url);
+    if (imgAvg.size > 400) imgAvg.clear(); /* pagini SPA cu multe adrese: memorie mărginită */
     let w = imgWait.get(url);
     if (!w) {
+      let abs = null;
+      try { abs = new URL(url, doc.baseURI); } catch (e) { }
+      const local = abs && (abs.protocol === 'data:' || abs.protocol === 'blob:' || abs.origin === location.origin);
+      if (!local || imgSamples >= 24 || (abs.protocol === 'data:' && /^data:image\/svg/i.test(abs.href)) || (abs.protocol !== 'data:' && /\.svg(\?|#|$)/i.test(abs.pathname))) { imgAvg.set(url, null); return null; }
+      imgSamples++;
       w = new Set(); imgWait.set(url, w);
-      const done = (v) => { imgAvg.set(url, v); const ws = imgWait.get(url); imgWait.delete(url); if (ws) ws.forEach((e) => { try { if (e.isConnected) enqueue(e); } catch (x) { } }); };
+      const done = (v) => { if (imgAvg.has(url)) return; imgAvg.set(url, v); const ws = imgWait.get(url); imgWait.delete(url); if (ws) ws.forEach((e) => { try { if (e.isConnected) enqueue(e); } catch (x) { } }); };
       try {
-        const abs = new URL(url, doc.baseURI).href;
-        if (/^data:image\/svg/i.test(abs) || /\.svg(\?|#|$)/i.test(abs)) { done(null); }
-        else {
-          const im = new Image(); im.crossOrigin = 'anonymous'; im.decoding = 'async';
-          im.onload = () => {
-            try {
-              const cv = doc.createElement('canvas'); cv.width = cv.height = 8;
-              const cx = cv.getContext('2d', { willReadFrequently: true }); cx.drawImage(im, 0, 0, 8, 8);
-              const d = cx.getImageData(0, 0, 8, 8).data; let r = 0, g = 0, b = 0, n = 0;
-              for (let i = 0; i < d.length; i += 4) { if (d[i + 3] < 8) continue; r += d[i]; g += d[i + 1]; b += d[i + 2]; n++; }
-              done(n ? { r: Math.round(r / n), g: Math.round(g / n), b: Math.round(b / n), a: 1 } : null);
-            } catch (e) { done(null); }
-          };
-          im.onerror = () => done(null);
-          im.src = abs;
-          setTimeout(() => { if (!imgAvg.has(url)) done(null); }, 4000);
-        }
+        /* local: doar data:image/blob/aceeași origine (cache-ul paginii) */ const im = new Image(); im.decoding = 'async';
+        im.onload = () => {
+          try {
+            const cv = doc.createElement('canvas'); cv.width = cv.height = 8;
+            const cx = cv.getContext('2d', { willReadFrequently: true }); cx.drawImage(im, 0, 0, 8, 8);
+            const d = cx.getImageData(0, 0, 8, 8).data; let r = 0, g = 0, b = 0, n = 0;
+            for (let i = 0; i < d.length; i += 4) { if (d[i + 3] < 8) continue; r += d[i]; g += d[i + 1]; b += d[i + 2]; n++; }
+            /* imagine în mare parte transparentă (pictogramă): nu e un fundal */
+            done(n >= 40 ? { r: Math.round(r / n), g: Math.round(g / n), b: Math.round(b / n), a: 1, w: im.naturalWidth, h: im.naturalHeight } : null);
+          } catch (e) { done(null); }
+        };
+        im.onerror = () => done(null);
+        im.src = abs.href;
+        setTimeout(() => done(null), 4000);
       } catch (e) { done(null); }
     }
     w.add(el);
     return undefined;
+  }
+  const first = (v) => String(v || '').split(',')[0].trim();
+  /* acoperă imaginea tot elementul? (pictogramele no-repeat mici nu sunt fundal) */
+  function bgCovers(cs) {
+    const rep = first(cs.backgroundRepeat), sz = first(cs.backgroundSize);
+    if (rep && rep !== 'no-repeat' && !/^no-repeat/.test(rep)) return true;
+    if (sz === 'cover') return true;
+    const pm = sz.match(/(\d+(?:\.\d+)?)%/g);
+    return !!(pm && pm.some((x) => parseFloat(x) >= 80));
   }
   function bgStep(el, pb) {
     const cs = getComputedStyle(el);
@@ -241,11 +256,12 @@
       else {
         const cc = c && c.a > 0 ? over(c, pb.c) : pb.c;
         const um = /url\(\s*(?:"([^"]+)"|'([^']+)'|([^)"']+))\s*\)/.exec(cs.backgroundImage);
-        res = { c: cc, stops: [cc], img: true, url: um ? (um[1] || um[2] || um[3]) : null, solid: !!(c && c.a >= 1) && !/cover/.test(cs.backgroundSize) };
+        res = { c: cc, stops: [cc], img: true, url: um ? (um[1] || um[2] || um[3]) : null, solid: !!(c && c.a >= 1) && !/cover/.test(cs.backgroundSize), cover: bgCovers(cs), owner: el };
       }
     } else if (c && c.a > 0) {
       const stops = c.a >= 1 ? [over(c, pb.c)] : pb.stops.map((x) => over(c, x));
-      res = { c: stops[0], stops, img: pb.img, url: c.a >= 1 ? null : pb.url, solid: c.a >= 1 ? true : pb.solid };
+      /* culoare opacă peste imagine = fundalul real e culoarea (imaginea de dedesubt nu se mai vede) */
+      res = c.a >= 1 ? { c: stops[0], stops, img: false } : { c: stops[0], stops, img: pb.img, url: pb.url, solid: pb.solid, cover: pb.cover, owner: pb.owner };
     }
     return res;
   }
@@ -288,6 +304,9 @@
       /* text pe imagine de fundal: media imaginii (dacă e citibilă) sau, la nevoie, o decizie prudentă + halou */
       const avg = bi.url ? sampleImg(bi.url, el) : null;
       if (bi.solid) { clearFix(el); return; } /* culoare opacă + pictogramă/ornament (nu acoperă tot): ca înainte */
+      let covers = bi.cover;
+      if (!covers && avg && bi.owner && bi.owner.clientWidth && bi.owner.clientHeight) covers = avg.w >= 0.8 * bi.owner.clientWidth && avg.h >= 0.8 * bi.owner.clientHeight;
+      if (!covers) { clearFix(el); return; } /* pictogramă / ornament: nu e fundal */
       if (avg) { bi = { c: avg, stops: [avg], img: true }; onImg = true; }
       else if (avg === undefined) { clearFix(el); return; } /* culoare opacă sub imagine (ca înainte) sau încă se măsoară; revenim după */
       else onImg = 'unknown';
