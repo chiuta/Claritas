@@ -1,0 +1,98 @@
+name: opera-diag
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+env:
+  CLARITAS_TEST_SHADOW: open
+  PYTHONUTF8: '1'
+  PYTHONIOENCODING: utf-8
+jobs:
+  opera-diag:
+    name: diag ${{ matrix.browser }}
+    runs-on: ${{ matrix.os }}
+    continue-on-error: true
+    timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { os: ubuntu-latest, browser: opera }
+          - { os: ubuntu-latest, browser: vivaldi }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - run: pip install playwright pillow imageio-ffmpeg
+      - run: python build.py
+      - name: Install browser (Playwright channel)
+        if: ${{ !contains('brave vivaldi opera', matrix.browser) }}
+        run: python -m playwright install ${{ matrix.browser == 'chromium' && 'chromium' || matrix.browser }}
+      - run: python -m playwright install ffmpeg
+      - name: Install Brave
+        if: matrix.browser == 'brave'
+        run: |
+          sudo curl -fsSLo /usr/share/keyrings/brave-browser-archive-keyring.gpg https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg
+          echo "deb [signed-by=/usr/share/keyrings/brave-browser-archive-keyring.gpg] https://brave-browser-apt-release.s3.brave.com/ stable main" | sudo tee /etc/apt/sources.list.d/brave.list
+          for i in 1 2 3 4; do sudo apt-get update && sudo apt-get install -y -o Acquire::Retries=5 brave-browser && break; sleep 20; done
+          echo "BROWSER_EXE=/usr/bin/brave-browser" >> $GITHUB_ENV
+      - name: Install Vivaldi
+        if: matrix.browser == 'vivaldi'
+        run: |
+          curl -fsSL https://repo.vivaldi.com/archive/linux_signing_key.pub | sudo gpg --dearmor -o /usr/share/keyrings/vivaldi.gpg
+          echo "deb [signed-by=/usr/share/keyrings/vivaldi.gpg] https://repo.vivaldi.com/archive/deb/ stable main" | sudo tee /etc/apt/sources.list.d/vivaldi.list
+          for i in 1 2 3 4; do sudo apt-get update && sudo apt-get install -y -o Acquire::Retries=5 vivaldi-stable && break; sleep 20; done
+          echo "BROWSER_EXE=/usr/bin/vivaldi-stable" >> $GITHUB_ENV
+          echo "BROWSER_CDP=1" >> $GITHUB_ENV
+      - name: Install Opera
+        if: matrix.browser == 'opera'
+        run: |
+          curl -fsSL https://deb.opera.com/archive.key | sudo gpg --dearmor -o /usr/share/keyrings/opera.gpg
+          echo "deb [signed-by=/usr/share/keyrings/opera.gpg] https://deb.opera.com/opera-stable/ stable non-free" | sudo tee /etc/apt/sources.list.d/opera.list
+          echo "opera-stable opera-stable/add-deb-source boolean false" | sudo debconf-set-selections
+          for i in 1 2 3 4; do sudo apt-get update && sudo apt-get install -y -o Acquire::Retries=5 opera-stable gsettings-desktop-schemas libglib2.0-bin && break; sleep 20; done
+          echo "BROWSER_EXE=/usr/bin/opera" >> $GITHUB_ENV
+          echo "BROWSER_CDP=1" >> $GITHUB_ENV
+      - name: Diagnostic pornire browser (CDP)
+        if: runner.os == 'Linux' && (matrix.browser == 'opera' || matrix.browser == 'vivaldi')
+        continue-on-error: true
+        shell: bash
+        run: |
+          sudo apt-get install -y xvfb >/dev/null 2>&1 || true
+          mkdir -p test/results
+          { echo "exe=$BROWSER_EXE"; file "$BROWSER_EXE"; head -c 600 "$BROWSER_EXE" | strings | head -5
+            xvfb-run -a bash -c "timeout 25 \"$BROWSER_EXE\" --user-data-dir=/tmp/diag-prof --remote-debugging-port=9444 --no-first-run --no-sandbox --disable-gpu about:blank > /tmp/diag.log 2>&1 & sleep 12; curl -s -m 3 http://127.0.0.1:9444/json/version || echo CURL_FAIL; echo; ps aux | grep -iE 'opera|vivaldi' | grep -v grep | head -5 | cut -c1-200; sleep 3"
+            echo '--- log'; head -40 /tmp/diag.log; } 2>&1 | tee test/results/diag-${{ matrix.browser }}.txt
+      - name: Run tests (Linux, xvfb)
+        if: runner.os == 'Linux'
+        shell: bash
+        timeout-minutes: 30
+        env:
+          BROWSER_CHANNEL: ${{ matrix.browser }}
+        run: |
+          sudo apt-get install -y xvfb >/dev/null 2>&1 || true
+          [ -n "$BROWSER_EXE" ] && unset BROWSER_CHANNEL
+          if [ -n "$BROWSER_CDP" ]; then
+            export HEADED=1
+            export CLR_DIAG=1
+            xvfb-run -a python test/run_matrix.py "${{ matrix.os }}-${{ matrix.browser }}" t5_features.py t6_popup_tools.py
+          else
+            python test/run_matrix.py "${{ matrix.os }}-${{ matrix.browser }}"
+          fi
+      - name: Prepare tools (Windows / macOS)
+        if: runner.os != 'Linux'
+        shell: bash
+        run: |
+          python -c "import os;os.makedirs('/tmp',exist_ok=True)"
+          if [ "$RUNNER_OS" = macOS ]; then brew install ffmpeg >/dev/null 2>&1 || true; else choco install ffmpeg -y >/dev/null 2>&1 || true; fi
+      - name: Run tests (Windows / macOS)
+        if: runner.os != 'Linux'
+        shell: bash
+        env:
+          HEADED: '1'
+          BROWSER_CHANNEL: ${{ matrix.browser }}
+        run: python test/run_matrix.py "${{ matrix.os }}-${{ matrix.browser }}"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: { name: 'r-${{ matrix.os }}-${{ matrix.browser }}', path: test/results }
+

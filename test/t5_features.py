@@ -1,5 +1,5 @@
 """Teste v1.3: audit, structură, mod lectură (bionic/gradient/RSVP), evidențiator, ascundere, bară selecție, TTS, derulare, hostile."""
-import asyncio, pathlib, sys, json
+import os, asyncio, pathlib, sys, json
 from playwright.async_api import async_playwright
 EXT = str(pathlib.Path('../dist/chromium').resolve())
 PAGE = 'file://' + str(pathlib.Path('page2.html').resolve())
@@ -22,9 +22,14 @@ async def main():
             return await sw.evaluate("""async ([cmd,kw]) => { const [t]=await chrome.tabs.query({url:'file:///*'}); return await chrome.tabs.sendMessage(t.id, Object.assign({type:'feat',cmd}, kw)); }""", [cmd, kw])
         r = await feat('ping'); ok(r and r['ok'], f'features încărcat {r}')
         a = await feat('audit'); rules = {i['rule'] for i in a['items']}
+        diag = ''
+        if os.environ.get('CLR_DIAG'):
+            info = await sw.evaluate("async()=>{const ts=await chrome.tabs.query({});return ts.map(t=>[t.id,t.url.slice(-30),t.active,t.windowId])}")
+            pgi = await page.evaluate("[location.href.slice(-20),document.body.innerText.split(/\\s+/).length,innerWidth,innerHeight,document.documentElement.lang,document.querySelectorAll('img').length]")
+            diag = f' DIAG tabs={info} stats={a["stats"]} rules={sorted(rules)} n={len(a["items"])} page={pgi}'
         for need in ['lang', 'img_alt', 'name', 'vague', 'label', 'h_skip', 'target_small']:
             ok(need in rules, f'audit detectează {need}')
-        ok(a['stats']['words'] > 40, f"statistici cuvinte={a['stats']['words']}")
+        ok(a['stats']['words'] > 40, f"statistici cuvinte={a['stats']['words']}" + diag)
         o = await feat('outline'); ok(any(x['kind']=='h' and x['level']==1 for x in o['items']) and any(x['kind']=='lm' for x in o['items']), 'structură: titluri + zone')
         ok((await feat('locate', id=o['items'][0]['id']))['ok'], 'locate funcționează')
         # evidențiator: selectăm text real și apăsăm culoarea 2 din bara de selecție
