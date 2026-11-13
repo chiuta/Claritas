@@ -18,7 +18,7 @@ async def main():
         await sw.evaluate("async()=>{await chrome.storage.local.clear();await chrome.storage.local.set({settings:{enabled:true}})}")
         await page.goto(PAGE); await page.wait_for_timeout(1500)
         async def cap(cmd):
-            await sw.evaluate("""async (cmd) => { const [t]=await chrome.tabs.query({url:'file:///*'}); await chrome.tabs.sendMessage(t.id,{type:'cap',cmd}); }""", cmd)
+            await sw.evaluate("""async (cmd) => { const ts=await chrome.tabs.query({url:'file:///*'}); const t=ts[ts.length-1]; await chrome.tabs.sendMessage(t.id,{type:'cap',cmd}); }""", cmd)
         async def save(n=2, wait=3000):
             await page.wait_for_timeout(wait)
             for _ in range(n): await page.keyboard.press('Tab')

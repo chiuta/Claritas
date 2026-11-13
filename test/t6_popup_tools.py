@@ -14,7 +14,7 @@ async def main():
         eid = sw.url.split('/')[2]
         await sw.evaluate("() => chrome.storage.local.clear()")
         page = await ctx.new_page(); await page.goto(PAGE); await page.wait_for_timeout(1200)
-        tid = await sw.evaluate("async () => (await chrome.tabs.query({url:'file:///*'}))[0].id")
+        tid = await sw.evaluate("async () => (await chrome.tabs.query({url:'file:///*'})).slice(-1)[0].id")
         errs=[]
         pop = await ctx.new_page(); pop.on('pageerror', lambda e: errs.append(str(e)))
         pop.on('console', lambda m: errs.append(m.text) if m.type=='error' else None)
@@ -41,7 +41,7 @@ async def main():
         if not loc:
             dg = ' DIAG ' + str(await pop.evaluate("[document.querySelectorAll('#auditList li').length,document.querySelector('#auditList li button')&&document.querySelector('#auditList li button').outerHTML.slice(0,80),location.search,document.hasFocus()]")) + str(await page.evaluate("[document.hasFocus(),document.visibilityState,[...document.querySelectorAll('[id^=clr-]')].map(e=>e.id)]"))
         if not loc:
-            dg += ' DIAG2 ' + str(await pop.evaluate("async()=>{const [t]=await chrome.tabs.query({url:'file:///*'});const o=await chrome.tabs.sendMessage(t.id,{type:'feat',cmd:'outline'});const id=(o.items||o.list||[])[0];const idv=id&&(id.id!==undefined?id.id:null);const r=await chrome.tabs.sendMessage(t.id,{type:'feat',cmd:'locate',id:idv});return [Object.keys(o),JSON.stringify(id).slice(0,100),idv,JSON.stringify(r)]}"))
+            dg += ' DIAG2 ' + str(await pop.evaluate("async()=>{const ts=await chrome.tabs.query({url:'file:///*'}); const t=ts[ts.length-1];const o=await chrome.tabs.sendMessage(t.id,{type:'feat',cmd:'outline'});const id=(o.items||o.list||[])[0];const idv=id&&(id.id!==undefined?id.id:null);const r=await chrome.tabs.sendMessage(t.id,{type:'feat',cmd:'locate',id:idv});return [Object.keys(o),JSON.stringify(id).slice(0,100),idv,JSON.stringify(r)]}"))
         ok(loc, 'locate din popup' + dg)
         ow = await pop.evaluate("document.documentElement.scrollWidth - innerWidth")
         ok(ow <= 0, f'fără overflow orizontal la 360px ({ow})')

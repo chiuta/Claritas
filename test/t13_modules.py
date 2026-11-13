@@ -48,7 +48,7 @@ async def main():
         page = await ctx.new_page(); page.on('pageerror', lambda e: errs.append(str(e)))
         await page.goto(pathlib.Path(TMP + '/t13.html').as_uri()); await page.wait_for_timeout(1500)
         async def feat(cmd, **kw):
-            return await sw.evaluate("""async ([cmd,kw]) => { const [t]=await chrome.tabs.query({url:'file:///*'}); return await chrome.tabs.sendMessage(t.id, Object.assign({type:'feat',cmd}, kw)); }""", [cmd, kw])
+            return await sw.evaluate("""async ([cmd,kw]) => { const ts=await chrome.tabs.query({url:'file:///*'}); const t=ts[ts.length-1]; return await chrome.tabs.sendMessage(t.id, Object.assign({type:'feat',cmd}, kw)); }""", [cmd, kw])
         a0 = {i['rule'] for i in (await feat('audit'))['items']}
         ok('aria_role' not in a0 and 'viewport_zoom' not in a0, 'audit suplimentar oprit implicit: regulile noi nu apar')
         await sw.evaluate("()=>chrome.storage.local.set({settings:{enabled:true,lang:'en',modAuditPlus:true}})"); await page.wait_for_timeout(800)

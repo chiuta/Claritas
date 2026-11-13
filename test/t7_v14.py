@@ -18,7 +18,7 @@ async def main():
             await sw.evaluate("async (s) => { await chrome.storage.local.clear(); await chrome.storage.local.set({settings: s}); }", s)
             await page.goto(PAGE); await page.wait_for_timeout(1800)
         async def feat(cmd):
-            return await sw.evaluate("""async (cmd) => { const [t]=await chrome.tabs.query({url:'file:///*'}); return await chrome.tabs.sendMessage(t.id,{type:'feat',cmd}); }""", cmd)
+            return await sw.evaluate("""async (cmd) => { const ts=await chrome.tabs.query({url:'file:///*'}); const t=ts[ts.length-1]; return await chrome.tabs.sendMessage(t.id,{type:'feat',cmd}); }""", cmd)
         # calm + unstick + altReveal + noFlash + font
         await setst({'enabled': True, 'calm': True, 'unstick': True, 'altReveal': True, 'noFlash': True, 'font': 'lexend', 'unblockPaste': True, 'hints': True})
         ok(await page.evaluate("getComputedStyle(document.getElementById('cookie')).display") == 'none', 'calm: bannerul cookie ascuns')

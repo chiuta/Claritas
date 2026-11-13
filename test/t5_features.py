@@ -19,7 +19,7 @@ async def main():
         await page.goto(PAGE); await page.wait_for_timeout(1500)
         # trimitem mesaje ca popup-ul: din service worker către tab
         async def feat(cmd, **kw):
-            return await sw.evaluate("""async ([cmd,kw]) => { const [t]=await chrome.tabs.query({url:'file:///*'}); return await chrome.tabs.sendMessage(t.id, Object.assign({type:'feat',cmd}, kw)); }""", [cmd, kw])
+            return await sw.evaluate("""async ([cmd,kw]) => { const ts=await chrome.tabs.query({url:'file:///*'}); const t=ts[ts.length-1]; return await chrome.tabs.sendMessage(t.id, Object.assign({type:'feat',cmd}, kw)); }""", [cmd, kw])
         r = await feat('ping'); ok(r and r['ok'], f'features încărcat {r}')
         for _ in range(20):  # așteptăm pagina completă (Opera sub xvfb e mai lentă)
             a = await feat('audit'); rules = {i['rule'] for i in a['items']}
