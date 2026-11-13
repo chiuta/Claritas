@@ -36,7 +36,8 @@ async def main():
             a = await feat('audit'); rules = {i['rule'] for i in a['items']}
             if 'auth_ac' in rules and 'spacing_clip' in rules: break
             await page.wait_for_timeout(500)
-        ok('auth_ac' in rules, 'audit: câmp parolă cu autocomplete=off'); ok('spacing_clip' in rules, 'audit: tăiere la spațierea textului (1.4.12)')
+        d7 = ' DIAG rules=%s pw=%s' % (sorted(rules), await page.evaluate("[...document.querySelectorAll('input[type=password]')].map(e=>e.outerHTML.slice(0,90))"))
+        ok('auth_ac' in rules, 'audit: câmp parolă cu autocomplete=off' + d7); ok('spacing_clip' in rules, 'audit: tăiere la spațierea textului (1.4.12)')
         ok(a['stats'].get('lix') is not None, f"LIX în statistici: {a['stats'].get('lix')}")
         # hint-uri numerotate: Alt+Shift+H, apoi 2 + Enter => al doilea țintă
         await page.evaluate("window.__clicked=null"); await page.mouse.click(5, 5)

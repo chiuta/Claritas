@@ -40,6 +40,8 @@ async def main():
         dg = ''
         if not loc:
             dg = ' DIAG ' + str(await pop.evaluate("[document.querySelectorAll('#auditList li').length,document.querySelector('#auditList li button')&&document.querySelector('#auditList li button').outerHTML.slice(0,80),location.search,document.hasFocus()]")) + str(await page.evaluate("[document.hasFocus(),document.visibilityState,[...document.querySelectorAll('[id^=clr-]')].map(e=>e.id)]"))
+        if not loc:
+            dg += ' DIAG2 ' + str(await pop.evaluate("async()=>{const [t]=await chrome.tabs.query({url:'file:///*'});const o=await chrome.tabs.sendMessage(t.id,{type:'feat',cmd:'outline'});const id=(o.items||o.list||[])[0];const idv=id&&(id.id!==undefined?id.id:null);const r=await chrome.tabs.sendMessage(t.id,{type:'feat',cmd:'locate',id:idv});return [Object.keys(o),JSON.stringify(id).slice(0,100),idv,JSON.stringify(r)]}"))
         ok(loc, 'locate din popup' + dg)
         ow = await pop.evaluate("document.documentElement.scrollWidth - innerWidth")
         ok(ow <= 0, f'fără overflow orizontal la 360px ({ow})')
