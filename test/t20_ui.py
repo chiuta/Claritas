@@ -26,8 +26,10 @@ async def main():
         await pg.keyboard.press('End'); ok(await pg.evaluate("document.activeElement.id") == 't-prof', 'End → ultimul tab')
         await pg.keyboard.press('Home'); ok(await pg.evaluate("document.activeElement.id") == 't-contrast', 'Home → primul tab')
         # căutare
-        await pg.keyboard.press('Escape'); await pg.click('body'); await pg.keyboard.press('/')
-        ok(await pg.evaluate("document.activeElement.id") == 'q', '„/” focalizează căutarea')
+        await pg.evaluate("document.activeElement&&document.activeElement.blur()"); await pg.keyboard.press('/')
+        ok(await pg.evaluate("document.activeElement.id") == 'q', '„/” focalizează căutarea (din body)')
+        await pg.evaluate("document.getElementById('enabled').focus()"); await pg.keyboard.press('/')
+        ok(await pg.evaluate("document.activeElement.id") == 'q', '„/” focalizează căutarea (de pe o casetă de bifat)')
         await pg.fill('#q', 'dictionary')
         s = await pg.evaluate("""()=>({vis:[...document.querySelectorAll('main > section')].filter(s=>!s.hidden).map(s=>s.id),live:document.getElementById('searchLive').textContent,n:[...document.querySelectorAll('main label:not(.sx-hide)')].filter(l=>l.offsetParent).length})""")
         ok(s['vis'] == ['p-more'] and s['n'] >= 1 and 'found' in s['live'], f'căutare „dictionary” → doar tab-ul More, {s["n"]} rezultate: {s["live"]}')

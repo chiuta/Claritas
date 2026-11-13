@@ -1,6 +1,6 @@
 # Claritas — Politica de confidențialitate
 
-**Versiunea 1.9.0 · Ultima actualizare: 14 nov. 2026** · Versiunea în engleză: [PRIVACY.md](PRIVACY.md)
+**Versiunea 1.9.1 · Ultima actualizare: 13 nov. 2026** · Versiunea în engleză: [PRIVACY.md](PRIVACY.md)
 
 Claritas este o extensie gratuită, open-source (MIT), de accesibilitate. **Nu are telemetrie, analitice, conturi sau servere proprii.** Documentul spune exact ce păstrează și puținele cazuri în care browserul (nu Claritas) comunică cu un terț.
 

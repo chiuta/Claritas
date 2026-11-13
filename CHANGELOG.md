@@ -1,6 +1,9 @@
 # Changelog
 
-## 1.9.0 — 14 Nov 2026
+## 1.9.1 — 13 Nov 2026
+- **Fix:** the `/` search shortcut was ignored while a checkbox or slider had focus (only text fields should block it). CI on Windows/macOS caught it via `t20_ui.py`, now covering both cases.
+
+## 1.9.0 — 13 Nov 2026
 - **Popup redesign:** search across all settings in every tab (`/` or Ctrl+K; Esc clears; result count announced to screen readers); quick-action bar (next theme, read aloud, text size ±); tab bar and search stay visible while scrolling long tabs; tab labels no longer wrap or get cut; full ARIA tab keyboard pattern (arrows, Home/End, roving tabindex); the last-used tab is remembered; no horizontal overflow at 320 px.
 - **Fix (engine):** on very large pages the node budget could abandon content added meanwhile, leaving new text uncorrected (intermittent). Only the current walk is dropped now; recently added nodes are re-queued. `t16_budget.py` made timing-tolerant.
 - 10 new interface strings in 8 languages.

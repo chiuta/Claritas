@@ -428,7 +428,7 @@
     qIn.addEventListener('keydown', (e) => { if (e.key === 'Escape' && qIn.value) { e.preventDefault(); e.stopPropagation(); qIn.value = ''; runSearch(); } });
     $('#qClear').addEventListener('click', () => { qIn.value = ''; runSearch(); qIn.focus(); });
     document.addEventListener('keydown', (e) => {
-      const typing = /^(INPUT|SELECT|TEXTAREA)$/.test((e.target && e.target.tagName) || '');
+      const tg = e.target || {}, typing = tg.tagName === 'TEXTAREA' || tg.tagName === 'SELECT' || tg.isContentEditable || (tg.tagName === 'INPUT' && /^(text|search|number|time|email|url|tel|password|date|datetime-local)$/.test(tg.type)); /* casetele de bifat/glisoarele nu sunt câmpuri de text: „/” funcționează și de pe ele */
       if ((e.key === '/' && !typing) || ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k')) { e.preventDefault(); qIn.focus(); qIn.select(); }
     });
     /* acțiuni rapide */
