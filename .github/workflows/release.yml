@@ -1,0 +1,23 @@
+name: release
+on:
+  workflow_dispatch:
+    inputs:
+      tag: { description: 'Etichetă (ex. v1.8.1)', required: true }
+permissions:
+  contents: write
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - run: bash tools/fetch_vendor.sh
+      - run: python build.py
+      - name: Sume de control
+        run: cd dist && sha256sum *.zip > SHA256SUMS && cat SHA256SUMS
+      - name: Publică release-ul
+        env: { GH_TOKEN: '${{ github.token }}' }
+        run: |
+          gh release create "${{ inputs.tag }}" dist/*.zip dist/SHA256SUMS install/install.sh install/install.ps1 \
+            --target "${{ github.sha }}" --title "Claritas ${{ inputs.tag }}" --notes-file CHANGELOG.md
