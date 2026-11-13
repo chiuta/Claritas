@@ -1,5 +1,5 @@
 """Teste v1.4: calm, unstick, fonturi încorporate, alt, GIF, hint-uri, lipire, dislexie, audit WCAG 2.2, forced-colors."""
-import asyncio, pathlib
+import os, asyncio, pathlib
 from playwright.async_api import async_playwright
 EXT = str(pathlib.Path('../dist/chromium').resolve())
 PAGE = 'file://' + str(pathlib.Path('page3.html').resolve())
@@ -37,6 +37,13 @@ async def main():
             if 'auth_ac' in rules and 'spacing_clip' in rules: break
             await page.wait_for_timeout(500)
         d7 = ' DIAG rules=%s pw=%s' % (sorted(rules), await page.evaluate("[...document.querySelectorAll('input[type=password]')].map(e=>e.outerHTML.slice(0,90))"))
+        if 'auth_ac' not in rules and os.environ.get('CLR_DIAG'):
+            ex = []
+            cd = await ctx.new_cdp_session(page); cd.on('Runtime.exceptionThrown', lambda e: ex.append(str(e['exceptionDetails'].get('exception', {}).get('description', e['exceptionDetails'].get('text')))[:300]))
+            cd.on('Runtime.consoleAPICalled', lambda e: ex.append('console.' + e['type'] + ' ' + ' '.join(str(a.get('value', a.get('description', ''))) for a in e['args'])[:200]) if e['type'] in ('error', 'warning') else None)
+            await cd.send('Runtime.enable'); await page.reload(); await page.wait_for_timeout(2500)
+            r2 = await feat('audit'); d7 += ' RELOAD exceptions=%s rules=%s' % (ex[:6], sorted({i['rule'] for i in r2['items']}))
+            d7 += ' ping=%s' % await feat('ping')
         ok('auth_ac' in rules, 'audit: câmp parolă cu autocomplete=off' + d7); ok('spacing_clip' in rules, 'audit: tăiere la spațierea textului (1.4.12)')
         ok(a['stats'].get('lix') is not None, f"LIX în statistici: {a['stats'].get('lix')}")
         # hint-uri numerotate: Alt+Shift+H, apoi 2 + Enter => al doilea țintă
