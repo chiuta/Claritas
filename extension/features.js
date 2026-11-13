@@ -422,7 +422,7 @@
       if (small > 40 || !vis(el)) return; const r = el.getBoundingClientRect();
       if (r.width && r.height && (r.width < 24 || r.height < 24) && getComputedStyle(el).display !== 'inline') { small++; add('target_small', 'warn', el); }
     });
-    if (CLR.x && CLR.x.auditExtra) { try { CLR.x.auditExtra(add); } catch (e) { } }
+    CLR.audErr = ''; if (CLR.x && CLR.x.auditExtra) { try { CLR.x.auditExtra(add); } catch (e) { CLR.audErr = String((e && e.stack) || e).slice(0, 300); } } /* eroarea nu rupe auditul, dar rămâne vizibilă la depanare (ping) */
     const fx = doc.querySelectorAll('[data-clr-c]').length;
     if (fx) out.push({ rule: 'contrast_fixed', sev: 'info', id: -1, label: String(fx) });
     return out;
@@ -805,7 +805,7 @@
   function run(msg) {
     if (!active && msg.cmd !== 'ping') return { ok: false, inactive: true };
     switch (msg.cmd) {
-      case 'ping': return { ok: true, hl: hasHL(), tts: hasTTS() };
+      case 'ping': return { ok: true, hl: hasHL(), tts: hasTTS(), x: !!CLR.x, err: CLR.audErr || '' };
       case 'readerStats': return rdOpen() && rdState && rdState.art ? { open: true, words: rdState.art.querySelectorAll('span.w').length, pos: rdState.art.querySelectorAll('[data-p]').length, noun: rdState.art.querySelectorAll('[data-p=n]').length } : { open: false };
       case 'reader': if (rdOpen()) closeReader(); else openReader(); return { ok: true, open: rdOpen() };
       case 'rsvp': openReader(); setTimeout(startRSVP, 120); return { ok: true };
