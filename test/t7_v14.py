@@ -32,7 +32,10 @@ async def main():
         await page.evaluate("document.getElementById('txt').dispatchEvent(new Event('paste',{bubbles:true,cancelable:true}))")
         ok(await page.evaluate("window.__paste||0") == 0, 'paste: handler-ul paginii nu rulează (deblocat)')
         # audit WCAG 2.2 suplimentar
-        a = await feat('audit'); rules = {i['rule'] for i in a['items']}
+        for _ in range(20):  # regulile suplimentare apar după o trecere de layout; navigatoarele lente au nevoie de timp
+            a = await feat('audit'); rules = {i['rule'] for i in a['items']}
+            if 'auth_ac' in rules and 'spacing_clip' in rules: break
+            await page.wait_for_timeout(500)
         ok('auth_ac' in rules, 'audit: câmp parolă cu autocomplete=off'); ok('spacing_clip' in rules, 'audit: tăiere la spațierea textului (1.4.12)')
         ok(a['stats'].get('lix') is not None, f"LIX în statistici: {a['stats'].get('lix')}")
         # hint-uri numerotate: Alt+Shift+H, apoi 2 + Enter => al doilea țintă

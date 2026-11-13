@@ -37,7 +37,10 @@ async def main():
             await pop.wait_for_timeout(500)
             loc = await page.evaluate("!!document.getElementById('clr-f')")
             if loc: break
-        ok(loc, 'locate din popup')
+        dg = ''
+        if not loc:
+            dg = ' DIAG ' + str(await pop.evaluate("[document.querySelectorAll('#auditList li').length,document.querySelector('#auditList li button')&&document.querySelector('#auditList li button').outerHTML.slice(0,80),location.search,document.hasFocus()]")) + str(await page.evaluate("[document.hasFocus(),document.visibilityState,[...document.querySelectorAll('[id^=clr-]')].map(e=>e.id)]"))
+        ok(loc, 'locate din popup' + dg)
         ow = await pop.evaluate("document.documentElement.scrollWidth - innerWidth")
         ok(ow <= 0, f'fără overflow orizontal la 360px ({ow})')
         for tab in ['color','text','read']:
