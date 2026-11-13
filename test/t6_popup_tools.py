@@ -22,14 +22,22 @@ async def main():
         await pop.set_viewport_size({'width':360,'height':800})
         await pop.goto(f'chrome-extension://{eid}/popup.html'); await pop.wait_for_timeout(900)
         ok(await pop.evaluate("document.getElementById('unsupported').hidden"), 'popup vede pagina (supported)')
-        await pop.click('#t-tools'); await pop.click('#auditBtn'); await pop.wait_for_timeout(700)
-        n = await pop.evaluate("document.querySelectorAll('#auditList li').length")
+        await pop.click('#t-tools'); await pop.click('#auditBtn')
+        for _ in range(16):
+            await pop.wait_for_timeout(500)
+            n = await pop.evaluate("document.querySelectorAll('#auditList li').length")
+            if n >= 6: break
         ok(n >= 6, f'audit afișat în popup: {n} elemente')
         await pop.screenshot(path='p4_tools_audit.png', full_page=True)
         await pop.click('#outlineBtn'); await pop.wait_for_timeout(500)
         ok(await pop.evaluate("document.querySelectorAll('#auditList li').length") >= 3, 'structură afișată')
-        await pop.click('#auditList li button'); await pop.wait_for_timeout(500)
-        ok(await page.evaluate("!!document.getElementById('clr-f')"), 'locate din popup')
+        await pop.click('#auditList li button')
+        loc = False
+        for _ in range(20):  # navigatoarele lente (Opera sub xvfb) au nevoie de mai mult de 500 ms
+            await pop.wait_for_timeout(500)
+            loc = await page.evaluate("!!document.getElementById('clr-f')")
+            if loc: break
+        ok(loc, 'locate din popup')
         ow = await pop.evaluate("document.documentElement.scrollWidth - innerWidth")
         ok(ow <= 0, f'fără overflow orizontal la 360px ({ow})')
         for tab in ['color','text','read']:

@@ -21,10 +21,13 @@ async def main():
         async def feat(cmd, **kw):
             return await sw.evaluate("""async ([cmd,kw]) => { const [t]=await chrome.tabs.query({url:'file:///*'}); return await chrome.tabs.sendMessage(t.id, Object.assign({type:'feat',cmd}, kw)); }""", [cmd, kw])
         r = await feat('ping'); ok(r and r['ok'], f'features încărcat {r}')
-        a = await feat('audit'); rules = {i['rule'] for i in a['items']}
+        for _ in range(20):  # așteptăm pagina completă (Opera sub xvfb e mai lentă)
+            a = await feat('audit'); rules = {i['rule'] for i in a['items']}
+            if a['stats']['words'] > 40 and 'lang' in rules: break
+            await page.wait_for_timeout(500)
         diag = ''
         if os.environ.get('CLR_DIAG'):
-            info = await sw.evaluate("async()=>{const ts=await chrome.tabs.query({});return ts.map(t=>[t.id,t.url.slice(-30),t.active,t.windowId])}")
+            info = await sw.evaluate("async()=>{const ts=await chrome.tabs.query({});return ts.map(t=>[t.id,(t.url||'').slice(-30),t.active,t.windowId])}")
             pgi = await page.evaluate("[location.href.slice(-20),document.body.innerText.split(/\\s+/).length,innerWidth,innerHeight,document.documentElement.lang,document.querySelectorAll('img').length]")
             diag = f' DIAG tabs={info} stats={a["stats"]} rules={sorted(rules)} n={len(a["items"])} page={pgi}'
         for need in ['lang', 'img_alt', 'name', 'vague', 'label', 'h_skip', 'target_small']:
