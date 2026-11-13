@@ -805,7 +805,7 @@
   function run(msg) {
     if (!active && msg.cmd !== 'ping') return { ok: false, inactive: true };
     switch (msg.cmd) {
-      case 'ping': return { ok: true, hl: hasHL(), tts: hasTTS(), x: !!CLR.x, err: CLR.audErr || '' };
+      case 'ping': return { ok: true, hl: hasHL(), tts: hasTTS(), x: !!CLR.x, err: CLR.audErr || '', url: location.href.slice(-24), pw: doc.querySelectorAll('input[type=password]').length };
       case 'readerStats': return rdOpen() && rdState && rdState.art ? { open: true, words: rdState.art.querySelectorAll('span.w').length, pos: rdState.art.querySelectorAll('[data-p]').length, noun: rdState.art.querySelectorAll('[data-p=n]').length } : { open: false };
       case 'reader': if (rdOpen()) closeReader(); else openReader(); return { ok: true, open: rdOpen() };
       case 'rsvp': openReader(); setTimeout(startRSVP, 120); return { ok: true };

@@ -43,7 +43,7 @@ async def main():
             cd.on('Runtime.consoleAPICalled', lambda e: ex.append('console.' + e['type'] + ' ' + ' '.join(str(a.get('value', a.get('description', ''))) for a in e['args'])[:200]) if e['type'] in ('error', 'warning') else None)
             await cd.send('Runtime.enable'); await page.reload(); await page.wait_for_timeout(2500)
             r2 = await feat('audit'); d7 += ' RELOAD exceptions=%s rules=%s' % (ex[:6], sorted({i['rule'] for i in r2['items']}))
-            d7 += ' ping=%s' % await feat('ping')
+            d7 += ' ping=%s tabs=%s page=%s' % (await feat('ping'), await sw.evaluate("async()=>(await chrome.tabs.query({})).map(t=>[t.id,(t.url||'').slice(-24),t.active])"), page.url[-24:])
         ok('auth_ac' in rules, 'audit: câmp parolă cu autocomplete=off' + d7); ok('spacing_clip' in rules, 'audit: tăiere la spațierea textului (1.4.12)')
         ok(a['stats'].get('lix') is not None, f"LIX în statistici: {a['stats'].get('lix')}")
         # hint-uri numerotate: Alt+Shift+H, apoi 2 + Enter => al doilea țintă
