@@ -1,0 +1,8 @@
+npm warn deprecated whatwg-encoding@3.1.1: Use @exodus/bytes instead for a more spec-conformant and faster implementation
+npm warn deprecated eslint@9.39.4: This version is no longer supported. Please see https://eslint.org/version-support for other options.
+Validation Summary:
+
+errors          0              
+notices         0              
+warnings        0              
+

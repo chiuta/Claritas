@@ -1,0 +1,50 @@
+exe=/usr/bin/vivaldi-stable
+/usr/bin/vivaldi-stable: symbolic link to /opt/vivaldi/vivaldi
+#!/bin/bash
+# Copyright (c) 2011 The Chromium Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+# Let the wrapped binary know that it has been run through the wrapper.
+{
+   "Browser": "Chrome/156.0.8078.104",
+   "File-Path-Style": "posix",
+   "Protocol-Version": "1.3",
+   "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36",
+   "V8-Version": "15.6.75.58",
+   "WebKit-Version": "537.36 (@46876a0c2df3492ed67a8846950ba6d37170b58c)",
+   "webSocketDebuggerUrl": "ws://127.0.0.1:9444/devtools/browser/75e82d79-cef6-4703-8c85-1a014e47b3ee"
+}
+
+runner      2932  0.0  0.0  17404  7692 ?        S    11:15   0:00 tee test/results/diag-vivaldi.txt
+runner      2952  0.0  0.0  17536  7696 ?        S    11:15   0:00 timeout 25 /usr/bin/vivaldi-stable --user-data-dir=/tmp/diag-prof --remote-debugging-port=9444 --no-first-run --no-sandbox --disable-
+runner      2954 48.5  2.5 55583036 413164 ?     Sl   11:15   0:05 /usr/bin/vivaldi-stable --user-data-dir=/tmp/diag-prof --remote-debugging-port=9444 --no-first-run --no-sandbox --disable-gpu about:b
+runner      2960  0.0  0.0 54569892 7852 ?       Sl   11:15   0:00 /opt/vivaldi/chrome_crashpad_handler --monitor-self --monitor-self-annotation=ptype=crashpad-handler --user-stream-region=3,65568 --d
+runner      2962  0.0  0.0 54553420 7768 ?       Sl   11:15   0:00 /opt/vivaldi/chrome_crashpad_handler --no-periodic-tasks --no-rate-limit --monitor-self-annotation=ptype=crashpad-handler --database=
+--- log
+[2954:2976:1114/111529.453891:ERROR:chromium/dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+[2954:2976:1114/111529.454687:ERROR:chromium/dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+[2954:2976:1114/111529.454719:ERROR:chromium/dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+[2954:2976:1114/111529.456691:ERROR:chromium/dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+[2954:2954:1114/111529.460539:ERROR:components/search_engines/search_engines_managers_factory.cc:78] File can't be read: /tmp/diag-prof/search_engines.json
+[2954:2954:1114/111529.462112:ERROR:components/search_engines/search_engines_managers_factory.cc:78] File can't be read: /tmp/diag-prof/search_engines_prompt.json
+[2954:2954:1114/111529.490588:ERROR:chromium/dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: 
+[2954:2976:1114/111529.490717:ERROR:chromium/dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+[2954:2954:1114/111529.490839:ERROR:chromium/dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: 
+[2954:2976:1114/111529.492283:ERROR:chromium/dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+[2954:2954:1114/111529.494580:ERROR:chromium/dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: 
+[2954:2954:1114/111529.495396:ERROR:chromium/dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: 
+[2954:2976:1114/111529.498954:ERROR:chromium/dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+
+DevTools listening on ws://127.0.0.1:9444/devtools/browser/75e82d79-cef6-4703-8c85-1a014e47b3ee
+[2954:2954:1114/111529.610925:ERROR:chromium/dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: 
+[2954:2976:1114/111529.611563:ERROR:chromium/dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+[2954:2954:1114/111529.611979:ERROR:chromium/dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.Properties.GetAll: object_path= /org/freedesktop/UPower/devices/DisplayDevice: org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.UPower was not provided by any .service files
+[2954:2954:1114/111529.612268:ERROR:chromium/dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: 
+[2954:2976:1114/111529.612314:ERROR:chromium/dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+[2954:2954:1114/111529.652200:ERROR:chromium/dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: 
+[2954:2954:1114/111529.652318:ERROR:chromium/dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: 
+[2954:2976:1114/111529.652514:ERROR:chromium/dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+[2954:2954:1114/111529.666225:ERROR:chromium/dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: 
+[2954:2976:1114/111529.667391:ERROR:chromium/dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+[2954:2954:1114/111529.683187:ERROR:chromium/dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: 
+[2990:3001:1114/111541.504055:ERROR:chromium/ui/gfx/x/connection.cc:64] X connection error received.

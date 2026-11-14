@@ -1,0 +1,1 @@
+OK   test/ci_good.html: 0 erori, 3 avertismente

@@ -1,0 +1,46 @@
+exe=/usr/bin/opera
+/usr/bin/opera: symbolic link to ../lib/x86_64-linux-gnu/opera-stable/opera
+{
+   "Browser": "Chrome/157.0.8103.39",
+   "Chromium-Version": "Chrome/157.0.8103.39",
+   "File-Path-Style": "posix",
+   "Protocol-Version": "1.3",
+   "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/157.0.0.0 Safari/537.36 OPR/140.0.0.0",
+   "V8-Version": "15.7.112.23",
+   "WebKit-Version": "537.36 (@9a31f0acec1854d44e49a73fbf8017598151a583)",
+   "webSocketDebuggerUrl": "ws://127.0.0.1:9444/devtools/browser/3316ec56-582c-4505-813d-833664d58078"
+}
+
+runner      3119  0.0  0.0  17404  7340 ?        S    11:06   0:00 tee test/results/diag-opera.txt
+runner      3138  0.0  0.0  17536  7596 ?        S    11:06   0:00 timeout 25 /usr/bin/opera --user-data-dir=/tmp/diag-prof --remote-debugging-port=9444 --no-first-run --no-sandbox --disable-gpu about
+runner      3140 14.9  1.6 55600168 274472 ?     Sl   11:06   0:01 /usr/bin/opera --user-data-dir=/tmp/diag-prof --remote-debugging-port=9444 --no-first-run --no-sandbox --disable-gpu about:blank
+runner      3142  0.0  0.0 54581548 4912 ?       Sl   11:06   0:00 /usr/lib/x86_64-linux-gnu/opera-stable/opera_crashreporter --monitor-self-annotation=ptype=crashpad-handler --database=/tmp/diag-prof
+runner      3147  0.0  0.5 54891240 92268 ?      S    11:06   0:00 /usr/lib/x86_64-linux-gnu/opera-stable/opera --type=zygote --no-zygote-sandbox --no-sandbox --crashpad-handler-pid=3142 --user-data-d
+--- log
+[3140:3156:1114/110609.621017:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+[3140:3156:1114/110610.300412:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+[3140:3163:1114/110610.301021:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+[3140:3163:1114/110610.301040:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+[3140:3163:1114/110610.301050:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+[3140:3156:1114/110610.302971:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+[3140:3156:1114/110610.337342:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+
+DevTools listening on ws://127.0.0.1:9444/devtools/browser/3316ec56-582c-4505-813d-833664d58078
+[3140:3197:1114/110610.388303:ERROR:opera/opera_components/partner_bookmarks/partner_bookmarks_utils.cc:267] Unable to read partner speeddials file.
+[3140:3140:1114/110610.399710:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: 
+[3140:3156:1114/110610.399996:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+[3140:3140:1114/110610.400187:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.Properties.GetAll: object_path= /org/freedesktop/UPower/devices/DisplayDevice: org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.UPower was not provided by any .service files
+[3140:3140:1114/110610.400220:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: 
+[3140:3140:1114/110610.403781:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: 
+[3140:3156:1114/110610.405380:ERROR:dbus/bus.cc:406] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+[3140:3140:1114/110610.434030:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: 
+[3140:3140:1114/110610.439587:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: 
+[3140:3140:1114/110611.143814:ERROR:CONSOLE:2] "Pref value for "continue_on_mixed.similar_products_enabled" is not a string", source: chrome://startpage/main.js (2)
+[3140:3140:1114/110611.180875:ERROR:CONSOLE:2] "Pref value for "continue_on_mixed.similar_products_visibility_state" is not a boolean", source: chrome://startpage/main.js (2)
+[3140:3140:1114/110611.180944:ERROR:CONSOLE:2] "Pref value for "continue_on_mixed.similar_products_visibility_state" is not a boolean", source: chrome://startpage/main.js (2)
+[3140:3140:1114/110611.180981:ERROR:CONSOLE:2] "Pref value for "continue_on_mixed.similar_products_visibility_state" is not a boolean", source: chrome://startpage/main.js (2)
+[3140:3140:1114/110611.181016:ERROR:CONSOLE:2] "Pref value for "continue_on_mixed.similar_products_visibility_state" is not a boolean", source: chrome://startpage/main.js (2)
+[3140:3140:1114/110611.181048:ERROR:CONSOLE:2] "Pref value for "continue_on_mixed.similar_products_visibility_state" is not a boolean", source: chrome://startpage/main.js (2)
+[3140:3140:1114/110611.181094:ERROR:CONSOLE:2] "Pref value for "continue_on_mixed.similar_products_visibility_state" is not a boolean", source: chrome://startpage/main.js (2)
+[3170:3170:1114/110624.594959:ERROR:ui/gfx/x/connection.cc:64] X connection error received.
+[3170:3181:1114/110624.596540:ERROR:ui/gfx/x/connection.cc:64] X connection error received.

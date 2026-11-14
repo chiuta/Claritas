@@ -1,0 +1,37 @@
+/home/runner/work/Claritas/Claritas/test/ff_selenium.py:83: DeprecationWarning: install_addon is deprecated, use install_web_extension instead
+  aid = d.install_addon(EXT, temporary=True); ok(True, f'extensie instalată temporar ({aid})')
+PASS extensie instalată temporar (claritas@trom.tf)
+INFO Firefox 161.0
+PASS popup en: "Contrast" lang=en
+PASS popup ro: "Contrast" lang=ro
+PASS popup fr: "Contraste" lang=fr
+PASS popup it: "Contrasto" lang=it
+PASS popup es: "Contraste" lang=es
+PASS popup pt: "Contraste" lang=pt
+PASS popup de: "Kontrast" lang=de
+PASS popup hu: "Kontraszt" lang=hu
+PASS contrast text pal corectat (7.1:1)
+PASS contrast câmp dezactivat corectat (7.2:1)
+PASS temă galben pe negru: fundal rgb(0, 0, 0)
+PASS extensie oprită: pagina neschimbată (rgb(187, 187, 187))
+PASS captură vizibilă: PNG descărcat (ok)
+PASS captură Firefox: e-mailul este acoperit cu negru
+PASS captură cu iframe cross-origin: PNG descărcat (ok)
+PASS captură Firefox: e-mailul din iframe cross-origin este acoperit (492 pixeli negri)
+PASS Firefox v1.7: alt imagini ['[auto-generated description] Casa veche din Brașov, 1900', '[auto-generated description] Casa din brasov', 'Grafic vânzări']
+PASS Firefox v1.7: navigare titluri 'Titlu principal', 'Secțiunea doi'
+PASS Firefox v1.7: listă repere/titluri/linkuri (10)
+PASS Firefox v1.7: rezumat + glosar ['CNRED', 'solicitantului']
+PASS Firefox v1.7: comandă vocală interpretată ({'id': 'zin', 'ok': True})
+PASS Firefox v1.7: spotlight
+PASS Firefox v1.7: voce nu aruncă ({'ok': True, 'on': True})
+PASS Firefox v1.7: raport HTML escapat
+PASS Firefox v1.7: dezactivarea modulelor restaurează pagina [False, 0, None]
+PASS Firefox v1.8: formulă cu descriere vorbită (the fraction a over 2 end fraction equals 3)
+PASS Firefox v1.8: inspector pornit
+PASS Firefox v1.8: inspector contrast #aaaaaa  #ffffff2.32 : 1  ·  normal text 16pxAA ✗   AAA ✗Suggestion: text #777777 reaches 4.5 : 1
+PASS Firefox v1.8: hartă tab 2 focusable elements · 1 with errors · 1 warnings
+PASS Firefox v1.8: listă de citit [{'id': '1794655147538', 'note': 'notă', 'read': False, 'sel': 'Propoziție pentru lista de citit.', 'title': 'T', 'ts': 1794655147538, 'url': 'http://127.0.0.1:8771/v18.html'}]
+PASS Firefox v1.8: CSS pe site aplicat (rgb(9, 8, 7))
+PASS Firefox v1.8: dezactivarea modulelor restaurează pagina [False, False, None]
+EȘECURI: niciunul
