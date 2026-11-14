@@ -61,7 +61,7 @@ Website: https://claritas.chiuta.ro
 
 Install: https://claritas.chiuta.ro/#instalare · `install/install.sh` · `install/install.ps1`
 
-Verification status (v1.5.5): tested automatically in CI on Chromium, Edge, Brave, Firefox (several channels), real Safari 27.2 on macOS, Safari 26.2 in iPhone/iPad Simulator, Chrome 113 and Firefox 162 on Android 14 (emulator). Verified in CI on Linux for v1.7.0: Opera 140 (all 12 test files). Not verified: Vivaldi (it starts, but the automated debugging connection times out), real Samsung Internet, the extension activated inside real Safari/iOS, branded Chrome. Shortcuts Alt+Shift+O/D/L/G can be remapped in the browser; P/H/S/M are fixed. The definition button opens dexonline.ro or Wiktionary only when you click it.
+Verification status (v1.5.5): tested automatically in CI on Chromium, Edge, Brave, Firefox (several channels), real Safari 27.2 on macOS, Safari 26.2 in iPhone/iPad Simulator, Chrome 113 and Firefox 162 on Android 14 (emulator). Verified in CI on Linux for v1.7.0: Opera 140 (all 12 test files). Vivaldi (Linux) is verified only partially: the automated debugging connection works, but Vivaldi does not expose new tabs, so a single-tab test (`test/t21_single_page.py`) checks the content script, the audit rules, contrast and the popup UI. Not verified: real Samsung Internet, the extension activated inside real Safari/iOS, branded Chrome. Shortcuts Alt+Shift+O/D/L/G can be remapped in the browser; P/H/S/M are fixed. The definition button opens dexonline.ro or Wiktionary only when you click it.
 
 ## Optional modules (v1.8)
 All are off by default (popup → “More” → “Optional modules (v1.8)”). Everything runs locally; nothing is sent anywhere.

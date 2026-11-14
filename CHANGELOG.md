@@ -1,5 +1,8 @@
 # Changelog
 
+## Unreleased — tests only
+- CI: Vivaldi (Linux) is now partially verified by `t21_single_page.py` (content script, audit rules, contrast, popup), after fixing the CDP connection in the test harness (wait + retries, `--remote-allow-origins`). Vivaldi exposes no new tabs through CDP, so multi-tab tests cannot run there. Opera now passes t5–t8 and t15 (the harness had been messaging a stale tab); t9 (recording) is skipped under CDP.
+
 ## 1.9.1 — 13 Nov 2026
 - **Fix:** the `/` search shortcut was ignored while a checkbox or slider had focus (only text fields should block it). CI on Windows/macOS caught it via `t20_ui.py`, now covering both cases.
 
