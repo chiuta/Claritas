@@ -42,23 +42,27 @@ async def _cdp_launch(self, kw):
     args = [a for a in kw.get('args', []) if not a.startswith('--headless')]
     cmd = [exe, f'--user-data-dir={prof}', f'--remote-debugging-port={port}', '--remote-allow-origins=*', '--no-first-run', '--no-default-browser-check', '--no-sandbox',
            '--disable-features=DisableLoadExtensionCommandLineSwitch'] + (['--headless=new'] if not os.environ.get('HEADED') else []) + args + ['about:blank']
-    logf = tempfile.NamedTemporaryFile('w+', suffix='.log', delete=False)
-    proc = subprocess.Popen(cmd, stdout=logf, stderr=logf, start_new_session=True)
-    for _ in range(60):
-        try: urllib.request.urlopen(f'http://127.0.0.1:{port}/json/version', timeout=1); break
-        except Exception: time.sleep(0.5)
-    time.sleep(5)  # Vivaldi: conectarea imediată după pornire se blochează (UI-ul încă se încarcă)
-    try:
-        br = None
-        for _try in range(6):
+    import json as _json
+    want_ext = any(a.startswith('--load-extension=') for a in args)
+    br = None; proc = None; last = None
+    for _launch in range(3):
+        if _launch: port = _next_port(); cmd = [c.replace(c, f'--remote-debugging-port={port}') if c.startswith('--remote-debugging-port=') else c for c in cmd]
+        logf = tempfile.NamedTemporaryFile('w+', suffix='.log', delete=False)
+        proc = subprocess.Popen(cmd, stdout=logf, stderr=logf, start_new_session=True)
+        for _ in range(80):  # așteaptă până apar fila inițială și (dacă e cazul) service worker-ul extensiei
+            try:
+                lst = _json.load(urllib.request.urlopen(f'http://127.0.0.1:{port}/json/list', timeout=1))
+                if any(t['type'] == 'page' for t in lst) and (not want_ext or any(t['type'] == 'service_worker' and t['url'].startswith('chrome-extension://') for t in lst)): break
+            except Exception: pass
+            time.sleep(0.5)
+        time.sleep(3)  # Vivaldi: conectarea imediată după pornire se blochează (UI-ul încă se încarcă)
+        for _try in range(2):
             try: br = await self.connect_over_cdp(f'http://127.0.0.1:{port}', timeout=15000); break
-            except Exception:
-                if _try == 5: raise
-                time.sleep(4)
-    except Exception:
-        print('CDP indisponibil; jurnal browser:', open(logf.name).read()[-800:], 'proces viu:', proc.poll() is None)
+            except Exception as e: last = e; time.sleep(3)
+        if br: break
+        print('CDP indisponibil (încercarea %d); jurnal browser:' % (_launch + 1), open(logf.name).read()[-400:], 'proces viu:', proc.poll() is None, flush=True)
         _killgrp(proc)
-        raise
+    if not br: raise last
     ctx = br.contexts[0]
     import hashlib
     ext = [a.split('=', 1)[1] for a in args if a.startswith('--load-extension=')]
