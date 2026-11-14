@@ -4,7 +4,7 @@ exe = os.environ['BROWSER_EXE']; port = 9555; prof = tempfile.mkdtemp()
 ext = os.path.abspath('dist/chromium')
 extra = sys.argv[1:] 
 cmd = [exe, f'--user-data-dir={prof}', f'--remote-debugging-port={port}', '--remote-allow-origins=*', '--no-first-run', '--no-default-browser-check', '--no-sandbox',
-       f'--load-extension={ext}', 'about:blank'] + extra
+       *([] if os.environ.get('NOEXT') else [f'--load-extension={ext}']), 'about:blank'] + extra
 log = open('/tmp/viv.log', 'w'); proc = subprocess.Popen(cmd, stdout=log, stderr=log, start_new_session=True)
 for _ in range(60):
     try: urllib.request.urlopen(f'http://127.0.0.1:{port}/json/version', timeout=1); break

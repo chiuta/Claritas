@@ -16,11 +16,15 @@ jobs:
           curl -fsSL https://repo.vivaldi.com/archive/linux_signing_key.pub | sudo gpg --dearmor -o /usr/share/keyrings/vivaldi.gpg
           echo "deb [signed-by=/usr/share/keyrings/vivaldi.gpg] https://repo.vivaldi.com/archive/deb/ stable main" | sudo tee /etc/apt/sources.list.d/vivaldi.list
           for i in 1 2 3 4; do sudo apt-get update && sudo apt-get install -y vivaldi-stable xvfb && break; sleep 20; done
-      - name: A - implicit
-        env: { BROWSER_EXE: /usr/bin/vivaldi-stable, DEBUG: 'pw:protocol' }
-        run: timeout 120 xvfb-run -a python -u test/viv_diag.py > /tmp/a.txt 2>&1 || true; cut -c1-260 /tmp/a.txt | tail -70
-        continue-on-error: true
-      - name: B - fără DEBUG, flags
+      - name: C - disable-extensions-except
         env: { BROWSER_EXE: /usr/bin/vivaldi-stable }
-        run: timeout 120 xvfb-run -a python -u test/viv_diag.py --disable-features=DisableLoadExtensionCommandLineSwitch > /tmp/b.txt 2>&1 || true; cut -c1-400 /tmp/b.txt | tail -20
+        run: timeout 120 xvfb-run -a python -u test/viv_diag.py --disable-extensions-except=$PWD/dist/chromium > /tmp/c.txt 2>&1 || true; cut -c1-300 /tmp/c.txt | grep -E "CONNECT|TIMEOUT|new_page|TARGETS" 
+        continue-on-error: true
+      - name: D - sem load-extension
+        env: { BROWSER_EXE: /usr/bin/vivaldi-stable, NOEXT: '1' }
+        run: timeout 120 xvfb-run -a python -u test/viv_diag.py > /tmp/d.txt 2>&1 || true; cut -c1-300 /tmp/d.txt | grep -E "CONNECT|TIMEOUT|new_page"
+        continue-on-error: true
+      - name: E - baza (ca diagnosticul reusit)
+        env: { BROWSER_EXE: /usr/bin/vivaldi-stable }
+        run: timeout 120 xvfb-run -a python -u test/viv_diag.py > /tmp/e.txt 2>&1 || true; cut -c1-300 /tmp/e.txt | grep -E "CONNECT|TIMEOUT|new_page"
         continue-on-error: true
