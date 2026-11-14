@@ -47,8 +47,14 @@ async def _cdp_launch(self, kw):
     for _ in range(60):
         try: urllib.request.urlopen(f'http://127.0.0.1:{port}/json/version', timeout=1); break
         except Exception: time.sleep(0.5)
+    time.sleep(5)  # Vivaldi: conectarea imediată după pornire se blochează (UI-ul încă se încarcă)
     try:
-        br = await self.connect_over_cdp(f'http://127.0.0.1:{port}', timeout=90000)
+        br = None
+        for _try in range(4):
+            try: br = await self.connect_over_cdp(f'http://127.0.0.1:{port}', timeout=20000); break
+            except Exception:
+                if _try == 3: raise
+                time.sleep(3)
     except Exception:
         print('CDP indisponibil; jurnal browser:', open(logf.name).read()[-800:], 'proces viu:', proc.poll() is None)
         _killgrp(proc)
