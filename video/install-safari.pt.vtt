@@ -1,0 +1,29 @@
+WEBVTT
+
+1
+00:00.000 --> 00:05.000
+Transfira do site do Claritas o pacote do seu navegador.
+
+2
+00:06.000 --> 00:11.000
+Descompacte-o numa pasta.
+
+3
+00:12.000 --> 00:21.000
+Num Mac com Xcode, execute ./build-safari.sh na pasta descompactada.
+
+4
+00:22.000 --> 00:29.000
+Abra Safari → Definições → Extensões.
+
+5
+00:30.000 --> 00:36.000
+Ative o Claritas e permita-o nos sites.
+
+6
+00:37.000 --> 00:41.000
+Abra a janela do Claritas na barra de ferramentas.
+
+7
+00:42.000 --> 00:46.000
+Se o Claritas não aparecer, ative Programação → Permitir extensões não assinadas. Ainda não verificámos a ativação num Safari real.

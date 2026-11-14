@@ -1,0 +1,29 @@
+WEBVTT
+
+1
+00:00.000 --> 00:05.000
+Descarcă de pe site-ul Claritas pachetul pentru browserul tău.
+
+2
+00:06.000 --> 00:11.000
+Dezarhivează-l într-un folder.
+
+3
+00:12.000 --> 00:21.000
+Pe un Mac cu Xcode, rulează ./build-safari.sh în folderul dezarhivat.
+
+4
+00:22.000 --> 00:29.000
+Deschide Safari → Setări → Extensii.
+
+5
+00:30.000 --> 00:36.000
+Activează Claritas și permite-i accesul pe site-uri.
+
+6
+00:37.000 --> 00:41.000
+Deschide fereastra Claritas din bara de instrumente.
+
+7
+00:42.000 --> 00:46.000
+Dacă Claritas nu apare, activează Develop → Allow Unsigned Extensions. Nu am verificat încă activarea în Safari real.

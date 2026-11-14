@@ -1,0 +1,29 @@
+WEBVTT
+
+1
+00:00.000 --> 00:05.000
+Download the package for your browser from the Claritas website.
+
+2
+00:06.000 --> 00:11.000
+Unzip it into a folder.
+
+3
+00:12.000 --> 00:16.000
+Open the extensions page: chrome://extensions (edge://extensions, opera://extensions…).
+
+4
+00:17.000 --> 00:21.000
+Turn on Developer mode.
+
+5
+00:22.000 --> 00:29.000
+Choose “Load unpacked” and select the folder.
+
+6
+00:30.000 --> 00:37.000
+Claritas appears in the list. Pin it to the toolbar.
+
+7
+00:38.000 --> 00:43.000
+Open the Claritas popup from the toolbar. Done.

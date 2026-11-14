@@ -1,0 +1,29 @@
+WEBVTT
+
+1
+00:00.000 --> 00:05.000
+Töltsd le a Claritas oldaláról a böngésződnek megfelelő csomagot.
+
+2
+00:06.000 --> 00:11.000
+Csomagold ki egy mappába.
+
+3
+00:12.000 --> 00:21.000
+Xcode-os Macen futtasd a ./build-safari.sh parancsot a kicsomagolt mappában.
+
+4
+00:22.000 --> 00:29.000
+Nyisd meg: Safari → Beállítások → Bővítmények.
+
+5
+00:30.000 --> 00:36.000
+Kapcsold be a Claritast, és engedélyezd a weboldalakon.
+
+6
+00:37.000 --> 00:41.000
+Nyisd meg a Claritas ablakát az eszköztárról.
+
+7
+00:42.000 --> 00:46.000
+Ha a Claritas nem jelenik meg, kapcsold be: Fejlesztés → Aláíratlan bővítmények engedélyezése. A valódi Safariban még nem ellenőriztük az aktiválást.
