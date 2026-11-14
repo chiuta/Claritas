@@ -75,7 +75,8 @@ jobs:
           if [ -n "$BROWSER_CDP" ]; then
             export HEADED=1
             export CLR_DIAG=1
-            xvfb-run -a python test/run_matrix.py "${{ matrix.os }}-${{ matrix.browser }}" t5_features.py t6_popup_tools.py t7_v14.py t8_capture.py t9_rec.py t15_v18.py
+            if [ "${{ matrix.browser }}" = vivaldi ]; then xvfb-run -a python test/run_matrix.py "${{ matrix.os }}-${{ matrix.browser }}" t21_single_page.py; else
+            xvfb-run -a python test/run_matrix.py "${{ matrix.os }}-${{ matrix.browser }}" t5_features.py t6_popup_tools.py t7_v14.py t8_capture.py t9_rec.py t15_v18.py; fi
           else
             python test/run_matrix.py "${{ matrix.os }}-${{ matrix.browser }}"
           fi
