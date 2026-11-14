@@ -40,7 +40,7 @@ async def _cdp_launch(self, kw):
     import subprocess, socket, time, urllib.request
     exe = os.environ['BROWSER_EXE']; port = _next_port(); prof = tempfile.mkdtemp(prefix='clr-cdp-')
     args = [a for a in kw.get('args', []) if not a.startswith('--headless')]
-    cmd = [exe, f'--user-data-dir={prof}', f'--remote-debugging-port={port}', '--no-first-run', '--no-default-browser-check', '--no-sandbox',
+    cmd = [exe, f'--user-data-dir={prof}', f'--remote-debugging-port={port}', '--remote-allow-origins=*', '--no-first-run', '--no-default-browser-check', '--no-sandbox',
            '--disable-features=DisableLoadExtensionCommandLineSwitch'] + (['--headless=new'] if not os.environ.get('HEADED') else []) + args + ['about:blank']
     logf = tempfile.NamedTemporaryFile('w+', suffix='.log', delete=False)
     proc = subprocess.Popen(cmd, stdout=logf, stderr=logf, start_new_session=True)
