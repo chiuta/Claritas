@@ -72,7 +72,12 @@ async def main():
             blk = sum(1 for x in range(max(0, x0), min(im.width, x1), 3) for y in range(max(0, y0), min(im.height, y1), 3) if im.getpixel((x, y))[:3] == (0, 0, 0))
             await page.keyboard.press('Escape'); return blk
         for path, nm in (('/srcdoc.html', 'iframe srcdoc'), ('/sandbox.html', 'iframe sandbox'), ('/shadowframe.html', 'iframe în shadow DOM')):
-            b = await shot(path); ok(b > (100 if (await page.evaluate('innerWidth') <= 1000 and not await page.evaluate('matchMedia("(pointer:coarse)").matches')) else 25), f'{nm}: e-mail acoperit ({b} pixeli negri)')
+            thr = (100 if (await page.evaluate('innerWidth') <= 1000 and not await page.evaluate('matchMedia("(pointer:coarse)").matches')) else 25)
+            b = await shot(path)
+            for _ in range(2):
+                if b > thr: break
+                await page.wait_for_timeout(1500); b = await shot(path)  # iframe încărcat târziu în emularea mobilă
+            ok(b > (100 if (await page.evaluate('innerWidth') <= 1000 and not await page.evaluate('matchMedia("(pointer:coarse)").matches')) else 25), f'{nm}: e-mail acoperit ({b} pixeli negri)')
         # E) jurnal VTT: taste simple nelogate; sesiune veche ignorată
         await sw.evaluate("globalThis.__ev=[];chrome.runtime.onMessage.addListener(m=>{if(m&&m.type==='rec-ev')globalThis.__ev.push(m)})")
         await sw.evaluate("async()=>{await chrome.storage.local.set({recSession:{on:true,beat:Date.now(),t0:Date.now(),fx:true,keys:true,blur:true}})}")

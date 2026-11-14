@@ -50,11 +50,11 @@ async def _cdp_launch(self, kw):
     time.sleep(5)  # Vivaldi: conectarea imediată după pornire se blochează (UI-ul încă se încarcă)
     try:
         br = None
-        for _try in range(4):
-            try: br = await self.connect_over_cdp(f'http://127.0.0.1:{port}', timeout=20000); break
+        for _try in range(6):
+            try: br = await self.connect_over_cdp(f'http://127.0.0.1:{port}', timeout=15000); break
             except Exception:
-                if _try == 3: raise
-                time.sleep(3)
+                if _try == 5: raise
+                time.sleep(4)
     except Exception:
         print('CDP indisponibil; jurnal browser:', open(logf.name).read()[-800:], 'proces viu:', proc.poll() is None)
         _killgrp(proc)
