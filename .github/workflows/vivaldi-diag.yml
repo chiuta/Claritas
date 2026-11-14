@@ -21,3 +21,8 @@ jobs:
         working-directory: test
         run: timeout 150 xvfb-run -a python -u -c "import bt,runpy,sys;runpy.run_path('viv_diag2.py',run_name='__main__')" > /tmp/f.txt 2>&1 || true; cut -c1-400 /tmp/f.txt | tail -25
         continue-on-error: true
+      - name: G - t5 direct
+        env: { BROWSER_EXE: /usr/bin/vivaldi-stable, BROWSER_CDP: '1', HEADED: '1', CLARITAS_TEST_SHADOW: open }
+        working-directory: test
+        run: timeout 200 xvfb-run -a python -u -c "import bt,runpy;runpy.run_path('t5_features.py',run_name='__main__')" > /tmp/g.txt 2>&1 || true; cut -c1-500 /tmp/g.txt | grep -vE "^\s*(\||File|\^)" | grep -v dbus | tail -30
+        continue-on-error: true
