@@ -36,5 +36,5 @@ async def main():
         await page.focus('#q'); await page.keyboard.type('contrast'); await page.wait_for_timeout(500)
         ok(await page.evaluate("document.querySelectorAll('.sx-hide').length>0 || document.getElementById('q').value==='contrast'"), 'popup: căutarea reacționează')
         await ctx.close()
-    print('FAILS', fails)
+    print('rezumat eșecuri:', fails)
 asyncio.run(main())
