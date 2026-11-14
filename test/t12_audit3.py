@@ -73,9 +73,10 @@ async def main():
             x0, y0, x1, y1 = [int(v * sc) for v in (fr[0], fr[1], fr[0] + fr[2], fr[1] + fr[3])]
             x1 = min(x1, im.width); y1 = min(y1, im.height)
             blk = sum(1 for x in range(max(0, x0), min(im.width, x1), 3) for y in range(max(0, y0), min(im.height, y1), 3) if im.getpixel((x, y))[:3] == (0, 0, 0))
-            try:
-                fp = await sw.evaluate("""async()=>{const [t]=await chrome.tabs.query({active:true,url:'http://localhost:8767/*'});const fs=await chrome.webNavigation.getAllFrames({tabId:t.id});const out=[];for(const f of fs){let r;try{r=await chrome.tabs.sendMessage(t.id,{type:'feat',cmd:'ping'},{frameId:f.frameId});r=r&&r.ok?'cs':'?'}catch(e){r='no:'+String(e.message).slice(0,40)}out.push([f.frameId,(f.url||'').slice(0,20),r])}return out}""")
-            except Exception as e: fp = str(e)[:80]
+            fp = []
+            for f in page.frames:
+                try: fp.append((f.url[:18], await f.evaluate("[!!document.getElementById('clr-style'), document.documentElement.getAttribute('data-clr')||'', document.documentElement.attributes.length, document.querySelectorAll('claritas-mask').length]")))
+                except Exception as e: fp.append((f.url[:18], 'ERR'))
             DIAG[0] = 'frames=%s ' % (fp,)
             DIAG[0] += 'img=%sx%s fr=%s vv=%s box=%s' % (im.width, im.height, [round(v) for v in fr], [round(v, 1) for v in vv], (x0, y0, x1, y1))
             await page.keyboard.press('Escape'); return blk
