@@ -18,9 +18,9 @@ jobs:
           for i in 1 2 3 4; do sudo apt-get update && sudo apt-get install -y vivaldi-stable xvfb && break; sleep 20; done
       - name: A - implicit
         env: { BROWSER_EXE: /usr/bin/vivaldi-stable, DEBUG: 'pw:protocol' }
-        run: xvfb-run -a python test/viv_diag.py 2>&1 | grep -vE "^\s*$" | cut -c1-260 | tail -60
+        run: timeout 120 xvfb-run -a python -u test/viv_diag.py > /tmp/a.txt 2>&1 || true; cut -c1-260 /tmp/a.txt | tail -70
         continue-on-error: true
       - name: B - fără DEBUG, flags
         env: { BROWSER_EXE: /usr/bin/vivaldi-stable }
-        run: xvfb-run -a python test/viv_diag.py --disable-features=DisableLoadExtensionCommandLineSwitch 2>&1 | cut -c1-400 | tail -20
+        run: timeout 120 xvfb-run -a python -u test/viv_diag.py --disable-features=DisableLoadExtensionCommandLineSwitch > /tmp/b.txt 2>&1 || true; cut -c1-400 /tmp/b.txt | tail -20
         continue-on-error: true

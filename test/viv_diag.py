@@ -20,5 +20,6 @@ async def main():
             print('CONNECTED in', round(time.time() - t, 1), 'contexts', len(br.contexts), 'pages', [pg.url[:50] for pg in br.contexts[0].pages], 'sw', [w.url[:60] for w in br.contexts[0].service_workers])
             pg = await br.contexts[0].new_page(); await pg.goto('about:blank'); print('new_page ok')
         except Exception as e: print('CONNECT FAIL', str(e)[:300])
-asyncio.run(main())
-os.killpg(os.getpgid(proc.pid), 9)
+try: asyncio.run(asyncio.wait_for(main(), 60))
+except BaseException as e: print("TIMEOUT/ERR", type(e).__name__, str(e)[:200])
+os.killpg(os.getpgid(proc.pid), 9); os._exit(0)
