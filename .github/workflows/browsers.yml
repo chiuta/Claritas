@@ -148,6 +148,7 @@ jobs:
         with: { firefox-version: '${{ matrix.channel }}' }
       - id: gd
         uses: browser-actions/setup-geckodriver@latest
+        with: { token: '${{ github.token }}' }
       - name: Selenium test
         shell: bash
         env:
@@ -289,6 +290,7 @@ jobs:
       - run: pip install selenium && python build.py
       - uses: browser-actions/setup-geckodriver@latest
         id: gd
+        with: { token: '${{ github.token }}' }
       - name: geckodriver path
         run: echo "GECKODRIVER=$(which geckodriver)" >> $GITHUB_ENV; geckodriver --version | head -1
       - name: KVM
