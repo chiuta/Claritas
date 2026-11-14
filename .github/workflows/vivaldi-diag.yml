@@ -16,13 +16,8 @@ jobs:
           curl -fsSL https://repo.vivaldi.com/archive/linux_signing_key.pub | sudo gpg --dearmor -o /usr/share/keyrings/vivaldi.gpg
           echo "deb [signed-by=/usr/share/keyrings/vivaldi.gpg] https://repo.vivaldi.com/archive/deb/ stable main" | sudo tee /etc/apt/sources.list.d/vivaldi.list
           for i in 1 2 3 4; do sudo apt-get update && sudo apt-get install -y vivaldi-stable xvfb && break; sleep 20; done
-      - name: F - ca in harness (bt.py, CDP)
+      - name: H - metode de creare tinte
         env: { BROWSER_EXE: /usr/bin/vivaldi-stable, BROWSER_CDP: '1', HEADED: '1' }
         working-directory: test
-        run: timeout 150 xvfb-run -a python -u -c "import bt,runpy,sys;runpy.run_path('viv_diag2.py',run_name='__main__')" > /tmp/f.txt 2>&1 || true; cut -c1-400 /tmp/f.txt | tail -25
-        continue-on-error: true
-      - name: G - t5 direct
-        env: { BROWSER_EXE: /usr/bin/vivaldi-stable, BROWSER_CDP: '1', HEADED: '1', CLARITAS_TEST_SHADOW: open }
-        working-directory: test
-        run: timeout 200 xvfb-run -a python -u -c "import bt,runpy;runpy.run_path('t5_features.py',run_name='__main__')" > /tmp/g.txt 2>&1 || true; cut -c1-500 /tmp/g.txt | grep -vE "^\s*(\||File|\^)" | grep -v dbus | tail -30
+        run: VIVALDI_FALLBACK=0 timeout 170 xvfb-run -a python -u -c "import bt,runpy;runpy.run_path('viv_diag3.py',run_name='__main__')" > /tmp/h.txt 2>&1 || true; cut -c1-900 /tmp/h.txt | grep -v dbus | tail -30
         continue-on-error: true
