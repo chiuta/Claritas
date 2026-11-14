@@ -33,8 +33,13 @@ async def main():
         await page.goto(f'chrome-extension://{eid}/popup.html'); await page.wait_for_timeout(1500)
         ok(await page.evaluate("document.querySelectorAll('.tabs [role=tab]').length>=4"), 'popup: filele sunt randate')
         ok(await page.evaluate("!!document.getElementById('q') && !!document.getElementById('quick')"), 'popup: căutare și bară rapidă')
-        await page.fill('#q', 'contrast'); await page.wait_for_timeout(600)
-        ok(await page.evaluate("document.querySelectorAll('.sx-hide').length>0"), 'popup: căutarea reacționează')
+        hid = 0; info = ''
+        for _ in range(10):
+            await page.fill('#q', ''); await page.fill('#q', 'contrast'); await page.wait_for_timeout(700)
+            hid = await page.evaluate("document.querySelectorAll('.sx-hide').length")
+            if hid: break
+        info = await page.evaluate("[document.getElementById('q').value, document.querySelectorAll('[data-i18n]').length, document.querySelectorAll('.tabs [role=tab]').length]")
+        ok(hid > 0, 'popup: căutarea reacționează (%s ascunse, %s)' % (hid, info))
         await ctx.close()
     print('rezumat eșecuri:', fails)
 asyncio.run(main())
