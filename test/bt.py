@@ -62,6 +62,18 @@ async def _cdp_launch(self, kw):
         from playwright.async_api import BrowserContext
         _orig_sw = BrowserContext.service_workers
         BrowserContext.service_workers = property(lambda self: [w for w in _orig_sw.fget(self) if eid in w.url])
+    _np = ctx.new_page
+    async def new_page():
+        # Vivaldi nu răspunde la Target.createTarget: ocolire prin chrome.tabs.create din service worker-ul extensiei
+        import asyncio
+        try: return await asyncio.wait_for(_np(), 8 if os.environ.get('VIVALDI_FALLBACK', '1') == '1' else 90)
+        except Exception:
+            sws = list(ctx.service_workers)
+            if not sws: raise
+            fut = asyncio.ensure_future(ctx.wait_for_event('page', timeout=15000))
+            await sws[0].evaluate("chrome.tabs.create({url:'about:blank',active:true}).then(()=>1)")
+            return await fut
+    if ext: ctx.new_page = new_page
     _close = ctx.close
     async def close():
         try: await br.close()
