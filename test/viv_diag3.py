@@ -15,12 +15,11 @@ async def main():
             args=[f'--disable-extensions-except={EXT}', f'--load-extension={EXT}', '--headless=new', '--no-sandbox'])
         await snap(ctx, 'start')
         sw = ctx.service_workers[0]
-        await sw.evaluate("chrome.tabs.create({url:'about:blank'}).then(()=>1)"); await snap(ctx, 'tabs.create')
-        await sw.evaluate("chrome.windows.create({url:'about:blank'}).then(()=>1)"); await snap(ctx, 'windows.create')
-        pg = ctx.pages[0]
-        try: await pg.evaluate("window.open('about:blank','_blank')"); 
-        except Exception as e: print('open ERR', str(e)[:100])
-        await snap(ctx, 'window.open')
+        await sw.evaluate("chrome.tabs.create({url:chrome.runtime.getURL('manifest.json')}).then(()=>1)"); await snap(ctx, 'tabs.create(manifest)')
+        live = [p for p in ctx.pages if not p.is_closed()]
+        if len(live) > 1:
+            try: await live[-1].goto('data:text/html,<title>ok</title>x'); print('GOTO ok', await live[-1].title(), flush=True)
+            except Exception as e: print('GOTO ERR', str(e)[:150], flush=True)
         br = ctx.browser
         try:
             s = await br.new_browser_cdp_session()
