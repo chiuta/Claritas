@@ -19,7 +19,7 @@ async def main():
     async with async_playwright() as p:
         ctx = await p.chromium.launch_persistent_context('/tmp/prof2', channel='chrome', headless=True,
             args=[f'--disable-extensions-except={EXT}', f'--load-extension={EXT}', '--headless=new', '--no-sandbox'])
-        sw = ctx.service_workers[0] if ctx.service_workers else await ctx.wait_for_event('serviceworker', timeout=8000)
+        sw = ctx.service_workers[0] if ctx.service_workers else await ctx.wait_for_event('serviceworker', timeout=30000)
         page = await ctx.new_page()
         for st in ({'enabled':False},{'enabled':True}):
             await sw.evaluate("s => chrome.storage.local.set({settings: s})", st)

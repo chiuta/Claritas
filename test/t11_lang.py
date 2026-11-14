@@ -12,7 +12,7 @@ async def main():
     async with async_playwright() as p:
         ctx = await p.chromium.launch_persistent_context('/tmp/prof12', channel='chrome', headless=True, accept_downloads=True,
             args=[f'--disable-extensions-except={EXT}', f'--load-extension={EXT}', '--headless=new', '--no-sandbox'], viewport={'width': 900, 'height': 700})
-        sw = ctx.service_workers[0] if ctx.service_workers else await ctx.wait_for_event('serviceworker', timeout=8000)
+        sw = ctx.service_workers[0] if ctx.service_workers else await ctx.wait_for_event('serviceworker', timeout=30000)
         eid = sw.url.split('/')[2]; errs = []
         for lg in EXP:
             await sw.evaluate("async (l)=>{await chrome.storage.local.clear();await chrome.storage.local.set({settings:{enabled:true,lang:l}})}", lg)

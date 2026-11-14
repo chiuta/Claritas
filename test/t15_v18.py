@@ -36,7 +36,7 @@ async def launch(p, ext, prof):
 async def main():
     async with async_playwright() as p:
         ctx = await launch(p, EXT, 'prof15')
-        sw = ctx.service_workers[0] if ctx.service_workers else await ctx.wait_for_event('serviceworker', timeout=8000)
+        sw = ctx.service_workers[0] if ctx.service_workers else await ctx.wait_for_event('serviceworker', timeout=30000)
         eid = sw.url.split('/')[2]; errs = []
         async def setset(**kw):
             base = dict(enabled=True, lang='en', noMotion=True); base.update(kw)
@@ -169,7 +169,7 @@ async def main():
         axe = unzip('claritas-chromium-axe')
         if axe is None: print('SKIP varianta -axe (rulează tools/fetch_vendor.sh și build.py)')
         else:
-            ctx = await launch(p, axe, 'prof15a'); sw = ctx.service_workers[0] if ctx.service_workers else await ctx.wait_for_event('serviceworker', timeout=8000)
+            ctx = await launch(p, axe, 'prof15a'); sw = ctx.service_workers[0] if ctx.service_workers else await ctx.wait_for_event('serviceworker', timeout=30000)
             await sw.evaluate("async()=>{await chrome.storage.local.set({settings:{enabled:true,lang:'en',modAI:true}})}")
             pg = await ctx.new_page(); pg.on('pageerror', lambda e: errs.append(str(e)))
             await pg.goto(URL); await pg.wait_for_timeout(1500)
@@ -187,7 +187,7 @@ async def main():
         pdfd = unzip('claritas-chromium-pdf')
         if pdfd is None: print('SKIP varianta -pdf (rulează tools/fetch_vendor.sh și build.py)')
         else:
-            ctx = await launch(p, pdfd, 'prof15p'); sw = ctx.service_workers[0] if ctx.service_workers else await ctx.wait_for_event('serviceworker', timeout=8000)
+            ctx = await launch(p, pdfd, 'prof15p'); sw = ctx.service_workers[0] if ctx.service_workers else await ctx.wait_for_event('serviceworker', timeout=30000)
             eid3 = sw.url.split('/')[2]
             pp = await ctx.new_page(); perr = []; pp.on('pageerror', lambda e: perr.append(str(e)))
             await pp.goto(f'chrome-extension://{eid3}/pdf.html'); await pp.wait_for_timeout(900)

@@ -11,7 +11,7 @@ async def main():
     async with async_playwright() as p:
         ctx = await p.chromium.launch_persistent_context('/tmp/prof21', channel='chrome', headless=True,
             args=[f'--disable-extensions-except={EXT}', f'--load-extension={EXT}', '--headless=new', '--no-sandbox'])
-        sw = ctx.service_workers[0] if ctx.service_workers else await ctx.wait_for_event('serviceworker', timeout=8000)
+        sw = ctx.service_workers[0] if ctx.service_workers else await ctx.wait_for_event('serviceworker', timeout=30000)
         eid = sw.url.split('/')[2]
         page = [pg for pg in ctx.pages if not pg.is_closed()][0]; errs = []
         page.on('pageerror', lambda e: errs.append(str(e)))

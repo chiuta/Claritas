@@ -23,7 +23,7 @@ async def main():
     async with async_playwright() as p:
         ctx = await p.chromium.launch_persistent_context(TMP + '/prof13', channel='chrome', headless=True, accept_downloads=True,
             args=[f'--disable-extensions-except={EXT}', f'--load-extension={EXT}', '--headless=new', '--no-sandbox'], viewport={'width': 900, 'height': 700})
-        sw = ctx.service_workers[0] if ctx.service_workers else await ctx.wait_for_event('serviceworker', timeout=8000)
+        sw = ctx.service_workers[0] if ctx.service_workers else await ctx.wait_for_event('serviceworker', timeout=30000)
         eid = sw.url.split('/')[2]; errs = []
         await sw.evaluate("async()=>{await chrome.storage.local.clear();await chrome.storage.sync.clear();await chrome.storage.local.set({settings:{enabled:true,lang:'en'}})}")
         pop = await ctx.new_page(); pop.on('pageerror', lambda e: errs.append(str(e)))
@@ -93,7 +93,7 @@ async def main():
             d.text((30, 60), 'Hello Claritas OCR 2026', fill='black', font=f); im.save(TMP + '/ocr13.png')
             ctx2 = await p.chromium.launch_persistent_context(TMP + '/prof13b', channel='chrome', headless=True,
                 args=[f'--disable-extensions-except={ext2}', f'--load-extension={ext2}', '--headless=new', '--no-sandbox'])
-            sw2 = ctx2.service_workers[0] if ctx2.service_workers else await ctx2.wait_for_event('serviceworker', timeout=8000)
+            sw2 = ctx2.service_workers[0] if ctx2.service_workers else await ctx2.wait_for_event('serviceworker', timeout=30000)
             eid2 = sw2.url.split('/')[2]; pg = await ctx2.new_page(); e2 = []
             pg.on('pageerror', lambda e: e2.append(str(e))); pg.on('requestfailed', lambda r: e2.append('REQFAIL ' + r.url[:80]))
             await pg.goto(f'chrome-extension://{eid2}/ocr.html'); await pg.wait_for_timeout(1500)

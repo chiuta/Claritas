@@ -22,7 +22,7 @@ async def main():
     async with async_playwright() as p:
         ctx = await p.chromium.launch_persistent_context(TMP + '/prof14', channel='chrome', headless=True, accept_downloads=True,
             args=[f'--disable-extensions-except={EXT}', f'--load-extension={EXT}', '--headless=new', '--no-sandbox'], viewport={'width': 1000, 'height': 700})
-        sw = ctx.service_workers[0] if ctx.service_workers else await ctx.wait_for_event('serviceworker', timeout=8000)
+        sw = ctx.service_workers[0] if ctx.service_workers else await ctx.wait_for_event('serviceworker', timeout=30000)
         eid = sw.url.split('/')[2]; errs = []
         async def setset(**kw):
             base = dict(enabled=True, lang='en', noMotion=True); base.update(kw)

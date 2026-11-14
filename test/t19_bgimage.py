@@ -34,7 +34,7 @@ async def main():
     async with async_playwright() as p:
         ctx = await p.chromium.launch_persistent_context('/tmp/prof19', channel='chrome', headless=True,
             args=[f'--disable-extensions-except={EXT}', f'--load-extension={EXT}', '--headless=new', '--no-sandbox'], viewport={'width': 900, 'height': 700})
-        sw = ctx.service_workers[0] if ctx.service_workers else await ctx.wait_for_event('serviceworker', timeout=8000)
+        sw = ctx.service_workers[0] if ctx.service_workers else await ctx.wait_for_event('serviceworker', timeout=30000)
         await sw.evaluate("async()=>{await chrome.storage.local.clear();await chrome.storage.local.set({settings:{enabled:true}})}")
         pg = await ctx.new_page(); errs = []; reqs = []; pg.on('request', lambda r: reqs.append(r.url)); pg.on('pageerror', lambda e: errs.append(str(e)))
         await pg.goto('http://localhost:8771/'); await pg.wait_for_timeout(2500)

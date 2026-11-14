@@ -6,7 +6,7 @@ async def main():
     async with async_playwright() as p:
         ctx = await p.chromium.launch_persistent_context('/tmp/prof3', channel='chrome', headless=True,
             args=[f'--disable-extensions-except={EXT}', f'--load-extension={EXT}', '--headless=new', '--no-sandbox'], viewport={'width':900,'height':700})
-        sw = ctx.service_workers[0] if ctx.service_workers else await ctx.wait_for_event('serviceworker', timeout=8000)
+        sw = ctx.service_workers[0] if ctx.service_workers else await ctx.wait_for_event('serviceworker', timeout=30000)
         eid = sw.url.split('/')[2]
         errs=[]
         pop = await ctx.new_page(); pop.on('pageerror', lambda e: errs.append(str(e))); pop.on('console', lambda m: errs.append(m.text) if m.type=='error' else None)

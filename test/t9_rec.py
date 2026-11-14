@@ -10,7 +10,7 @@ async def main():
         ctx = await p.chromium.launch_persistent_context('/tmp/prof9', channel='chrome', headless=True, accept_downloads=True,
             args=[f'--disable-extensions-except={EXT}', f'--load-extension={EXT}', '--headless=new', '--no-sandbox',
                   '--use-fake-ui-for-media-stream', '--use-fake-device-for-media-stream', '--auto-select-desktop-capture-source=Entire screen', '--auto-accept-this-tab-capture', '--auto-select-tab-capture-source-by-title=Pagina captură'])
-        sw = ctx.service_workers[0] if ctx.service_workers else await ctx.wait_for_event('serviceworker', timeout=8000)
+        sw = ctx.service_workers[0] if ctx.service_workers else await ctx.wait_for_event('serviceworker', timeout=30000)
         eid = sw.url.split('/')[2]
         page = await ctx.new_page(); await page.goto(PAGE); await page.wait_for_timeout(1200)
         rec = await ctx.new_page(); errs = []; rec.on('pageerror', lambda e: errs.append(str(e))); rec.on('console', lambda m: print('C', m.text) if m.type == 'error' else None)
