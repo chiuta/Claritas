@@ -20,7 +20,7 @@ async def main():
         st = await rec.evaluate("[document.getElementById('status').textContent, document.getElementById('stop').disabled]")
         print('status', st, errs)
         if st[1]:
-            print('INCERCARE: sursa nu a fost selectată automat în headless'); await ctx.close(); return
+            print('SKIP INCERCARE: sursa nu a fost selectată automat în headless'); await ctx.close(); return
         await page.bring_to_front(); await page.click('#b1'); await page.keyboard.press('Tab'); await page.keyboard.press('Alt+Shift+M'); await page.wait_for_timeout(800)
         await rec.bring_to_front(); await rec.wait_for_timeout(500); await rec.click('#stop'); await rec.wait_for_timeout(2500)
         print('out visible', await rec.evaluate("!document.getElementById('out').hidden"))
