@@ -27,9 +27,13 @@ async def main():
         except Exception as e: print('createTarget ERR', str(e)[:150])
         await snap(ctx, 'createTarget')
         try:
-            r = await asyncio.wait_for(ctx.new_page(), 10); print('new_page orig ok')
-        except BaseException as e: print('new_page orig', type(e).__name__)
-        await snap(ctx, 'new_page')
+            r = await s.send('Target.createTarget', {'url': 'data:text/html,<title>t2</title>hi'}); print('createTarget(data)', r, flush=True)
+        except Exception as e: print('createTarget2 ERR', str(e)[:150])
+        await snap(ctx, 'createTarget2')
+        try:
+            br2 = await p.chromium.connect_over_cdp('http://127.0.0.1:9334', timeout=20000)
+            print('RECONNECT pages', [(pg.url[:40], pg.is_closed()) for c in br2.contexts for pg in c.pages], flush=True)
+        except BaseException as e: print('RECONNECT ERR', type(e).__name__, str(e)[:150])
 try: asyncio.run(asyncio.wait_for(main(), 120))
 except BaseException as e: print('ERR', type(e).__name__, str(e)[-300:])
 os._exit(0)
