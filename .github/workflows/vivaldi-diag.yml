@@ -1,0 +1,26 @@
+name: vivaldi-diag
+on: { workflow_dispatch: }
+permissions: { contents: read }
+jobs:
+  v:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - run: pip install playwright pillow
+      - run: python build.py
+      - name: Install Vivaldi
+        run: |
+          curl -fsSL https://repo.vivaldi.com/archive/linux_signing_key.pub | sudo gpg --dearmor -o /usr/share/keyrings/vivaldi.gpg
+          echo "deb [signed-by=/usr/share/keyrings/vivaldi.gpg] https://repo.vivaldi.com/archive/deb/ stable main" | sudo tee /etc/apt/sources.list.d/vivaldi.list
+          for i in 1 2 3 4; do sudo apt-get update && sudo apt-get install -y vivaldi-stable xvfb && break; sleep 20; done
+      - name: A - implicit
+        env: { BROWSER_EXE: /usr/bin/vivaldi-stable, DEBUG: 'pw:protocol' }
+        run: xvfb-run -a python test/viv_diag.py 2>&1 | grep -vE "^\s*$" | cut -c1-260 | tail -60
+        continue-on-error: true
+      - name: B - fără DEBUG, flags
+        env: { BROWSER_EXE: /usr/bin/vivaldi-stable }
+        run: xvfb-run -a python test/viv_diag.py --disable-features=DisableLoadExtensionCommandLineSwitch 2>&1 | cut -c1-400 | tail -20
+        continue-on-error: true
