@@ -98,7 +98,9 @@ jobs:
           [ -n "$BROWSER_EXE" ] && unset BROWSER_CHANNEL
           if [ -n "$BROWSER_CDP" ]; then
             export HEADED=1
-            xvfb-run -a python test/run_matrix.py "${{ matrix.os }}-${{ matrix.browser }}"
+            # Vivaldi nu expune file noi prin CDP: rulează doar testul cu o singură filă
+            if [ "${{ matrix.browser }}" = vivaldi ]; then T=t21_single_page.py; else T=""; fi
+            xvfb-run -a python test/run_matrix.py "${{ matrix.os }}-${{ matrix.browser }}" $T
           else
             python test/run_matrix.py "${{ matrix.os }}-${{ matrix.browser }}"
           fi
