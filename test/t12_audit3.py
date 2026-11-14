@@ -59,6 +59,7 @@ async def main():
         # D) mască în iframe srcdoc / sandbox / shadow
         await sw.evaluate("async()=>{await chrome.storage.local.clear();await chrome.storage.local.set({settings:{enabled:true}})}")
         page = await ctx.new_page(); page.on('pageerror', lambda e: errs.append(str(e)))
+        DIAG = ['']
         async def shot(path):
             await page.goto(U + path); await page.wait_for_timeout(1500)
             await sw.evaluate("""async()=>{const [t]=await chrome.tabs.query({active:true,url:'http://localhost:8767/*'});await chrome.tabs.sendMessage(t.id,{type:'cap',cmd:'visible'})}""")
@@ -67,9 +68,12 @@ async def main():
             async with page.expect_download(timeout=30000) as dl: await page.keyboard.press('Enter')
             im = Image.open(await (await dl.value).path()).convert('RGB')
             fr = await page.evaluate("""(()=>{let f=document.querySelector('iframe');if(!f){const h=document.getElementById('h');f=h&&h.shadowRoot&&h.shadowRoot.querySelector('iframe')}const r=f.getBoundingClientRect();return [r.left,r.top,r.width,r.height]})()""")
-            vw = await page.evaluate('innerWidth'); sc = im.width / vw  # scara reală (DPR / emulare mobilă)
+            vv = await page.evaluate('[visualViewport.width, visualViewport.offsetLeft, visualViewport.pageLeft, visualViewport.height]')
+            sc = im.width / vv[0]  # captura acoperă viewportul vizual (DPR / emulare mobilă)
             x0, y0, x1, y1 = [int(v * sc) for v in (fr[0], fr[1], fr[0] + fr[2], fr[1] + fr[3])]
+            x1 = min(x1, im.width); y1 = min(y1, im.height)
             blk = sum(1 for x in range(max(0, x0), min(im.width, x1), 3) for y in range(max(0, y0), min(im.height, y1), 3) if im.getpixel((x, y))[:3] == (0, 0, 0))
+            DIAG[0] = 'img=%sx%s fr=%s vv=%s box=%s' % (im.width, im.height, [round(v) for v in fr], [round(v, 1) for v in vv], (x0, y0, x1, y1))
             await page.keyboard.press('Escape'); return blk
         for path, nm in (('/srcdoc.html', 'iframe srcdoc'), ('/sandbox.html', 'iframe sandbox'), ('/shadowframe.html', 'iframe în shadow DOM')):
             thr = (100 if (await page.evaluate('innerWidth') <= 1000 and not await page.evaluate('matchMedia("(pointer:coarse)").matches')) else 25)
@@ -77,7 +81,7 @@ async def main():
             for _ in range(2):
                 if b > thr: break
                 await page.wait_for_timeout(1500); b = await shot(path)  # iframe încărcat târziu în emularea mobilă
-            ok(b > (100 if (await page.evaluate('innerWidth') <= 1000 and not await page.evaluate('matchMedia("(pointer:coarse)").matches')) else 25), f'{nm}: e-mail acoperit ({b} pixeli negri)')
+            ok(b > (100 if (await page.evaluate('innerWidth') <= 1000 and not await page.evaluate('matchMedia("(pointer:coarse)").matches')) else 25), f'{nm}: e-mail acoperit ({b} pixeli negri; {DIAG[0]})')
         # E) jurnal VTT: taste simple nelogate; sesiune veche ignorată
         await sw.evaluate("globalThis.__ev=[];chrome.runtime.onMessage.addListener(m=>{if(m&&m.type==='rec-ev')globalThis.__ev.push(m)})")
         await sw.evaluate("async()=>{await chrome.storage.local.set({recSession:{on:true,beat:Date.now(),t0:Date.now(),fx:true,keys:true,blur:true}})}")

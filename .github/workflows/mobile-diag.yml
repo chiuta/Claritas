@@ -1,0 +1,14 @@
+name: mobile-diag
+on: { workflow_dispatch: }
+permissions: { contents: read }
+jobs:
+  m:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - run: pip install playwright pillow imageio-ffmpeg && python build.py && python -m playwright install chromium ffmpeg
+      - env: { BROWSER_CHANNEL: chromium, EMULATE: chrome-android, CLARITAS_TEST_SHADOW: open }
+        run: cd test && python -c "import bt,runpy;runpy.run_path('t12_audit3.py',run_name='__main__')" 2>&1 | grep -E "iframe|DEFECTE|FAIL" | cut -c1-300
