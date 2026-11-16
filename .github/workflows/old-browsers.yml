@@ -35,6 +35,7 @@ jobs:
           FIREFOX_BIN: ${{ steps.ff.outputs.firefox-path }}
           GECKODRIVER: ${{ steps.gd.outputs.path }}
           EXT_DIR: ../dist/${{ matrix.ext }}
+          GD_NO_SYSACCESS: ${{ matrix.gd != '0.34.0' && '1' || '' }}
         run: |
           mkdir -p test/results
           cd test
@@ -51,7 +52,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        rev: ['88.0.4324.96', '94.0.4606.81', '102.0.5005.61']
+        rev: ['827102', '1000000']
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5

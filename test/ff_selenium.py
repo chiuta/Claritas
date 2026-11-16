@@ -46,7 +46,8 @@ opts.set_preference('browser.download.folderList', 2); opts.set_preference('brow
 opts.set_preference('browser.download.useDownloadDir', True); opts.set_preference('browser.download.manager.showWhenStarting', False)
 opts.set_preference('browser.helperApps.neverAsk.saveToDisk', 'application/zip,application/octet-stream,image/png')
 opts.set_preference('xpinstall.signatures.required', False); opts.set_preference('extensions.autoDisableScopes', 0)
-svc = Service(os.environ['GECKODRIVER'], service_args=['--allow-system-access']) if os.environ.get('GECKODRIVER') else Service(service_args=['--allow-system-access'])
+sargs = [] if os.environ.get('GD_NO_SYSACCESS') else ['--allow-system-access']
+svc = Service(os.environ['GECKODRIVER'], service_args=sargs) if os.environ.get('GECKODRIVER') else Service(service_args=sargs)
 d = webdriver.Firefox(options=opts, service=svc)
 d.set_window_size(900, 760)
 def wait_dl(ext, secs=25):
