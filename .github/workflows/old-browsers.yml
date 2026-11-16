@@ -1,0 +1,79 @@
+name: old-browsers
+# Browsere vechi reale: Firefox ESR 91/102/115 (Selenium) și Chromium 88/94/102 (CDP). Pornire manuală.
+on: { workflow_dispatch: }
+permissions: { contents: read }
+jobs:
+  firefox-old:
+    name: ubuntu-26.04 / firefox-${{ matrix.ver }} (${{ matrix.ext }})
+    runs-on: ubuntu-26.04
+    continue-on-error: true
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { ver: '91.0esr',  ext: firefox-legacy, gd: '0.31.0' }
+          - { ver: '102.0esr', ext: firefox-legacy, gd: '0.33.0' }
+          - { ver: '115.0esr', ext: firefox,        gd: '0.34.0' }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - run: pip install selenium pillow
+      - run: python build.py
+      - name: Biblioteci pentru Firefox vechi
+        run: sudo apt-get update -q && sudo apt-get install -y -q libdbus-glib-1-2 libgtk-3-0t64 libasound2t64 libxt6t64 libx11-xcb1 xvfb
+      - id: ff
+        uses: browser-actions/setup-firefox@v1
+        with: { firefox-version: '${{ matrix.ver }}' }
+      - id: gd
+        uses: browser-actions/setup-geckodriver@latest
+        with: { token: '${{ github.token }}', geckodriver-version: '${{ matrix.gd }}' }
+      - name: Selenium test (Firefox vechi)
+        shell: bash
+        env:
+          FIREFOX_BIN: ${{ steps.ff.outputs.firefox-path }}
+          GECKODRIVER: ${{ steps.gd.outputs.path }}
+          EXT_DIR: ../dist/${{ matrix.ext }}
+        run: |
+          mkdir -p test/results
+          cd test
+          xvfb-run -a python ff_selenium.py 2>&1 | tee results/firefox-old-${{ matrix.ver }}.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: { name: 'r-ff-old-${{ matrix.ver }}', path: test/results }
+
+  chromium-old:
+    name: ubuntu-26.04 / chromium-${{ matrix.rev }}
+    runs-on: ubuntu-26.04
+    continue-on-error: true
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        rev: ['88.0.4324.96', '94.0.4606.81', '102.0.5005.61']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - run: pip install playwright pillow && python build.py
+        env: { CLARITAS_TEST_SHADOW: open }
+      - name: Biblioteci pentru Chromium vechi
+        run: sudo apt-get update -q && sudo apt-get install -y -q libnss3 libgbm1 libasound2t64 libatk1.0-0t64 libatk-bridge2.0-0t64 libcups2t64 libxkbcommon0 libxcomposite1 libxdamage1 libxrandr2 libpango-1.0-0 libcairo2 libgtk-3-0t64 xvfb
+      - id: chrome
+        uses: browser-actions/setup-chrome@v1
+        with: { chrome-version: '${{ matrix.rev }}' }
+      - name: Teste (CDP, Chromium vechi)
+        env:
+          CLARITAS_TEST_SHADOW: open
+          BROWSER_CDP: '1'
+          HEADED: '1'
+          BROWSER_EXE: ${{ steps.chrome.outputs.chrome-path }}
+        run: |
+          mkdir -p test/results
+          ${{ steps.chrome.outputs.chrome-path }} --version || true
+          xvfb-run -a python test/run_matrix.py "ubuntu-chromium-${{ matrix.rev }}" 2>&1 | tail -60
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: { name: 'r-chromium-old-${{ matrix.rev }}', path: test/results }
+
