@@ -181,6 +181,8 @@ jobs:
         with: { python-version: '3.12' }
       - run: pip install selenium pillow
       - run: python build.py
+      - name: Biblioteci pentru Firefox vechi
+        run: sudo apt-get update -q && sudo apt-get install -y -q libdbus-glib-1-2 libgtk-3-0t64 libasound2t64 libxt6t64 libx11-xcb1 xvfb
       - id: ff
         uses: browser-actions/setup-firefox@v1
         with: { firefox-version: '${{ matrix.ver }}' }
@@ -216,6 +218,8 @@ jobs:
         with: { python-version: '3.12' }
       - run: pip install playwright pillow && python build.py
         env: { CLARITAS_TEST_SHADOW: open }
+      - name: Biblioteci pentru Chromium vechi
+        run: sudo apt-get update -q && sudo apt-get install -y -q libnss3 libgbm1 libasound2t64 libatk1.0-0t64 libatk-bridge2.0-0t64 libcups2t64 libxkbcommon0 libxcomposite1 libxdamage1 libxrandr2 libpango-1.0-0 libcairo2 libgtk-3-0t64 xvfb
       - id: chrome
         uses: browser-actions/setup-chrome@v1
         with: { chrome-version: '${{ matrix.rev }}' }
