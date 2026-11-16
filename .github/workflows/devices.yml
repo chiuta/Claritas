@@ -11,7 +11,7 @@ env:
   PYTHONIOENCODING: utf-8
 jobs:
   android:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     continue-on-error: true
     timeout-minutes: 45
     steps:
@@ -89,7 +89,7 @@ jobs:
   publish:
     needs: [android, safari-macos, ios]
     if: always()
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     permissions:
       contents: write
     steps:

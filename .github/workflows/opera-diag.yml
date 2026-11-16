@@ -17,8 +17,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - { os: ubuntu-latest, browser: opera }
-          - { os: ubuntu-latest, browser: vivaldi }
+          - { os: ubuntu-26.04, browser: opera }
+          - { os: ubuntu-26.04, browser: vivaldi }
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5

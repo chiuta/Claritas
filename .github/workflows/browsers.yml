@@ -11,11 +11,11 @@ env:
   PYTHONIOENCODING: utf-8
 jobs:
   lint:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        with: { node-version: 22 }
+        with: { node-version: latest }
       - run: python3 build.py
       - name: web-ext lint (chromium + firefox)
         run: |
@@ -34,11 +34,11 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - { os: ubuntu-latest,  browser: msedge }
-          - { os: ubuntu-latest,  browser: chromium }
-          - { os: ubuntu-latest,  browser: brave }
-          - { os: ubuntu-latest,  browser: vivaldi }
-          - { os: ubuntu-latest,  browser: opera }
+          - { os: ubuntu-26.04,  browser: msedge }
+          - { os: ubuntu-26.04,  browser: chromium }
+          - { os: ubuntu-26.04,  browser: brave }
+          - { os: ubuntu-26.04,  browser: vivaldi }
+          - { os: ubuntu-26.04,  browser: opera }
           - { os: windows-latest, browser: chromium }
           - { os: windows-latest, browser: msedge }
           - { os: macos-latest,   browser: chromium }
@@ -130,11 +130,11 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - { os: ubuntu-latest,  channel: latest }
-          - { os: ubuntu-latest,  channel: latest-esr }
-          - { os: ubuntu-latest,  channel: latest-beta }
-          - { os: ubuntu-latest,  channel: latest-nightly }
-          - { os: ubuntu-latest,  channel: latest-devedition }
+          - { os: ubuntu-26.04,  channel: latest }
+          - { os: ubuntu-26.04,  channel: latest-esr }
+          - { os: ubuntu-26.04,  channel: latest-beta }
+          - { os: ubuntu-26.04,  channel: latest-nightly }
+          - { os: ubuntu-26.04,  channel: latest-devedition }
           - { os: windows-latest, channel: latest }
           - { os: macos-latest,   channel: latest }
     steps:
@@ -172,8 +172,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - { os: ubuntu-latest, engine: firefox }
-          - { os: ubuntu-latest, engine: chromium }
+          - { os: ubuntu-26.04, engine: firefox }
+          - { os: ubuntu-26.04, engine: chromium }
           - { os: macos-latest,  engine: webkit }
           - { os: windows-latest, engine: webkit }
     steps:
@@ -212,14 +212,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ubuntu-26.04, windows-latest, macos-latest]
         ch: [stable, beta, dev, canary]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with: { python-version: '3.12' }
       - uses: actions/setup-node@v4
-        with: { node-version: 22 }
+        with: { node-version: latest }
       - run: pip install playwright pillow imageio-ffmpeg && python build.py
       - name: Install Chrome for Testing (real Chrome builds that accept --load-extension)
         shell: bash
@@ -240,7 +240,7 @@ jobs:
 
   browser-profiles:
     name: profile / ${{ matrix.profile }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     continue-on-error: true
     timeout-minutes: 30
     strategy:
@@ -264,7 +264,7 @@ jobs:
         with: { name: 'r-profile-${{ matrix.profile }}', path: test/results }
 
   samsung-emulation:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     continue-on-error: true
     timeout-minutes: 30
     steps:
@@ -280,7 +280,7 @@ jobs:
         with: { name: r-samsung-emulation, path: test/results }
 
   firefox-android:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     continue-on-error: true
     timeout-minutes: 40
     steps:
@@ -479,7 +479,7 @@ jobs:
 
   privacy-shadow:
     name: 'confidențialitate și buget (build livrat, Chromium)'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     continue-on-error: true
     timeout-minutes: 15
     env:
@@ -499,7 +499,7 @@ jobs:
 
   ocr-module:
     name: modul OCR local (Chromium)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     continue-on-error: true
     timeout-minutes: 30
     steps:
@@ -507,7 +507,7 @@ jobs:
       - uses: actions/setup-python@v5
         with: { python-version: '3.12' }
       - uses: actions/setup-node@v4
-        with: { node-version: 22 }
+        with: { node-version: latest }
       - run: pip install playwright pillow imageio-ffmpeg && python -m playwright install chromium ffmpeg
       - run: bash tools/fetch_ocr.sh
       - run: bash tools/fetch_vendor.sh
@@ -521,7 +521,7 @@ jobs:
 
   ci-mode:
     name: mod CI (tools/claritas_ci.py)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     continue-on-error: true
     timeout-minutes: 15
     steps:
@@ -550,7 +550,7 @@ jobs:
   publish:
     needs: [ci-mode, ocr-module, privacy-shadow, lint, chromium-family, firefox, engines, safari-convert, samsung-emulation, chrome-for-testing, browser-profiles, firefox-android, ios-ipados, safari-real]
     if: always()
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     permissions:
       contents: write
     steps:
@@ -570,7 +570,7 @@ jobs:
           python - <<'PY'
           import json, glob, sys
           bad = []; exp = []
-          EXPERIMENTAL = ('ubuntu-latest-opera.json', 'ubuntu-latest-vivaldi.json')  # CDP în browsere branded: neverificate, raportate separat
+          EXPERIMENTAL = ('ubuntu-26.04-opera.json', 'ubuntu-26.04-vivaldi.json')  # CDP în browsere branded: neverificate, raportate separat
           for f in sorted(glob.glob('collected/*/*.json')):
               try: d = json.load(open(f))
               except Exception: continue

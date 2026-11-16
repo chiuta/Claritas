@@ -11,9 +11,9 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - { os: ubuntu-latest, eng: chromium }
-          - { os: ubuntu-latest, eng: firefox }
-          - { os: ubuntu-latest, eng: webkit }
+          - { os: ubuntu-26.04, eng: chromium }
+          - { os: ubuntu-26.04, eng: firefox }
+          - { os: ubuntu-26.04, eng: webkit }
           - { os: macos-latest, eng: webkit }
           - { os: windows-latest, eng: chromium }
     steps:
