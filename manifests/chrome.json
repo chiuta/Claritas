@@ -75,7 +75,7 @@
   "background": {
     "service_worker": "background.js"
   },
-  "minimum_chrome_version": "109",
+  "minimum_chrome_version": "88",
   "web_accessible_resources": [
     {
       "resources": [

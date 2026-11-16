@@ -30,10 +30,53 @@ for name, mf in (("chromium", "chrome.json"), ("firefox", "firefox.json"), ("saf
 make_zip(dist / "chromium", dist / "claritas-chromium.zip")
 make_zip(dist / "firefox", dist / "claritas-firefox.zip")
 
+# Versiuni „legacy” (Manifest V2) pentru Firefox 91–114 (ESR 91/102, Windows 7/8 mai vechi) și Safari 14–15.3.
+# Chromium nu are variantă MV2: CSS-ul de bază folosește :where()/:not(listă) (Chromium 88+), iar Chromium 88 este și prima versiune MV3.
+def to_mv2(mf, min_ver=None, family="firefox"):
+    mf = json.loads(json.dumps(mf))
+    mf["manifest_version"] = 2
+    if "action" in mf:
+        mf["browser_action"] = mf.pop("action")
+    perms = list(mf.get("permissions", [])) + list(mf.pop("host_permissions", []))
+    mf["permissions"] = perms
+    bg = mf.get("background", {})
+    if "scripts" in bg:
+        bg["persistent"] = False
+    mf["background"] = bg
+    war = mf.get("web_accessible_resources", [])
+    flat = []
+    for w in war:
+        flat += w["resources"] if isinstance(w, dict) else [w]
+    mf["web_accessible_resources"] = flat
+    cmds = mf.get("commands", {})
+    if "_execute_action" in cmds:
+        cmds["_execute_browser_action"] = cmds.pop("_execute_action")
+    mf.pop("minimum_chrome_version", None)
+    if family == "firefox":
+        g = mf["browser_specific_settings"]["gecko"]
+        g["strict_min_version"] = min_ver or "91.0"
+        mf["browser_specific_settings"].pop("gecko_android", None)
+        g.pop("data_collection_permissions", None)  # cheia există doar din Firefox 140
+    mf.pop("storage", None) if family == "safari" else None
+    return mf
+
+for name, mfname, fam, ver in (("firefox-legacy", "firefox.json", "firefox", "91.0"), ("safari-legacy", "safari.json", "safari", None)):
+    out = dist / name
+    shutil.copytree(ext, out)
+    mf2 = to_mv2(json.load(open(root / "manifests" / mfname)), ver, fam)
+    json.dump(mf2, open(out / "manifest.json", "w"), indent=2, ensure_ascii=False)
+make_zip(dist / "firefox-legacy", dist / "claritas-firefox-legacy.zip")
+
 # Safari: proiect-sursă + script de conversie (rulat pe Mac cu Xcode)
-sf = dist / "safari-pack"
-shutil.copytree(dist / "safari", sf / "extension")
-(sf / "build-safari.sh").write_text("""#!/bin/bash
+def safari_pack(srcdir, zipname):
+    sf = dist / "safari-pack"
+    shutil.copytree(srcdir, sf / "extension")
+    (sf / "build-safari.sh").write_text(SAFARI_SH)
+    (sf / "build-safari.sh").chmod(0o755)
+    make_zip(sf, dist / zipname)
+    shutil.rmtree(sf)
+
+SAFARI_SH = """#!/bin/bash
 # Rulează pe macOS cu Xcode instalat (nu doar Command Line Tools).
 set -e
 cd "$(dirname "$0")"
@@ -43,10 +86,10 @@ xcrun safari-web-extension-converter ./extension \\
 echo "Proiect creat în ./xcode. Deschide-l în Xcode, alege schema 'Claritas (macOS)' sau '(iOS)', apasă Run."
 echo "Apoi: Safari > Setări > Extensii > Claritas (bifează) și acordă accesul la site-uri."
 echo "Dacă nu apare: Safari > Dezvoltare > Permite extensii nesemnate (la fiecare pornire Safari)."
-""")
-(sf / "build-safari.sh").chmod(0o755)
-make_zip(sf, dist / "claritas-safari-source.zip")
-shutil.rmtree(sf)
+"""
+# Safari: proiect-sursă + script de conversie (rulat pe Mac cu Xcode)
+safari_pack(dist / "safari", "claritas-safari-source.zip")
+safari_pack(dist / "safari-legacy", "claritas-safari-legacy-source.zip")
 # Module opționale: OCR local (Tesseract.js împachetat). Se construiește doar dacă s-a rulat tools/fetch_ocr.sh.
 ocr_src = root / "modules-src" / "ocr"
 if (ocr_src / "vendor" / "tesseract.min.js").exists():
