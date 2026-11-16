@@ -1,6 +1,8 @@
 # Changelog
 
-## Unreleased — tests only
+## Unreleased — tests, CI and docs
+- Docs: the privacy policy is now available in all 8 languages (`PRIVACY.<lang>.md`, with a language switcher); the READMEs link to their own language. Translations still await native-speaker review.
+- CI: all workflows run on Ubuntu 26.04 and the latest Node.js; `setup-geckodriver` uses the GitHub token (no more rate-limit failures on macOS).
 - CI: Vivaldi (Linux) is now partially verified by `t21_single_page.py` (content script, audit rules, contrast, popup), after fixing the CDP connection in the test harness (wait + retries, `--remote-allow-origins`). Vivaldi exposes no new tabs through CDP, so multi-tab tests cannot run there. Opera now passes t5–t8 and t15 (the harness had been messaging a stale tab); t9 (recording) is skipped under CDP.
 
 ## 1.9.1 — 13 Nov 2026

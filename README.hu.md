@@ -56,7 +56,7 @@ MIT — szerzői jog: Alexandru-Ionuț Chiuță (Alexio).
 
 Ha a Claritas segít Önnek, támogathatja a munkát: [Buy Me a Coffee](https://buymeacoffee.com/echo.of.the.strings).
 
-Adatvédelmi irányelvek: [PRIVACY.md](PRIVACY.md)
+Adatvédelmi irányelvek: [PRIVACY.md](PRIVACY.hu.md)
 
 Weboldal: https://claritas.chiuta.ro
 

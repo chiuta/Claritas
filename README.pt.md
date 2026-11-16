@@ -56,7 +56,7 @@ MIT — copyright Alexandru-Ionuț Chiuță (Alexio).
 
 Se o Claritas lhe for útil, pode apoiar o trabalho: [Buy Me a Coffee](https://buymeacoffee.com/echo.of.the.strings).
 
-Política de privacidade: [PRIVACY.md](PRIVACY.md)
+Política de privacidade: [PRIVACY.md](PRIVACY.pt.md)
 
 Site: https://claritas.chiuta.ro
 
