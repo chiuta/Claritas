@@ -65,6 +65,15 @@ jobs:
       - id: chrome
         uses: browser-actions/setup-chrome@v1
         with: { chrome-version: '${{ matrix.rev }}' }
+      - name: Diagnostic Chromium (extensie încărcată?)
+        env: { EXE: '${{ steps.chrome.outputs.chrome-path }}' }
+        run: |
+          mkdir -p /tmp/pf
+          (xvfb-run -a "$EXE" --no-sandbox --user-data-dir=/tmp/pf --remote-debugging-port=9333 --remote-allow-origins=* --load-extension="$PWD/dist/chromium" --disable-extensions-except="$PWD/dist/chromium" --enable-logging=stderr --v=0 about:blank > /tmp/chrome.log 2>&1 &)
+          sleep 12
+          curl -s localhost:9333/json/list | head -c 1500 || true
+          echo; grep -aiE "extension|manifest|error" /tmp/chrome.log | head -20 || true
+          pkill -f remote-debugging-port=9333 || true
       - name: Teste (CDP, Chromium vechi)
         env:
           CLARITAS_TEST_SHADOW: open
@@ -74,7 +83,7 @@ jobs:
         run: |
           mkdir -p test/results
           ${{ steps.chrome.outputs.chrome-path }} --version || true
-          xvfb-run -a python test/run_matrix.py "ubuntu-chromium-${{ matrix.rev }}" 2>&1 | tail -60
+          xvfb-run -a python test/run_matrix.py "ubuntu-chromium-${{ matrix.rev }}" 2>&1 | tail -150
       - uses: actions/upload-artifact@v4
         if: always()
         with: { name: 'r-chromium-old-${{ matrix.rev }}', path: test/results }
