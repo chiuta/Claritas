@@ -6,6 +6,8 @@
 
 Extensie gratuită de accesibilitate all-in-one. Fără telemetrie, fără rețea, fără conturi: totul rămâne în browserul tău.
 
+Nu este un instrument de conformitate: îmbunătățește citirea pentru utilizator și nu face un site conform WCAG.
+
 ## Ce face
 - **Corecție automată a contrastului (WCAG AA/AAA)**: măsoară contrastul real text/fundal și ajustează doar textul insuficient, inclusiv câmpurile dezactivate. Din 1.8.1 tratează și textul de pe imagini de fundal (culoarea medie a imaginilor de pe aceeași origine sau data:, altfel alb/negru prudent plus halou); pictogramele mici nu sunt tratate ca fundal. Popup (1.9): căutare în toate setările (`/` sau Ctrl+K), acțiuni rapide (tema următoare, citire cu voce tare, mărime text), bară de tab-uri lipicioasă cu navigare din săgeți, ultimul tab reținut.
 - **Teme cu contrast mare**, filtre de culoare, **daltonism** (corecție și simulare), filtru de lumină albastră, simulator de vedere.
@@ -30,6 +32,8 @@ Alege pachetul potrivit browserului (în folderul `dist/` sau în fișierele de 
 | `claritas-safari-source.zip` | Safari macOS / iOS / iPadOS (necesită un Mac cu Xcode) |
 | `claritas-firefox-legacy.zip` | Firefox 91–114 (ESR 91/102) — Browsere mai vechi (experimental, Manifest V2; neverificat pe browsere vechi reale) |
 | `claritas-safari-legacy-source.zip` | Safari 14–15 (necesită un Mac cu Xcode) — Browsere mai vechi (experimental, Manifest V2; neverificat pe browsere vechi reale) |
+
+Versiunile minime declarate (88 / 115 / 120) **nu sunt testate**; verificat doar pe versiunile curente.
 
 - **Familia Chromium**: dezarhivează, deschide pagina de extensii (`chrome://extensions`, `edge://extensions`, `opera://extensions`…), activează *Mod dezvoltator*, alege *Încarcă extensie despachetată* și selectează folderul.
 - **Firefox**: `about:debugging#/runtime/this-firefox` → *Load Temporary Add-on* → `manifest.json`. Pentru instalare permanentă, semnează-l ca add-on nelistat pe addons.mozilla.org (ID `claritas@trom.tf`).

@@ -6,6 +6,8 @@
 
 Ingyenes, mindent egyben tartalmazó akadálymentesítő bővítmény. Nincs telemetria, nincs hálózat, nincs fiók: minden a böngészőjében marad.
 
+Nem megfelelőségi eszköz: javítja az olvasást a felhasználónak, de nem teszi WCAG-megfelelővé a webhelyet.
+
 ## Mit tud
 - **Automatikus kontrasztjavítás (WCAG AA/AAA)**: méri a valódi szöveg/háttér kontrasztot, és csak a nem elégséges szöveget igazítja, a letiltott mezőket is. Az 1.8.1-től a háttérképen lévő szöveget is kezeli (az azonos eredetű vagy data: képek átlagszíne, egyébként óvatos fehér/fekete választás körvonallal); a kis ikonokat nem tekinti háttérnek. Popup (1.9): keresés minden beállításban (`/` vagy Ctrl+K), gyorsműveletek (következő téma, felolvasás, szövegméret), rögzített fülsáv nyílbillentyűs navigációval, az utolsó fül megjegyzése.
 - **Nagy kontrasztú témák**, színszűrők, **színtévesztés** (korrekció és szimuláció), kékfényszűrő, látásszimulátor.
@@ -30,6 +32,8 @@ Válassza a böngészőjének megfelelő csomagot (`dist/` mappa vagy a kiadás 
 | `claritas-safari-source.zip` | Safari macOS / iOS / iPadOS (Xcode-dal rendelkező Mac szükséges) |
 | `claritas-firefox-legacy.zip` | Firefox 91–114 (ESR 91/102) — Régebbi böngészők (kísérleti, Manifest V2; valódi régi böngészőkön nem ellenőrzött) |
 | `claritas-safari-legacy-source.zip` | Safari 14–15 (Xcode-dal rendelkező Mac szükséges) — Régebbi böngészők (kísérleti, Manifest V2; valódi régi böngészőkön nem ellenőrzött) |
+
+A megadott minimális verziók (88 / 115 / 120) **nincsenek tesztelve**; csak a jelenlegi verziókon ellenőrizve.
 
 - **Chromium család**: csomagolja ki, nyissa meg a bővítmények oldalát (`chrome://extensions`, `edge://extensions`, `opera://extensions`…), kapcsolja be a *Fejlesztői módot*, válassza a *Kicsomagolt bővítmény betöltése* lehetőséget, és jelölje ki a mappát.
 - **Firefox**: `about:debugging#/runtime/this-firefox` → *Ideiglenes kiegészítő betöltése* → `manifest.json`. Végleges telepítéshez írja alá nem listázott kiegészítőként az addons.mozilla.org oldalon (azonosító: `claritas@trom.tf`).

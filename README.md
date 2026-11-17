@@ -6,6 +6,8 @@
 
 Free all-in-one accessibility extension. No telemetry, no network, no accounts: everything stays in your browser.
 
+Not a compliance tool: it improves reading for the user and does not make a website WCAG-conformant.
+
 ## What it does
 - **Automatic contrast fix (WCAG AA/AAA)**: measures the real text/background contrast and adjusts only insufficient text, including disabled fields. Since 1.8.1 it also handles text over background images (average colour of images from the same origin or data: URLs, otherwise a cautious white/black choice plus a halo); small icons are not treated as backgrounds. Popup (1.9): search across all settings (`/` or Ctrl+K), quick actions (next theme, read aloud, text size), sticky tab bar with arrow-key navigation, last tab remembered.
 - **High-contrast themes**, colour filters, **colour-blindness** correction and simulation, blue-light filter, vision simulator.
@@ -30,6 +32,8 @@ Pick the package that matches your browser (in the `dist/` folder or the release
 | `claritas-safari-source.zip` | Safari macOS / iOS / iPadOS (needs a Mac with Xcode) |
 | `claritas-firefox-legacy.zip` | Firefox 91–114 (ESR 91/102) — Older browsers (experimental, Manifest V2; not verified on real old browsers) |
 | `claritas-safari-legacy-source.zip` | Safari 14–15 (needs a Mac with Xcode) — Older browsers (experimental, Manifest V2; not verified on real old browsers) |
+
+Declared minimums (88 / 115 / 120) are **not tested**; verified only on current browser versions.
 
 - **Chromium family**: unzip, open the extensions page (`chrome://extensions`, `edge://extensions`, `opera://extensions`…), turn on *Developer mode*, choose *Load unpacked* and select the folder.
 - **Firefox**: `about:debugging#/runtime/this-firefox` → *Load Temporary Add-on* → `manifest.json`. For a permanent install, sign it as an unlisted add-on on addons.mozilla.org (ID `claritas@trom.tf`).

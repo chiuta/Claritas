@@ -6,6 +6,8 @@
 
 Extensión de accesibilidad todo en uno, gratuita. Sin telemetría, sin red, sin cuentas: todo se queda en tu navegador.
 
+No es una herramienta de conformidad: mejora la lectura para el usuario y no hace que un sitio cumpla las WCAG.
+
 ## Qué hace
 - **Corrección automática del contraste (WCAG AA/AAA)**: mide el contraste real texto/fondo y ajusta solo el texto insuficiente, incluidos los campos deshabilitados. Desde la 1.8.1 también trata el texto sobre imágenes de fondo (color medio de las imágenes del mismo origen o data:, si no, elección prudente blanco/negro con un halo); los iconos pequeños no se tratan como fondos. Popup (1.9): búsqueda en todos los ajustes (`/` o Ctrl+K), acciones rápidas (tema siguiente, lectura en voz alta, tamaño del texto), barra de pestañas fija con navegación por flechas, última pestaña recordada.
 - **Temas de alto contraste**, filtros de color, **daltonismo** (corrección y simulación), filtro de luz azul, simulador de visión.
@@ -30,6 +32,8 @@ Elige el paquete que corresponda a tu navegador (carpeta `dist/` o archivos de l
 | `claritas-safari-source.zip` | Safari macOS / iOS / iPadOS (requiere un Mac con Xcode) |
 | `claritas-firefox-legacy.zip` | Firefox 91–114 (ESR 91/102) — Navegadores antiguos (experimental, Manifest V2; no verificado en navegadores antiguos reales) |
 | `claritas-safari-legacy-source.zip` | Safari 14–15 (requiere un Mac con Xcode) — Navegadores antiguos (experimental, Manifest V2; no verificado en navegadores antiguos reales) |
+
+Las versiones mínimas declaradas (88 / 115 / 120) **no están probadas**; verificado solo en las versiones actuales.
 
 - **Familia Chromium**: descomprime, abre la página de extensiones (`chrome://extensions`, `edge://extensions`, `opera://extensions`…), activa el *modo de desarrollador*, elige *Cargar descomprimida* y selecciona la carpeta.
 - **Firefox**: `about:debugging#/runtime/this-firefox` → *Cargar complemento temporal* → `manifest.json`. Para una instalación permanente, fírmalo como complemento no listado en addons.mozilla.org (ID `claritas@trom.tf`).

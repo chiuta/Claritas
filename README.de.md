@@ -6,6 +6,8 @@
 
 Kostenlose Barrierefreiheits-Erweiterung „Alles in einem“. Keine Telemetrie, kein Netzwerk, keine Konten: Alles bleibt in Ihrem Browser.
 
+Kein Konformitätswerkzeug: Es verbessert das Lesen für die Nutzer und macht eine Website nicht WCAG-konform.
+
 ## Funktionen
 - **Automatische Kontrastkorrektur (WCAG AA/AAA)**: misst den tatsächlichen Text-/Hintergrundkontrast und passt nur unzureichenden Text an, auch deaktivierte Felder. Seit 1.8.1 behandelt sie auch Text auf Hintergrundbildern (Durchschnittsfarbe von Bildern gleicher Herkunft oder data:, sonst vorsichtige Wahl Weiß/Schwarz mit Halo); kleine Icons gelten nicht als Hintergrund. Popup (1.9): Suche in allen Einstellungen (`/` oder Strg+K), Schnellaktionen (nächstes Design, Vorlesen, Textgröße), fixierte Tab-Leiste mit Pfeiltasten-Navigation, letzter Tab wird gemerkt.
 - **Hochkontrast-Designs**, Farbfilter, **Farbenblindheit** (Korrektur und Simulation), Blaulichtfilter, Sehsimulator.
@@ -30,6 +32,8 @@ Wählen Sie das Paket passend zu Ihrem Browser (Ordner `dist/` oder Release-Date
 | `claritas-safari-source.zip` | Safari macOS / iOS / iPadOS (erfordert einen Mac mit Xcode) |
 | `claritas-firefox-legacy.zip` | Firefox 91–114 (ESR 91/102) — Ältere Browser (experimentell, Manifest V2; nicht auf echten alten Browsern geprüft) |
 | `claritas-safari-legacy-source.zip` | Safari 14–15 (erfordert einen Mac mit Xcode) — Ältere Browser (experimentell, Manifest V2; nicht auf echten alten Browsern geprüft) |
+
+Die angegebenen Mindestversionen (88 / 115 / 120) sind **nicht getestet**; geprüft nur auf aktuellen Versionen.
 
 - **Chromium-Familie**: entpacken, die Erweiterungsseite öffnen (`chrome://extensions`, `edge://extensions`, `opera://extensions`…), den *Entwicklermodus* aktivieren, *Entpackte Erweiterung laden* wählen und den Ordner auswählen.
 - **Firefox**: `about:debugging#/runtime/this-firefox` → *Temporäres Add-on laden* → `manifest.json`. Für eine dauerhafte Installation als nicht gelistetes Add-on auf addons.mozilla.org signieren (ID `claritas@trom.tf`).

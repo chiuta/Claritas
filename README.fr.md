@@ -6,6 +6,8 @@
 
 Extension d’accessibilité tout-en-un, gratuite. Sans télémétrie, sans réseau, sans compte : tout reste dans votre navigateur.
 
+Ce n'est pas un outil de conformité : il améliore la lecture pour l'utilisateur et ne rend pas un site conforme aux WCAG.
+
 ## Fonctionnalités
 - **Correction automatique du contraste (WCAG AA/AAA)** : mesure le contraste réel texte/arrière-plan et n’ajuste que le texte insuffisant, y compris les champs désactivés. Depuis la 1.8.1, il traite aussi le texte sur des images d’arrière-plan (couleur moyenne des images de même origine ou data:, sinon choix prudent blanc/noir avec un halo) ; les petites icônes ne sont pas considérées comme des arrière-plans. Popup (1.9) : recherche dans tous les réglages (`/` ou Ctrl+K), actions rapides (thème suivant, lecture à voix haute, taille du texte), barre d’onglets fixe avec navigation aux flèches, dernier onglet mémorisé.
 - **Thèmes à fort contraste**, filtres de couleur, **daltonisme** (correction et simulation), filtre de lumière bleue, simulateur de vision.
@@ -30,6 +32,8 @@ Choisissez le paquet correspondant à votre navigateur (dossier `dist/` ou fichi
 | `claritas-safari-source.zip` | Safari macOS / iOS / iPadOS (nécessite un Mac avec Xcode) |
 | `claritas-firefox-legacy.zip` | Firefox 91–114 (ESR 91/102) — Navigateurs plus anciens (expérimental, Manifest V2 ; non vérifié sur de vrais navigateurs anciens) |
 | `claritas-safari-legacy-source.zip` | Safari 14–15 (nécessite un Mac avec Xcode) — Navigateurs plus anciens (expérimental, Manifest V2 ; non vérifié sur de vrais navigateurs anciens) |
+
+Les versions minimales déclarées (88 / 115 / 120) **ne sont pas testées** ; vérifié uniquement sur les versions actuelles.
 
 - **Famille Chromium** : décompressez, ouvrez la page des extensions (`chrome://extensions`, `edge://extensions`, `opera://extensions`…), activez le *mode développeur*, choisissez *Charger l’extension non empaquetée* et sélectionnez le dossier.
 - **Firefox** : `about:debugging#/runtime/this-firefox` → *Charger un module complémentaire temporaire* → `manifest.json`. Pour une installation permanente, signez-le comme module non listé sur addons.mozilla.org (ID `claritas@trom.tf`).

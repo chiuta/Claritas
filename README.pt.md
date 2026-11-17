@@ -6,6 +6,8 @@
 
 Extensão de acessibilidade tudo em um, gratuita. Sem telemetria, sem rede, sem contas: tudo fica no seu navegador.
 
+Não é uma ferramenta de conformidade: melhora a leitura para o utilizador e não torna um site conforme com as WCAG.
+
 ## O que faz
 - **Correção automática do contraste (WCAG AA/AAA)**: mede o contraste real texto/fundo e ajusta apenas o texto insuficiente, incluindo campos desativados. Desde a 1.8.1 também trata texto sobre imagens de fundo (cor média das imagens da mesma origem ou data:, caso contrário escolha prudente branco/preto com um halo); ícones pequenos não são tratados como fundos. Popup (1.9): pesquisa em todas as definições (`/` ou Ctrl+K), ações rápidas (tema seguinte, leitura em voz alta, tamanho do texto), barra de separadores fixa com navegação por setas, último separador memorizado.
 - **Temas de alto contraste**, filtros de cor, **daltonismo** (correção e simulação), filtro de luz azul, simulador de visão.
@@ -30,6 +32,8 @@ Escolha o pacote adequado ao seu navegador (pasta `dist/` ou ficheiros da versã
 | `claritas-safari-source.zip` | Safari macOS / iOS / iPadOS (requer um Mac com Xcode) |
 | `claritas-firefox-legacy.zip` | Firefox 91–114 (ESR 91/102) — Navegadores antigos (experimental, Manifest V2; não verificado em navegadores antigos reais) |
 | `claritas-safari-legacy-source.zip` | Safari 14–15 (requer um Mac com Xcode) — Navegadores antigos (experimental, Manifest V2; não verificado em navegadores antigos reais) |
+
+As versões mínimas declaradas (88 / 115 / 120) **não foram testadas**; verificado apenas nas versões atuais.
 
 - **Família Chromium**: descompacte, abra a página de extensões (`chrome://extensions`, `edge://extensions`, `opera://extensions`…), ative o *modo de programador*, escolha *Carregar sem compactação* e selecione a pasta.
 - **Firefox**: `about:debugging#/runtime/this-firefox` → *Carregar extensão temporária* → `manifest.json`. Para instalação permanente, assine-o como extensão não listada em addons.mozilla.org (ID `claritas@trom.tf`).
