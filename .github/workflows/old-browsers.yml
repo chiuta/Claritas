@@ -35,7 +35,8 @@ jobs:
           FIREFOX_BIN: ${{ steps.ff.outputs.firefox-path }}
           GECKODRIVER: ${{ steps.gd.outputs.path }}
           EXT_DIR: ../dist/${{ matrix.ext }}
-          GD_NO_SYSACCESS: ${{ matrix.gd != '0.34.0' && '1' || '' }}
+          GD_NO_SYSACCESS: '1'
+          HEADLESS: '0'
         run: |
           mkdir -p test/results
           cd test
