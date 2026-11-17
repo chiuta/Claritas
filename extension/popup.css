@@ -8,7 +8,7 @@ h1{font-size:20px;margin:0 0 2px;display:flex;align-items:center;gap:8px}
 .warn{background:var(--warnbg);color:var(--warn);border:2px solid var(--warn);padding:8px;border-radius:6px;font-size:14px}
 .switches{border:2px solid var(--line);border-radius:8px;padding:4px 10px;margin-bottom:10px}
 .row{display:flex;gap:10px;align-items:center;padding:6px 0;cursor:pointer}
-.row input[type=checkbox]{width:22px;height:22px;flex:none;accent-color:var(--acc)}
+.row input[type=checkbox]{width:24px;height:24px;flex:none;accent-color:var(--acc)}
 .field{display:flex;flex-direction:column;gap:4px;margin:8px 0}
 select,input[type=color],button{font:inherit;color:var(--fg);background:var(--card);border:2px solid var(--line);border-radius:6px;padding:7px 10px}
 select{width:100%}
@@ -58,3 +58,9 @@ footer{margin-top:12px;border-top:2px solid var(--line);padding-top:8px}
 .list li .sev{font-weight:700;min-width:62px}.list li.err .sev{color:#b00020}.list li.warn .sev{color:#8a5a00}.list li.info .sev{color:#0b57d0}
 .list li button{margin-left:auto;padding:2px 8px;min-height:26px;font-size:12px}
 .list li .sw{width:14px;height:14px;border-radius:50%;flex:none;border:1px solid #000}
+
+header{position:relative}
+.modebtn{margin:4px 0 0;padding:6px 10px;min-height:36px;font-size:13px}
+body.simple .sticky,body.simple main>section:not(#p-contrast),body.simple #quick~.search{display:none!important}
+body.simple #p-contrast{display:block!important}
+input[type=checkbox],input[type=radio]{width:24px;height:24px;min-width:24px;min-height:24px}

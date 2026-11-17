@@ -548,5 +548,8 @@
 "calm_n": "{n} elementi nascosti dalla modalità calma",
 "fab_open": "Claritas – accesso rapido",
 "alt_missing": "ALT MANCANTE",
-"sev_tip": ""
+"sev_tip": "",
+"ui_simple": "Modalità semplice",
+"ui_full": "Tutte le impostazioni",
+"ui_simple_hint": "Modalità semplice: solo contrasto e dimensione. Premi «Tutte le impostazioni» per il resto."
 }

@@ -2,7 +2,7 @@
 
 **English** · [Română](README.ro.md) · [Français](README.fr.md) · [Italiano](README.it.md) · [Español](README.es.md) · [Português](README.pt.md) · [Deutsch](README.de.md) · [Magyar](README.hu.md)
 
-**Version: 1.10.0 · Last updated: 17 Nov 2026**
+**Version: 1.10.1 · Last updated: 18 Nov 2026**
 
 Free all-in-one accessibility extension. No telemetry, no network, no accounts: everything stays in your browser.
 
@@ -10,6 +10,7 @@ Not a compliance tool: it improves reading for the user and does not make a webs
 
 ## What it does
 - **Automatic contrast fix (WCAG AA/AAA)**: measures the real text/background contrast and adjusts only insufficient text, including disabled fields. Since 1.8.1 it also handles text over background images (average colour of images from the same origin or data: URLs, otherwise a cautious white/black choice plus a halo); small icons are not treated as backgrounds. Popup (1.9): search across all settings (`/` or Ctrl+K), quick actions (next theme, read aloud, text size), sticky tab bar with arrow-key navigation, last tab remembered.
+- **Simple mode** (popup): contrast and size only, for people overwhelmed by many options; the choice is remembered.
 - **High-contrast themes**, colour filters, **colour-blindness** correction and simulation, blue-light filter, vision simulator.
 - **Text**: page zoom, text size, spacing, fonts (dyslexia-friendly, Lexend, Atkinson Hyperlegible), left alignment.
 - **Reading**: ruler, mask, magnifier, reader mode, speed reading, read aloud (local voices), highlights with export.
@@ -93,6 +94,8 @@ All are off by default (popup → “More” → “Optional modules (v1.7)”).
 - **Audit report**: HTML, CSV or JSON with WCAG 2.2 / EN 301 549 mapping, fix suggestions and comparison with a saved baseline.
 - **CI mode**: `python tools/claritas_ci.py https://example.com --format all --max-errors 0` (exit code 1 above the threshold). Covers only Claritas’s automatic rules.
 - **Verified (Chromium, real extension)**: 36 checks in `test/t14_v17.py` (navigation, list, spotlight, voice-command parser, alt, summary/glossary, reports, profiles, rule import, privacy panel, cleanup on disable). **Not verified**: speech recognition with real speech (only start/stop and the command parser), live captions with real speech, the modules on Firefox/Safari.
+
+[Security](SECURITY.md) · [Governance](GOVERNANCE.md) · [Contributing](CONTRIBUTING.md) · [Contrast benchmark](tools/contrast_benchmark.py)
 
 ## Optional modules (v1.6)
 All are off by default; switch them on in the popup → “Optional modules”. Nothing sends data outside the browser.

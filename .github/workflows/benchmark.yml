@@ -1,0 +1,30 @@
+name: contrast-benchmark
+# Benchmark public de contrast: pagini reale, cu și fără Claritas (măsurătoare independentă de motor). Pornire manuală.
+on: { workflow_dispatch: }
+permissions: { contents: read }
+jobs:
+  bench:
+    runs-on: ubuntu-26.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: latest }
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.x' }
+      - id: chrome
+        uses: browser-actions/setup-chrome@v1
+        with: { chrome-version: stable }
+      - run: pip install playwright && sudo apt-get update && sudo apt-get install -y xvfb
+      - run: python3 build.py
+      - name: Benchmark
+        env: { CHROME_PATH: '${{ steps.chrome.outputs.chrome-path }}' }
+        run: xvfb-run -a python3 tools/contrast_benchmark.py --out contrast_benchmark.json 2>&1 | tee bench.log
+      - name: Rezumat
+        if: always()
+        run: |
+          echo '### Benchmark contrast' >> $GITHUB_STEP_SUMMARY
+          grep '^REZUMAT' bench.log | sed 's/^REZUMAT //' | python3 -c "import sys,json; d=json.loads(sys.stdin.read()); [print(f'- {k}: {v}') for k,v in d.items()]" >> $GITHUB_STEP_SUMMARY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: { name: contrast-benchmark, path: 'contrast_benchmark.json' }

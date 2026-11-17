@@ -1,6 +1,8 @@
 # Claritas — Politica de confidențialitate
 
-**Versiunea 1.10.0 · Ultima actualizare: 17 nov. 2026** · [English](PRIVACY.md) · Română · [Français](PRIVACY.fr.md) · [Italiano](PRIVACY.it.md) · [Español](PRIVACY.es.md) · [Português](PRIVACY.pt.md) · [Deutsch](PRIVACY.de.md) · [Magyar](PRIVACY.hu.md)
+**Versiunea 1.10.1 · Ultima actualizare: 18 nov. 2026** · [English](PRIVACY.md) · Română · [Français](PRIVACY.fr.md) · [Italiano](PRIVACY.it.md) · [Español](PRIVACY.es.md) · [Português](PRIVACY.pt.md) · [Deutsch](PRIVACY.de.md) · [Magyar](PRIVACY.hu.md)
+
+> Traducere asistată automat, încă nerevizuită de un vorbitor nativ. Dacă formulările diferă, prevalează textul în engleză (PRIVACY.md).
 
 Claritas este o extensie gratuită, open-source (MIT), de accesibilitate. **Nu are telemetrie, analitice, conturi sau servere proprii.** Documentul spune exact ce păstrează și puținele cazuri în care browserul (nu Claritas) comunică cu un terț.
 

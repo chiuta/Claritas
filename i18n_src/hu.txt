@@ -548,3 +548,7 @@ ui_bigger=Nagyobb szöveg
 ui_smaller=Kisebb szöveg
 ui_theme_now=Téma: {t}
 ui_clear=Keresés törlése
+
+ui_simple=Egyszerű mód
+ui_full=Minden beállítás
+ui_simple_hint=Egyszerű mód: csak kontraszt és méret. A többihez nyomd meg a „Minden beállítás” gombot.

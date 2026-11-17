@@ -2,13 +2,14 @@
 
 [English](README.md) · [Română](README.ro.md) · [Français](README.fr.md) · [Italiano](README.it.md) · [Español](README.es.md) · [Português](README.pt.md) · [Deutsch](README.de.md) · **Magyar**
 
-**Verzió: 1.10.0 · Utolsó frissítés: 2026. 11. 17.**
+**Verzió: 1.10.1 · Utolsó frissítés: 2026. 11. 17.**
 
 Ingyenes, mindent egyben tartalmazó akadálymentesítő bővítmény. Nincs telemetria, nincs hálózat, nincs fiók: minden a böngészőjében marad.
 
 Nem megfelelőségi eszköz: javítja az olvasást a felhasználónak, de nem teszi WCAG-megfelelővé a webhelyet.
 
 ## Mit tud
+- **Egyszerű mód** (popup): csak kontraszt és méret, azoknak, akiket sok opció elbizonytalanít; a választás megmarad.
 - **Automatikus kontrasztjavítás (WCAG AA/AAA)**: méri a valódi szöveg/háttér kontrasztot, és csak a nem elégséges szöveget igazítja, a letiltott mezőket is. Az 1.8.1-től a háttérképen lévő szöveget is kezeli (az azonos eredetű vagy data: képek átlagszíne, egyébként óvatos fehér/fekete választás körvonallal); a kis ikonokat nem tekinti háttérnek. Popup (1.9): keresés minden beállításban (`/` vagy Ctrl+K), gyorsműveletek (következő téma, felolvasás, szövegméret), rögzített fülsáv nyílbillentyűs navigációval, az utolsó fül megjegyzése.
 - **Nagy kontrasztú témák**, színszűrők, **színtévesztés** (korrekció és szimuláció), kékfényszűrő, látásszimulátor.
 - **Szöveg**: nagyítás, méret, térközök, betűtípusok (diszlexiabarát, Lexend, Atkinson Hyperlegible), balra igazítás.
@@ -94,6 +95,8 @@ Alapértelmezetten mind ki van kapcsolva (popup → „Továbbiak” → „Opci
 - **Audit-jelentés**: HTML, CSV vagy JSON WCAG 2.2 / EN 301 549 megfeleltetéssel, javítási javaslatokkal és mentett referenciával való összevetéssel.
 - **CI mód**: `python tools/claritas_ci.py https://example.com --format all --max-errors 0` (1-es kilépési kód a küszöb túllépésekor). Csak a Claritas automatikus szabályait fedi le.
 - **Ellenőrizve (Chromium, valódi bővítmény)**: 36 ellenőrzés a `test/t14_v17.py` fájlban. **Nem ellenőrzött**: beszédfelismerés valódi beszéddel (csak indítás/leállítás és a parancsértelmező), élő feliratok valódi beszéddel, a modulok Firefoxban/Safariban.
+
+[Security](SECURITY.md) · [Governance](GOVERNANCE.md) · [Contributing](CONTRIBUTING.md) · [Contrast benchmark](tools/contrast_benchmark.py)
 
 ## Választható modulok (v1.6)
 Mind alapból ki van kapcsolva (felugró ablak → „Választható modulok”); semmi sem hagyja el a böngészőt. Szófajok az Olvasóban (román/angol, heurisztikus), kiegészítő ellenőrzési szabályok (ARIA, űrlapok, main, nagyítás, feliratok), helyi szótár (saját JSON/TSV, max. 4 MB), a beállítások szinkronizálása a böngésző `storage.sync` tárolójával (szótár és felvételek nélkül) és helyi OCR a külön `claritas-*-ocr.zip` csomagban (~20 MB; automatikusan csak Chromiumban ellenőrizve, Firefox/Safari nem ellenőrzött).

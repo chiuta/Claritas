@@ -2,13 +2,14 @@
 
 [English](README.md) · [Română](README.ro.md) · [Français](README.fr.md) · [Italiano](README.it.md) · [Español](README.es.md) · **Português** · [Deutsch](README.de.md) · [Magyar](README.hu.md)
 
-**Versão: 1.10.0 · Última atualização: 17/11/2026**
+**Versão: 1.10.1 · Última atualização: 17/11/2026**
 
 Extensão de acessibilidade tudo em um, gratuita. Sem telemetria, sem rede, sem contas: tudo fica no seu navegador.
 
 Não é uma ferramenta de conformidade: melhora a leitura para o utilizador e não torna um site conforme com as WCAG.
 
 ## O que faz
+- **Modo simples** (popup): apenas contraste e tamanho, para quem se perde com tantas opções; a escolha é guardada.
 - **Correção automática do contraste (WCAG AA/AAA)**: mede o contraste real texto/fundo e ajusta apenas o texto insuficiente, incluindo campos desativados. Desde a 1.8.1 também trata texto sobre imagens de fundo (cor média das imagens da mesma origem ou data:, caso contrário escolha prudente branco/preto com um halo); ícones pequenos não são tratados como fundos. Popup (1.9): pesquisa em todas as definições (`/` ou Ctrl+K), ações rápidas (tema seguinte, leitura em voz alta, tamanho do texto), barra de separadores fixa com navegação por setas, último separador memorizado.
 - **Temas de alto contraste**, filtros de cor, **daltonismo** (correção e simulação), filtro de luz azul, simulador de visão.
 - **Texto**: zoom, tamanho, espaçamento, tipos de letra (adequado à dislexia, Lexend, Atkinson Hyperlegible), alinhamento à esquerda.
@@ -94,6 +95,8 @@ Todos estão desativados por predefinição (popup → «Mais» → «Módulos o
 - **Relatório de auditoria**: HTML, CSV ou JSON com correspondência WCAG 2.2 / EN 301 549, correções sugeridas e comparação com uma referência guardada.
 - **Modo CI**: `python tools/claritas_ci.py https://example.com --format all --max-errors 0` (código de saída 1 acima do limiar). Cobre apenas as regras automáticas do Claritas.
 - **Verificado (Chromium, extensão real)**: 36 verificações em `test/t14_v17.py`. **Não verificado**: reconhecimento de voz com voz real (apenas início/paragem e o analisador de comandos), legendas em direto com voz real, os módulos no Firefox/Safari.
+
+[Security](SECURITY.md) · [Governance](GOVERNANCE.md) · [Contributing](CONTRIBUTING.md) · [Contrast benchmark](tools/contrast_benchmark.py)
 
 ## Módulos opcionais (v1.6)
 Todos desligados por defeito (popup → «Módulos opcionais»); nada sai do navegador. Classes gramaticais no Leitor (romeno/inglês, heurístico), regras de auditoria adicionais (ARIA, formulários, main, zoom, legendas), dicionário local (o seu JSON/TSV, máx. 4 MB), sincronização das definições com `storage.sync` do navegador (sem dicionário nem gravações) e OCR local no pacote separado `claritas-*-ocr.zip` (~20 MB; verificado automaticamente apenas no Chromium, Firefox/Safari não verificados).

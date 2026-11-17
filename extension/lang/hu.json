@@ -548,5 +548,8 @@
 "calm_n": "{n} elemet rejtett el a nyugodt mód",
 "fab_open": "Claritas – gyors elérés",
 "alt_missing": "HIÁNYZÓ ALT",
-"sev_tip": ""
+"sev_tip": "",
+"ui_simple": "Egyszerű mód",
+"ui_full": "Minden beállítás",
+"ui_simple_hint": "Egyszerű mód: csak kontraszt és méret. A többihez nyomd meg a „Minden beállítás” gombot."
 }

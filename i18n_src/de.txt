@@ -548,3 +548,7 @@ ui_bigger=Größerer Text
 ui_smaller=Kleinerer Text
 ui_theme_now=Design: {t}
 ui_clear=Suche löschen
+
+ui_simple=Einfacher Modus
+ui_full=Alle Einstellungen
+ui_simple_hint=Einfacher Modus: nur Kontrast und Größe. „Alle Einstellungen“ zeigt den Rest.

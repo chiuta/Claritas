@@ -548,5 +548,8 @@
 "calm_n": "{n} Elemente durch den Ruhemodus ausgeblendet",
 "fab_open": "Claritas – Schnellzugriff",
 "alt_missing": "ALT FEHLT",
-"sev_tip": ""
+"sev_tip": "",
+"ui_simple": "Einfacher Modus",
+"ui_full": "Alle Einstellungen",
+"ui_simple_hint": "Einfacher Modus: nur Kontrast und Größe. „Alle Einstellungen“ zeigt den Rest."
 }

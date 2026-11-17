@@ -548,3 +548,7 @@ ui_bigger=Texto más grande
 ui_smaller=Texto más pequeño
 ui_theme_now=Tema: {t}
 ui_clear=Borrar la búsqueda
+
+ui_simple=Modo simple
+ui_full=Todos los ajustes
+ui_simple_hint=Modo simple: solo contraste y tamaño. Pulsa «Todos los ajustes» para el resto.

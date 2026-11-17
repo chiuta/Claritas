@@ -1,6 +1,8 @@
 # Claritas — Informativa sulla privacy
 
-**Versione 1.10.0 · Ultimo aggiornamento: 17 nov 2026** · [English](PRIVACY.md) · [Română](PRIVACY.ro.md) · [Français](PRIVACY.fr.md) · Italiano · [Español](PRIVACY.es.md) · [Português](PRIVACY.pt.md) · [Deutsch](PRIVACY.de.md) · [Magyar](PRIVACY.hu.md)
+**Versione 1.10.1 · Ultimo aggiornamento: 18 nov 2026** · [English](PRIVACY.md) · [Română](PRIVACY.ro.md) · [Français](PRIVACY.fr.md) · Italiano · [Español](PRIVACY.es.md) · [Português](PRIVACY.pt.md) · [Deutsch](PRIVACY.de.md) · [Magyar](PRIVACY.hu.md)
+
+> Traduzione assistita da macchina, non ancora rivista da un madrelingua. In caso di differenze prevale il testo inglese (PRIVACY.md).
 
 Claritas è un'estensione di accessibilità gratuita e open source (MIT). **Non ha telemetria, analisi, account né server propri.** Questo documento indica esattamente cosa memorizza e i pochi casi in cui il browser (non Claritas) comunica con terze parti.
 

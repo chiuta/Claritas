@@ -22,7 +22,7 @@ jobs:
           bash tools/fetch_vendor.sh
           python build.py
           mkdir -p site/download
-          cp dist/claritas-chromium.zip dist/claritas-firefox.zip dist/claritas-safari-source.zip site/download/
+          cp dist/claritas-chromium.zip dist/claritas-firefox.zip dist/claritas-safari-source.zip dist/claritas-firefox-legacy.zip dist/claritas-safari-legacy-source.zip site/download/
           for v in axe pdf; do for f in chromium firefox; do cp dist/claritas-$f-$v.zip site/download/; done; done
           cp install/install.sh install/install.ps1 site/download/
           (cd site/download && sha256sum *.zip > SHA256SUMS && ls -la)

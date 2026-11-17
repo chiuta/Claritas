@@ -242,6 +242,20 @@
       api.storage.local.set({ [chkKey()]: v }).catch(() => { });
     }));
   }
+  function bindMode() {
+    const b = $('#modeBtn'), hint = $('#simpleHint');
+    if (!b) return;
+    const get = () => { try { return localStorage.getItem('clr_simple') === '1'; } catch (e) { return false; } };
+    const apply = (on) => {
+      document.body.classList.toggle('simple', on);
+      b.textContent = on ? tl('ui_full') : tl('ui_simple');
+      b.setAttribute('aria-pressed', on ? 'true' : 'false');
+      hint.textContent = tl('ui_simple_hint'); hint.hidden = !on;
+      if (on) { const t = $('#t-contrast'); if (t) t.click(); }
+    };
+    b.addEventListener('click', () => { const on = !document.body.classList.contains('simple'); try { localStorage.setItem('clr_simple', on ? '1' : '0'); } catch (e) { } apply(on); });
+    apply(get());
+  }
   async function init() {
     const st = await api.storage.local.get(['settings', 'sites']);
     G = st.settings && typeof st.settings === 'object' ? st.settings : {}; SITES = CLR.sanitizeSites(st.sites);
@@ -258,6 +272,7 @@
     buildAutoTheme();
     fillVoices();
     bind();
+    bindMode();
     bindTools();
     bindModules(); bindModules2(); bindModules3();
     render();

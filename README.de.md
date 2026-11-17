@@ -2,13 +2,14 @@
 
 [English](README.md) · [Română](README.ro.md) · [Français](README.fr.md) · [Italiano](README.it.md) · [Español](README.es.md) · [Português](README.pt.md) · **Deutsch** · [Magyar](README.hu.md)
 
-**Version: 1.10.0 · Letzte Aktualisierung: 17.11.2026**
+**Version: 1.10.1 · Letzte Aktualisierung: 18.11.2026**
 
 Kostenlose Barrierefreiheits-Erweiterung „Alles in einem“. Keine Telemetrie, kein Netzwerk, keine Konten: Alles bleibt in Ihrem Browser.
 
 Kein Konformitätswerkzeug: Es verbessert das Lesen für die Nutzer und macht eine Website nicht WCAG-konform.
 
 ## Funktionen
+- **Einfacher Modus** (Popup): nur Kontrast und Größe, für alle, die viele Optionen überfordern; die Wahl wird gespeichert.
 - **Automatische Kontrastkorrektur (WCAG AA/AAA)**: misst den tatsächlichen Text-/Hintergrundkontrast und passt nur unzureichenden Text an, auch deaktivierte Felder. Seit 1.8.1 behandelt sie auch Text auf Hintergrundbildern (Durchschnittsfarbe von Bildern gleicher Herkunft oder data:, sonst vorsichtige Wahl Weiß/Schwarz mit Halo); kleine Icons gelten nicht als Hintergrund. Popup (1.9): Suche in allen Einstellungen (`/` oder Strg+K), Schnellaktionen (nächstes Design, Vorlesen, Textgröße), fixierte Tab-Leiste mit Pfeiltasten-Navigation, letzter Tab wird gemerkt.
 - **Hochkontrast-Designs**, Farbfilter, **Farbenblindheit** (Korrektur und Simulation), Blaulichtfilter, Sehsimulator.
 - **Text**: Seitenzoom, Größe, Abstände, Schriften (legasthenie-freundlich, Lexend, Atkinson Hyperlegible), Linksausrichtung.
@@ -94,6 +95,8 @@ Alle sind standardmäßig aus (Popup → „Mehr“ → „Optionale Module (v1.
 - **Audit-Bericht**: HTML, CSV oder JSON mit Zuordnung zu WCAG 2.2 / EN 301 549, Korrekturvorschlägen und Vergleich mit einer gespeicherten Referenz.
 - **CI-Modus**: `python tools/claritas_ci.py https://example.com --format all --max-errors 0` (Exit-Code 1 bei Überschreitung). Deckt nur die automatischen Regeln von Claritas ab.
 - **Geprüft (Chromium, echte Erweiterung)**: 36 Prüfungen in `test/t14_v17.py`. **Nicht geprüft**: Spracherkennung mit echter Sprache (nur Start/Stopp und Befehlsparser), Live-Untertitel mit echter Sprache, die Module in Firefox/Safari.
+
+[Security](SECURITY.md) · [Governance](GOVERNANCE.md) · [Contributing](CONTRIBUTING.md) · [Contrast benchmark](tools/contrast_benchmark.py)
 
 ## Optionale Module (v1.6)
 Alle sind standardmäßig aus (Popup → „Optionale Module“); nichts verlässt den Browser. Wortarten im Leser (Rumänisch/Englisch, heuristisch), zusätzliche Prüfregeln (ARIA, Formulare, main, Zoom, Untertitel), lokales Wörterbuch (eigene JSON-/TSV-Datei, max. 4 MB), Einstellungs-Sync über `storage.sync` des Browsers (ohne Wörterbuch und Aufnahmen) und lokale OCR im separaten Paket `claritas-*-ocr.zip` (~20 MB; nur in Chromium automatisch geprüft, Firefox/Safari nicht geprüft).

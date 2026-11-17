@@ -2,13 +2,14 @@
 
 [English](README.md) · [Română](README.ro.md) · [Français](README.fr.md) · **Italiano** · [Español](README.es.md) · [Português](README.pt.md) · [Deutsch](README.de.md) · [Magyar](README.hu.md)
 
-**Versione: 1.10.0 · Ultimo aggiornamento: 17/11/2026**
+**Versione: 1.10.1 · Ultimo aggiornamento: 17/11/2026**
 
 Estensione di accessibilità tutto-in-uno, gratuita. Nessuna telemetria, nessuna rete, nessun account: tutto resta nel tuo browser.
 
 Non è uno strumento di conformità: migliora la lettura per l'utente e non rende un sito conforme alle WCAG.
 
 ## Cosa fa
+- **Modalità semplice** (popup): solo contrasto e dimensione, per chi si perde tra troppe opzioni; la scelta viene ricordata.
 - **Correzione automatica del contrasto (WCAG AA/AAA)**: misura il contrasto reale testo/sfondo e regola solo il testo insufficiente, compresi i campi disabilitati. Dalla 1.8.1 gestisce anche il testo su immagini di sfondo (colore medio delle immagini della stessa origine o data:, altrimenti scelta prudente bianco/nero con alone); le piccole icone non sono trattate come sfondi. Popup (1.9): ricerca in tutte le impostazioni (`/` o Ctrl+K), azioni rapide (tema successivo, lettura ad alta voce, dimensione del testo), barra delle schede fissa con navigazione da frecce, ultima scheda ricordata.
 - **Temi ad alto contrasto**, filtri colore, **daltonismo** (correzione e simulazione), filtro luce blu, simulatore di visione.
 - **Testo**: zoom, dimensione, spaziatura, caratteri (adatto alla dislessia, Lexend, Atkinson Hyperlegible), allineamento a sinistra.
@@ -94,6 +95,8 @@ Tutti sono disattivati di default (popup → «Altro» → «Moduli opzionali (v
 - **Rapporto di audit**: HTML, CSV o JSON con corrispondenza WCAG 2.2 / EN 301 549, correzioni suggerite e confronto con un riferimento salvato.
 - **Modalità CI**: `python tools/claritas_ci.py https://example.com --format all --max-errors 0` (codice di uscita 1 oltre la soglia). Copre solo le regole automatiche di Claritas.
 - **Verificato (Chromium, estensione reale)**: 36 controlli in `test/t14_v17.py`. **Non verificato**: riconoscimento vocale con voce reale (solo avvio/arresto e parser dei comandi), sottotitoli dal vivo con voce reale, i moduli su Firefox/Safari.
+
+[Security](SECURITY.md) · [Governance](GOVERNANCE.md) · [Contributing](CONTRIBUTING.md) · [Contrast benchmark](tools/contrast_benchmark.py)
 
 ## Moduli opzionali (v1.6)
 Tutti disattivati di default (popup → «Moduli opzionali»); nulla esce dal browser. Parti del discorso nel Lettore (rumeno/inglese, euristico), regole di audit aggiuntive (ARIA, moduli, main, zoom, sottotitoli), dizionario locale (tuo JSON/TSV, max 4 MB), sincronizzazione delle impostazioni con `storage.sync` del browser (senza dizionario né registrazioni) e OCR locale nel pacchetto separato `claritas-*-ocr.zip` (~20 MB; verificato automaticamente solo in Chromium, Firefox/Safari non verificati).

@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.10.1 — 18 Nov 2026
+- **Popup:** new *Simple mode* (contrast and size only, remembered); checkboxes enlarged to 24×24 px (WCAG 2.2 target size). New test `t22_popup_a11y.py` (accessible names, targets, mode, persistence).
+- **Evidence tooling:** `tools/contrast_benchmark.py` + `benchmark.yml` workflow measure contrast on real pages with and without Claritas using an independent calculation; no results published yet.
+- **Trust files:** `SECURITY.md`, `GOVERNANCE.md`, `CONTRIBUTING.md`; privacy-policy translations marked as machine-assisted and unreviewed (English text prevails).
+- **Site:** minimum versions aligned with the README (declared, untested); legacy packages listed as experimental; Pages publishes them.
+
 ## 1.10.0 — 17 Nov 2026
 - **New: builds for older browsers** (experimental). `claritas-firefox-legacy.zip` (Manifest V2, Firefox 91+, non-persistent background page) and `claritas-safari-legacy-source.zip` (Manifest V2 for Safari 14–15). The declared minimums of the main packages were lowered to Chromium 88 and Firefox 115 (Android 120).
 - **Docs:** the declared minimum versions are labelled as untested; the audit is described as “own rules (a WCAG 2.2 subset)”; a not-a-compliance-tool line was added to every README.
