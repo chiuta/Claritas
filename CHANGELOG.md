@@ -1,5 +1,8 @@
 # Changelog
 
+## Unreleased
+- **Site:** the landing page (`site/index.html`) runs in older browsers (Chrome/Edge 55+, Firefox 52+, Safari 10.1+/iOS 10.3+): fff-kit 1.8.0 compatibility layer and ES2017 syntax. This concerns the web page only, not the extension builds. Checked with an ES2017 parser and in a simulated old engine, not on real old devices.
+
 ## 1.10.1 — 18 Nov 2026
 - **Popup:** new *Simple mode* (contrast and size only, remembered); checkboxes enlarged to 24×24 px (WCAG 2.2 target size). New test `t22_popup_a11y.py` (accessible names, targets, mode, persistence).
 - **Evidence tooling:** `tools/contrast_benchmark.py` + `benchmark.yml` workflow measure contrast on real pages with and without Claritas using an independent calculation; no results published yet.
