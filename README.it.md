@@ -2,7 +2,7 @@
 
 [English](README.md) · [Română](README.ro.md) · [Français](README.fr.md) · **Italiano** · [Español](README.es.md) · [Português](README.pt.md) · [Deutsch](README.de.md) · [Magyar](README.hu.md)
 
-**Versione: 1.9.1 · Ultimo aggiornamento: 13/11/2026**
+**Versione: 1.10.0 · Ultimo aggiornamento: 17/11/2026**
 
 Estensione di accessibilità tutto-in-uno, gratuita. Nessuna telemetria, nessuna rete, nessun account: tutto resta nel tuo browser.
 
@@ -25,9 +25,11 @@ Scegli il pacchetto adatto al tuo browser (cartella `dist/` o file della release
 
 | Pacchetto | Browser |
 |---|---|
-| `claritas-chromium.zip` | Chrome, Edge, Opera / Opera GX, Brave, Vivaldi, Arc, Dia, Comet, Yandex, Whale e qualsiasi browser Chromium 109+ |
-| `claritas-firefox.zip` | Firefox (desktop 140+ e Android 142+), LibreWolf, Zen, Floorp, Waterfox, Mullvad Browser |
+| `claritas-chromium.zip` | Chrome, Edge, Opera / Opera GX, Brave, Vivaldi, Arc, Dia, Comet, Yandex, Whale e qualsiasi browser Chromium 88+ |
+| `claritas-firefox.zip` | Firefox (desktop 115+ e Android 120+), LibreWolf, Zen, Floorp, Waterfox, Mullvad Browser |
 | `claritas-safari-source.zip` | Safari macOS / iOS / iPadOS (serve un Mac con Xcode) |
+| `claritas-firefox-legacy.zip` | Firefox 91–114 (ESR 91/102) — Browser più vecchi (sperimentale, Manifest V2; non verificato su browser vecchi reali) |
+| `claritas-safari-legacy-source.zip` | Safari 14–15 (serve un Mac con Xcode) — Browser più vecchi (sperimentale, Manifest V2; non verificato su browser vecchi reali) |
 
 - **Famiglia Chromium**: decomprimi, apri la pagina delle estensioni (`chrome://extensions`, `edge://extensions`, `opera://extensions`…), attiva la *modalità sviluppatore*, scegli *Carica estensione non pacchettizzata* e seleziona la cartella.
 - **Firefox**: `about:debugging#/runtime/this-firefox` → *Carica componente aggiuntivo temporaneo* → `manifest.json`. Per un’installazione permanente, firmalo come componente non elencato su addons.mozilla.org (ID `claritas@trom.tf`).

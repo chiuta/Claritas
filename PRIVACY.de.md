@@ -1,6 +1,6 @@
 # Claritas — Datenschutzerklärung
 
-**Version 1.9.1 · Zuletzt aktualisiert: 13. Nov. 2026** · [English](PRIVACY.md) · [Română](PRIVACY.ro.md) · [Français](PRIVACY.fr.md) · [Italiano](PRIVACY.it.md) · [Español](PRIVACY.es.md) · [Português](PRIVACY.pt.md) · Deutsch · [Magyar](PRIVACY.hu.md)
+**Version 1.10.0 · Zuletzt aktualisiert: 17. Nov. 2026** · [English](PRIVACY.md) · [Română](PRIVACY.ro.md) · [Français](PRIVACY.fr.md) · [Italiano](PRIVACY.it.md) · [Español](PRIVACY.es.md) · [Português](PRIVACY.pt.md) · Deutsch · [Magyar](PRIVACY.hu.md)
 
 Claritas ist eine kostenlose Open-Source-Erweiterung (MIT) für Barrierefreiheit. Sie hat **keine Telemetrie, keine Analysen, keine Konten und keine eigenen Server**. Dieses Dokument beschreibt genau, was gespeichert wird und in welchen wenigen Fällen Ihr Browser (nicht Claritas) mit Dritten kommuniziert.
 

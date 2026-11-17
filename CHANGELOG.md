@@ -1,6 +1,9 @@
 # Changelog
 
-## Unreleased — tests, CI and docs
+## 1.10.0 — 17 Nov 2026
+- **New: builds for older browsers** (experimental). `claritas-firefox-legacy.zip` (Manifest V2, Firefox 91+, non-persistent background page) and `claritas-safari-legacy-source.zip` (Manifest V2 for Safari 14–15). The declared minimums of the main packages were lowered to Chromium 88 and Firefox 115 (Android 120).
+- **Honest status:** the older builds and the lowered minimums have NOT been verified on real old browsers. The CI attempts (Firefox ESR 91/102/115, Chromium 88/103) did not complete a test run yet; see `old-browsers.yml`. Use at your own risk and report problems.
+- Privacy policy in 8 languages; CI on Ubuntu 26.04 and the latest Node.js; Vivaldi partially verified; Opera t5–t8, t15 verified.
 - Docs: the privacy policy is now available in all 8 languages (`PRIVACY.<lang>.md`, with a language switcher); the READMEs link to their own language. Translations still await native-speaker review.
 - CI: all workflows run on Ubuntu 26.04 and the latest Node.js; `setup-geckodriver` uses the GitHub token (no more rate-limit failures on macOS).
 - CI: Vivaldi (Linux) is now partially verified by `t21_single_page.py` (content script, audit rules, contrast, popup), after fixing the CDP connection in the test harness (wait + retries, `--remote-allow-origins`). Vivaldi exposes no new tabs through CDP, so multi-tab tests cannot run there. Opera now passes t5–t8 and t15 (the harness had been messaging a stale tab); t9 (recording) is skipped under CDP.

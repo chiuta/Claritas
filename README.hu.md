@@ -2,7 +2,7 @@
 
 [English](README.md) · [Română](README.ro.md) · [Français](README.fr.md) · [Italiano](README.it.md) · [Español](README.es.md) · [Português](README.pt.md) · [Deutsch](README.de.md) · **Magyar**
 
-**Verzió: 1.9.1 · Utolsó frissítés: 2026. 11. 13.**
+**Verzió: 1.10.0 · Utolsó frissítés: 2026. 11. 17.**
 
 Ingyenes, mindent egyben tartalmazó akadálymentesítő bővítmény. Nincs telemetria, nincs hálózat, nincs fiók: minden a böngészőjében marad.
 
@@ -25,9 +25,11 @@ Válassza a böngészőjének megfelelő csomagot (`dist/` mappa vagy a kiadás 
 
 | Csomag | Böngészők |
 |---|---|
-| `claritas-chromium.zip` | Chrome, Edge, Opera / Opera GX, Brave, Vivaldi, Arc, Dia, Comet, Yandex, Whale és minden Chromium 109+ böngésző |
-| `claritas-firefox.zip` | Firefox (asztali 140+ és Android 142+), LibreWolf, Zen, Floorp, Waterfox, Mullvad Browser |
+| `claritas-chromium.zip` | Chrome, Edge, Opera / Opera GX, Brave, Vivaldi, Arc, Dia, Comet, Yandex, Whale és minden Chromium 88+ böngésző |
+| `claritas-firefox.zip` | Firefox (asztali 115+ és Android 120+), LibreWolf, Zen, Floorp, Waterfox, Mullvad Browser |
 | `claritas-safari-source.zip` | Safari macOS / iOS / iPadOS (Xcode-dal rendelkező Mac szükséges) |
+| `claritas-firefox-legacy.zip` | Firefox 91–114 (ESR 91/102) — Régebbi böngészők (kísérleti, Manifest V2; valódi régi böngészőkön nem ellenőrzött) |
+| `claritas-safari-legacy-source.zip` | Safari 14–15 (Xcode-dal rendelkező Mac szükséges) — Régebbi böngészők (kísérleti, Manifest V2; valódi régi böngészőkön nem ellenőrzött) |
 
 - **Chromium család**: csomagolja ki, nyissa meg a bővítmények oldalát (`chrome://extensions`, `edge://extensions`, `opera://extensions`…), kapcsolja be a *Fejlesztői módot*, válassza a *Kicsomagolt bővítmény betöltése* lehetőséget, és jelölje ki a mappát.
 - **Firefox**: `about:debugging#/runtime/this-firefox` → *Ideiglenes kiegészítő betöltése* → `manifest.json`. Végleges telepítéshez írja alá nem listázott kiegészítőként az addons.mozilla.org oldalon (azonosító: `claritas@trom.tf`).

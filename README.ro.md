@@ -2,7 +2,7 @@
 
 [English](README.md) · **Română** · [Français](README.fr.md) · [Italiano](README.it.md) · [Español](README.es.md) · [Português](README.pt.md) · [Deutsch](README.de.md) · [Magyar](README.hu.md)
 
-**Versiune: 1.9.1 · Ultima actualizare: 13.11.2026**
+**Versiune: 1.10.0 · Ultima actualizare: 17.11.2026**
 
 Extensie gratuită de accesibilitate all-in-one. Fără telemetrie, fără rețea, fără conturi: totul rămâne în browserul tău.
 
@@ -26,8 +26,10 @@ Alege pachetul potrivit browserului (în folderul `dist/` sau în fișierele de 
 | Pachet | Browsere |
 |---|---|
 | `claritas-chromium.zip` | Chrome, Edge, Opera / Opera GX, Brave, Vivaldi, Arc, Dia, Comet, Yandex, Whale și alte browsere Chromium (testat direct doar Chromium, Edge, Brave) |
-| `claritas-firefox.zip` | Firefox (desktop 140+ și Android 142+), LibreWolf, Zen, Floorp, Waterfox, Mullvad Browser |
+| `claritas-firefox.zip` | Firefox (desktop 115+ și Android 120+), LibreWolf, Zen, Floorp, Waterfox, Mullvad Browser |
 | `claritas-safari-source.zip` | Safari macOS / iOS / iPadOS (necesită un Mac cu Xcode) |
+| `claritas-firefox-legacy.zip` | Firefox 91–114 (ESR 91/102) — Browsere mai vechi (experimental, Manifest V2; neverificat pe browsere vechi reale) |
+| `claritas-safari-legacy-source.zip` | Safari 14–15 (necesită un Mac cu Xcode) — Browsere mai vechi (experimental, Manifest V2; neverificat pe browsere vechi reale) |
 
 - **Familia Chromium**: dezarhivează, deschide pagina de extensii (`chrome://extensions`, `edge://extensions`, `opera://extensions`…), activează *Mod dezvoltator*, alege *Încarcă extensie despachetată* și selectează folderul.
 - **Firefox**: `about:debugging#/runtime/this-firefox` → *Load Temporary Add-on* → `manifest.json`. Pentru instalare permanentă, semnează-l ca add-on nelistat pe addons.mozilla.org (ID `claritas@trom.tf`).

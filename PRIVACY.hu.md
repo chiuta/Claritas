@@ -1,6 +1,6 @@
 # Claritas — Adatvédelmi irányelvek
 
-**1.9.1 verzió · Utolsó frissítés: 2026. nov. 13.** · [English](PRIVACY.md) · [Română](PRIVACY.ro.md) · [Français](PRIVACY.fr.md) · [Italiano](PRIVACY.it.md) · [Español](PRIVACY.es.md) · [Português](PRIVACY.pt.md) · [Deutsch](PRIVACY.de.md) · Magyar
+**1.10.0 verzió · Utolsó frissítés: 2026. nov. 17.** · [English](PRIVACY.md) · [Română](PRIVACY.ro.md) · [Français](PRIVACY.fr.md) · [Italiano](PRIVACY.it.md) · [Español](PRIVACY.es.md) · [Português](PRIVACY.pt.md) · [Deutsch](PRIVACY.de.md) · Magyar
 
 A Claritas ingyenes, nyílt forráskódú (MIT) akadálymentesítési bővítmény. **Nincs benne telemetria, elemzés, fiók, és saját szervere sincs.** Ez a dokumentum pontosan leírja, mit tárol, és a ritka eseteket, amikor a böngésző (nem a Claritas) harmadik féllel kommunikál.
 

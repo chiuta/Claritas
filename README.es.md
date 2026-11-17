@@ -2,7 +2,7 @@
 
 [English](README.md) · [Română](README.ro.md) · [Français](README.fr.md) · [Italiano](README.it.md) · **Español** · [Português](README.pt.md) · [Deutsch](README.de.md) · [Magyar](README.hu.md)
 
-**Versión: 1.9.1 · Última actualización: 13/11/2026**
+**Versión: 1.10.0 · Última actualización: 17/11/2026**
 
 Extensión de accesibilidad todo en uno, gratuita. Sin telemetría, sin red, sin cuentas: todo se queda en tu navegador.
 
@@ -25,9 +25,11 @@ Elige el paquete que corresponda a tu navegador (carpeta `dist/` o archivos de l
 
 | Paquete | Navegadores |
 |---|---|
-| `claritas-chromium.zip` | Chrome, Edge, Opera / Opera GX, Brave, Vivaldi, Arc, Dia, Comet, Yandex, Whale y cualquier navegador Chromium 109+ |
-| `claritas-firefox.zip` | Firefox (escritorio 140+ y Android 142+), LibreWolf, Zen, Floorp, Waterfox, Mullvad Browser |
+| `claritas-chromium.zip` | Chrome, Edge, Opera / Opera GX, Brave, Vivaldi, Arc, Dia, Comet, Yandex, Whale y cualquier navegador Chromium 88+ |
+| `claritas-firefox.zip` | Firefox (escritorio 115+ y Android 120+), LibreWolf, Zen, Floorp, Waterfox, Mullvad Browser |
 | `claritas-safari-source.zip` | Safari macOS / iOS / iPadOS (requiere un Mac con Xcode) |
+| `claritas-firefox-legacy.zip` | Firefox 91–114 (ESR 91/102) — Navegadores antiguos (experimental, Manifest V2; no verificado en navegadores antiguos reales) |
+| `claritas-safari-legacy-source.zip` | Safari 14–15 (requiere un Mac con Xcode) — Navegadores antiguos (experimental, Manifest V2; no verificado en navegadores antiguos reales) |
 
 - **Familia Chromium**: descomprime, abre la página de extensiones (`chrome://extensions`, `edge://extensions`, `opera://extensions`…), activa el *modo de desarrollador*, elige *Cargar descomprimida* y selecciona la carpeta.
 - **Firefox**: `about:debugging#/runtime/this-firefox` → *Cargar complemento temporal* → `manifest.json`. Para una instalación permanente, fírmalo como complemento no listado en addons.mozilla.org (ID `claritas@trom.tf`).

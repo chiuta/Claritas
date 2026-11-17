@@ -2,7 +2,7 @@
 
 [English](README.md) · [Română](README.ro.md) · **Français** · [Italiano](README.it.md) · [Español](README.es.md) · [Português](README.pt.md) · [Deutsch](README.de.md) · [Magyar](README.hu.md)
 
-**Version: 1.9.1 · Dernière mise à jour: 13/11/2026**
+**Version: 1.10.0 · Dernière mise à jour: 17/11/2026**
 
 Extension d’accessibilité tout-en-un, gratuite. Sans télémétrie, sans réseau, sans compte : tout reste dans votre navigateur.
 
@@ -25,9 +25,11 @@ Choisissez le paquet correspondant à votre navigateur (dossier `dist/` ou fichi
 
 | Paquet | Navigateurs |
 |---|---|
-| `claritas-chromium.zip` | Chrome, Edge, Opera / Opera GX, Brave, Vivaldi, Arc, Dia, Comet, Yandex, Whale et tout navigateur Chromium 109+ |
-| `claritas-firefox.zip` | Firefox (ordinateur 140+ et Android 142+), LibreWolf, Zen, Floorp, Waterfox, Mullvad Browser |
+| `claritas-chromium.zip` | Chrome, Edge, Opera / Opera GX, Brave, Vivaldi, Arc, Dia, Comet, Yandex, Whale et tout navigateur Chromium 88+ |
+| `claritas-firefox.zip` | Firefox (ordinateur 115+ et Android 120+), LibreWolf, Zen, Floorp, Waterfox, Mullvad Browser |
 | `claritas-safari-source.zip` | Safari macOS / iOS / iPadOS (nécessite un Mac avec Xcode) |
+| `claritas-firefox-legacy.zip` | Firefox 91–114 (ESR 91/102) — Navigateurs plus anciens (expérimental, Manifest V2 ; non vérifié sur de vrais navigateurs anciens) |
+| `claritas-safari-legacy-source.zip` | Safari 14–15 (nécessite un Mac avec Xcode) — Navigateurs plus anciens (expérimental, Manifest V2 ; non vérifié sur de vrais navigateurs anciens) |
 
 - **Famille Chromium** : décompressez, ouvrez la page des extensions (`chrome://extensions`, `edge://extensions`, `opera://extensions`…), activez le *mode développeur*, choisissez *Charger l’extension non empaquetée* et sélectionnez le dossier.
 - **Firefox** : `about:debugging#/runtime/this-firefox` → *Charger un module complémentaire temporaire* → `manifest.json`. Pour une installation permanente, signez-le comme module non listé sur addons.mozilla.org (ID `claritas@trom.tf`).

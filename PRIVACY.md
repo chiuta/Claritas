@@ -1,6 +1,6 @@
 # Claritas — Privacy policy
 
-**Version 1.9.1 · Last updated: 13 Nov 2026** · English · [Română](PRIVACY.ro.md) · [Français](PRIVACY.fr.md) · [Italiano](PRIVACY.it.md) · [Español](PRIVACY.es.md) · [Português](PRIVACY.pt.md) · [Deutsch](PRIVACY.de.md) · [Magyar](PRIVACY.hu.md)
+**Version 1.10.0 · Last updated: 17 Nov 2026** · English · [Română](PRIVACY.ro.md) · [Français](PRIVACY.fr.md) · [Italiano](PRIVACY.it.md) · [Español](PRIVACY.es.md) · [Português](PRIVACY.pt.md) · [Deutsch](PRIVACY.de.md) · [Magyar](PRIVACY.hu.md)
 
 Claritas is a free, open-source (MIT) accessibility extension. It has **no telemetry, no analytics, no accounts and no servers of its own**. This document says exactly what it stores and the few cases where your browser (not Claritas) talks to a third party.
 

@@ -2,7 +2,7 @@
 
 [English](README.md) · [Română](README.ro.md) · [Français](README.fr.md) · [Italiano](README.it.md) · [Español](README.es.md) · [Português](README.pt.md) · **Deutsch** · [Magyar](README.hu.md)
 
-**Version: 1.9.1 · Letzte Aktualisierung: 13.11.2026**
+**Version: 1.10.0 · Letzte Aktualisierung: 17.11.2026**
 
 Kostenlose Barrierefreiheits-Erweiterung „Alles in einem“. Keine Telemetrie, kein Netzwerk, keine Konten: Alles bleibt in Ihrem Browser.
 
@@ -25,9 +25,11 @@ Wählen Sie das Paket passend zu Ihrem Browser (Ordner `dist/` oder Release-Date
 
 | Paket | Browser |
 |---|---|
-| `claritas-chromium.zip` | Chrome, Edge, Opera / Opera GX, Brave, Vivaldi, Arc, Dia, Comet, Yandex, Whale und jeder Chromium-109+-Browser |
-| `claritas-firefox.zip` | Firefox (Desktop 140+ und Android 142+), LibreWolf, Zen, Floorp, Waterfox, Mullvad Browser |
+| `claritas-chromium.zip` | Chrome, Edge, Opera / Opera GX, Brave, Vivaldi, Arc, Dia, Comet, Yandex, Whale und jeder Chromium-88+-Browser |
+| `claritas-firefox.zip` | Firefox (Desktop 115+ und Android 120+), LibreWolf, Zen, Floorp, Waterfox, Mullvad Browser |
 | `claritas-safari-source.zip` | Safari macOS / iOS / iPadOS (erfordert einen Mac mit Xcode) |
+| `claritas-firefox-legacy.zip` | Firefox 91–114 (ESR 91/102) — Ältere Browser (experimentell, Manifest V2; nicht auf echten alten Browsern geprüft) |
+| `claritas-safari-legacy-source.zip` | Safari 14–15 (erfordert einen Mac mit Xcode) — Ältere Browser (experimentell, Manifest V2; nicht auf echten alten Browsern geprüft) |
 
 - **Chromium-Familie**: entpacken, die Erweiterungsseite öffnen (`chrome://extensions`, `edge://extensions`, `opera://extensions`…), den *Entwicklermodus* aktivieren, *Entpackte Erweiterung laden* wählen und den Ordner auswählen.
 - **Firefox**: `about:debugging#/runtime/this-firefox` → *Temporäres Add-on laden* → `manifest.json`. Für eine dauerhafte Installation als nicht gelistetes Add-on auf addons.mozilla.org signieren (ID `claritas@trom.tf`).
