@@ -1,6 +1,6 @@
 # Claritas — Adatvédelmi irányelvek
 
-**1.10.1 verzió · Utolsó frissítés: 2026. nov. 17.** · [English](PRIVACY.md) · [Română](PRIVACY.ro.md) · [Français](PRIVACY.fr.md) · [Italiano](PRIVACY.it.md) · [Español](PRIVACY.es.md) · [Português](PRIVACY.pt.md) · [Deutsch](PRIVACY.de.md) · Magyar
+**1.10.1 verzió · Utolsó frissítés: 2026. nov. 18.** · [English](PRIVACY.md) · [Română](PRIVACY.ro.md) · [Français](PRIVACY.fr.md) · [Italiano](PRIVACY.it.md) · [Español](PRIVACY.es.md) · [Português](PRIVACY.pt.md) · [Deutsch](PRIVACY.de.md) · Magyar
 
 > Gépi segítséggel készült fordítás, anyanyelvi lektorálás még nem történt. Eltérés esetén az angol szöveg (PRIVACY.md) az irányadó.
 

@@ -18,13 +18,19 @@ jobs:
           echo "CHROME_PATH=$(tail -1 /tmp/cft.txt | sed -E 's/^[^ ]+ //')" >> $GITHUB_ENV
       - run: pip install playwright && sudo apt-get update && sudo apt-get install -y xvfb
       - run: python3 build.py
+      - run: npm install --no-save axe-core
       - name: Benchmark
-        run: xvfb-run -a python3 tools/contrast_benchmark.py --out contrast_benchmark.json 2>&1 | tee bench.log
+        run: xvfb-run -a python3 tools/contrast_benchmark.py --axe node_modules/axe-core/axe.min.js --out contrast_benchmark.json 2>&1 | tee bench.log
       - name: Rezumat
         if: always()
         run: |
           echo '### Benchmark contrast' >> $GITHUB_STEP_SUMMARY
           grep '^REZUMAT' bench.log | sed 's/^REZUMAT //' | python3 -c "import sys,json; d=json.loads(sys.stdin.read()); [print(f'- {k}: {v}') for k,v in d.items()]" >> $GITHUB_STEP_SUMMARY
+          cat contrast_benchmark.md >> $GITHUB_STEP_SUMMARY
       - uses: actions/upload-artifact@v4
         if: always()
-        with: { name: contrast-benchmark, path: 'contrast_benchmark.json' }
+        with:
+          name: contrast-benchmark
+          path: |
+            contrast_benchmark.json
+            contrast_benchmark.md

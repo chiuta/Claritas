@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Benchmark public de contrast: aceleași pagini cu și fără Claritas.
-Măsurătoare INDEPENDENTĂ de motorul extensiei (calcul propriu în pagină, WCAG 2.x):
+Două măsurători, ambele independente de motorul extensiei:
+  - calcul propriu în pagină (WCAG 2.x) — atenție: folosește aceeași formulă ca ținta extensiei, deci este parțial circular;
+  - regula color-contrast din axe-core (--axe cale/axe.min.js), implementare terță, care NU a fost scrisă de noi;
   - procent de noduri de text care trec AA (4.5:1 / 3:1 pentru text mare), înainte și după;
   - regresii: elemente cu text vizibil care ies din ecran orizontal după corecție, schimbarea înălțimii documentului.
 Utilizare: python tools/contrast_benchmark.py [--urls fișier] [--ext dist/chromium] [--out rezultate.json]
@@ -27,19 +29,30 @@ JS = r"""() => {
   const over_x = [...document.querySelectorAll('body *')].filter((e) => { const r = e.getBoundingClientRect(); return r.width > 0 && r.right > innerWidth + 2 && (e.textContent || '').trim() && getComputedStyle(e).position !== 'fixed'; }).length;
   return { total, pass, skipped, overflowX: over_x, docH: document.documentElement.scrollHeight };
 }"""
+AXE_SRC = None
 async def measure(ctx, url, wait_ms):
     pg = await ctx.new_page()
     try:
         await pg.goto(url, wait_until='load', timeout=45000); await pg.wait_for_timeout(wait_ms)
-        return await pg.evaluate(JS)
+        r = await pg.evaluate(JS)
+        if AXE_SRC:
+            try:
+                await pg.evaluate(AXE_SRC)  # prin CDP: nu e blocat de CSP-ul paginii
+                ax = await pg.evaluate("() => axe.run(document, {runOnly:{type:'rule',values:['color-contrast']}}).then(x => ({v: x.violations.reduce((n, v) => n + v.nodes.length, 0), p: x.passes.reduce((n, v) => n + v.nodes.length, 0), i: x.incomplete.reduce((n, v) => n + v.nodes.length, 0)}))")
+                r['axe_violations'], r['axe_passes'], r['axe_incomplete'] = ax['v'], ax['p'], ax['i']
+            except Exception as e:
+                r['axe_error'] = str(e)[:80]
+        return r
     except Exception as e:
         return {'error': str(e)[:120]}
     finally:
         await pg.close()
 LAUNCH = {'executable_path': os.environ['CHROME_PATH']} if os.environ.get('CHROME_PATH') else {'channel': 'chrome'}
 async def main():
-    ap = argparse.ArgumentParser(); ap.add_argument('--urls', default='tools/benchmark_urls.txt'); ap.add_argument('--ext', default='dist/chromium'); ap.add_argument('--out', default='contrast_benchmark.json'); ap.add_argument('--wait', type=int, default=2500); ap.add_argument('--min', type=int, default=20)
+    ap = argparse.ArgumentParser(); ap.add_argument('--urls', default='tools/benchmark_urls.txt'); ap.add_argument('--ext', default='dist/chromium'); ap.add_argument('--out', default='contrast_benchmark.json'); ap.add_argument('--wait', type=int, default=2500); ap.add_argument('--min', type=int, default=20); ap.add_argument('--axe', default=None)
     a = ap.parse_args(); ext = str(pathlib.Path(a.ext).resolve())
+    global AXE_SRC
+    if a.axe: AXE_SRC = open(a.axe, encoding='utf-8').read()
     urls = [l.strip() for l in open(a.urls) if l.strip() and not l.startswith('#')]
     res = []
     async with async_playwright() as p:
@@ -60,6 +73,18 @@ async def main():
                'pages_worse': sum(1 for r in good if rate(r['after']) < rate(r['before']) - 0.001),
                'pages_new_horizontal_overflow': sum(1 for r in good if r['after']['overflowX'] > r['before']['overflowX']),
                'pages_height_changed_over_10pct': sum(1 for r in good if r['before']['docH'] and abs(r['after']['docH'] - r['before']['docH']) / r['before']['docH'] > 0.10)}
+    ax = [r for r in good if 'axe_violations' in r['before'] and 'axe_violations' in r['after']]
+    if ax:
+        summary.update({'axe_pages': len(ax), 'axe_violations_before_total': sum(r['before']['axe_violations'] for r in ax), 'axe_violations_after_total': sum(r['after']['axe_violations'] for r in ax),
+                        'axe_pages_with_fewer': sum(1 for r in ax if r['after']['axe_violations'] < r['before']['axe_violations']), 'axe_pages_with_more': sum(1 for r in ax if r['after']['axe_violations'] > r['before']['axe_violations']),
+                        'axe_pages_zero_before': sum(1 for r in ax if r['before']['axe_violations'] == 0), 'axe_pages_zero_after': sum(1 for r in ax if r['after']['axe_violations'] == 0)})
+    summary['elements_not_measured_by_own_calc'] = sum(r['after'].get('skipped', 0) for r in good)
+    with open(a.out.replace('.json', '.md'), 'w', encoding='utf-8') as f:
+        f.write('| Pagină | Trec AA înainte | după | axe înainte | axe după | depășire X înainte→după |\n|---|---|---|---|---|---|\n')
+        for r in res:
+            if 'error' in r['before'] or 'error' in r['after']: f.write(f"| {r['url']} | eroare de încărcare | | | | |\n"); continue
+            b, x = r['before'], r['after']
+            f.write(f"| {r['url']} | {b['pass']}/{b['total']} | {x['pass']}/{x['total']} | {b.get('axe_violations', '-')} | {x.get('axe_violations', '-')} | {b['overflowX']}→{x['overflowX']} |\n")
     json.dump({'summary': summary, 'pages': res}, open(a.out, 'w'), indent=1, ensure_ascii=False)
     print('REZUMAT', json.dumps(summary, ensure_ascii=False))
 asyncio.run(main())

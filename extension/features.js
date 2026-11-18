@@ -275,8 +275,10 @@
   let chipT = null;
   function flashChip(msg) { const u = ui(); u.chip.textContent = ''; const m = doc.createElement('span'); m.textContent = msg; u.chip.append(m, btn('✕', T('close'), () => { u.chip.style.display = 'none'; })); u.chip.style.display = 'flex'; clearTimeout(chipT); chipT = setTimeout(() => { u.chip.style.display = 'none'; }, 12000); }
   function defineUrl(w) {
-    const l = (L() === 'auto' ? (navigator.language || 'en').slice(0, 2) : L());
-    return l === 'ro' ? 'https://dexonline.ro/definitie/' + encodeURIComponent(w) : 'https://' + (l.length === 2 ? l : 'en') + '.wiktionary.org/wiki/' + encodeURIComponent(w);
+    const l = (L() === 'auto' ? (navigator.language || 'en').slice(0, 2).toLowerCase() : L());
+    /* limba intră în numele de gazdă: acceptăm strict două litere mici, altfel „en” (nu construim URL din valori arbitrare) */
+    const lg = /^[a-z]{2}$/.test(l) ? l : 'en';
+    return lg === 'ro' ? 'https://dexonline.ro/definitie/' + encodeURIComponent(w) : 'https://' + lg + '.wiktionary.org/wiki/' + encodeURIComponent(w);
   }
   function showSel() {
     if (!S || !S.selBar || !active || rdOpen()) return hideSel();
