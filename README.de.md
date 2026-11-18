@@ -55,6 +55,12 @@ Keine Netzwerkanfragen, keine Telemetrie, keine Konten. Bildschirmfotos und Aufn
 - Safari iOS kann Bildschirmfotos beschneiden; nutzen Sie die Bereichs- oder Elementaufnahme.
 - Live in Chrome geprüft; Firefox, Safari und die übrigen Browser wurden statisch begutachtet.
 
+## Gemessene Ergebnisse
+
+Gemessen auf echten Seiten (CI, Chrome for Testing, 20 öffentliche Seiten, die ohne die Erweiterung gleich laden): Die unabhängige Kontrastregel von axe-core meldete ohne Claritas 292 fehlerhafte Elemente und mit Claritas 0 (11 der 20 Seiten hatten von Anfang an keine). Ein früherer Lauf mit einer etwas anderen Seitenauswahl (Seiten ändern sich zwischen Läufen) ließ 11 Fehler übrig und eine Seite um ein einzelnes Element verschlechtert – „null“ ist also nicht garantiert. Nicht gemessen: Text über Bildern oder Verläufen, Hover- und Fokuszustände, später nachgeladene Inhalte, Seiten hinter einem Login. Das ist kein Konformitätsnachweis.
+
+[`tools/contrast_benchmark.py`](tools/contrast_benchmark.py) · [workflow](.github/workflows/benchmark.yml)
+
 ## Lizenz
 
 MIT — Copyright Alexandru-Ionuț Chiuță (Alexio).

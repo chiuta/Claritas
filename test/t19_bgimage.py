@@ -1,4 +1,4 @@
-"""v1.9: text pe imagine de fundal (titlu gri pe imagine albastră întunecată, ca pe pagina CNRED)."""
+"""v1.9: text pe imagine de fundal (titlu gri pe imagine albastră întunecată, ca pe multe pagini reale)."""
 import asyncio, pathlib, sys, threading, zlib, struct, base64
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from playwright.async_api import async_playwright

@@ -8,7 +8,7 @@ fails = []
 def ok(c, m):
     print(('PASS ' if c else 'FAIL ') + m); sys.stdout.flush()
     if not c: fails.append(m)
-LONG = ("Centrul Național de Recunoaștere și Echivalare a Diplomelor (CNRED) este instituția care analizează diplomele; CNRED colaborează cu autoritățile, iar rezultatul analizei se comunică solicitantului în termen legal. "
+LONG = ("Centrul Național pentru Examinarea Diplomelor (CNPED) este instituția care analizează diplomele; CNPED colaborează cu autoritățile, iar rezultatul analizei se comunică solicitantului în termen legal. "
         "Procedura de recunoaștere profesională presupune verificarea documentelor, compararea programelor de studii și evaluarea echivalenței, ceea ce poate dura mai multe săptămâni, deoarece dosarele incomplete sunt returnate. ")
 HTML = f"""<!doctype html><html lang="ro"><head><meta charset="utf-8"><title>Pagina de test</title></head><body>
 <header><a href="#c">Sari</a></header><nav aria-label="Principal"><a href="/a">Acasă</a> <a href="/b">Despre</a></nav>
@@ -32,7 +32,7 @@ async def main():
         pop = await ctx.new_page(); pop.on('pageerror', lambda e: errs.append(str(e)))
         await pop.goto(f'chrome-extension://{eid}/popup.html'); await pop.wait_for_timeout(900)
         await pop.add_script_tag(url=f'chrome-extension://{eid}/modules2.js')
-        r = await pop.evaluate("""(LONG)=>{const M=CLR.m2; const g=M.glossary(LONG+' CNRED CNRED XYZ XYZ extraordinariamente');
+        r = await pop.evaluate("""(LONG)=>{const M=CLR.m2; const g=M.glossary(LONG+' CNPED CNPED XYZ XYZ extraordinariamente');
           const long='Aceasta este o propoziție foarte lungă care conține mai multe idei diferite; totuși ea continuă, iar cititorul se pierde ușor, deoarece nu mai găsește punctul principal al textului scris.';
           const sm=M.simplify(long);
           return {v:['next heading','titlul anterior','Zoom in!','mărește','deruleaza jos','blabla',''].map(M.parseVoice),
@@ -41,8 +41,8 @@ async def main():
             alt:[M.altFromName('/img/casa-din-brasov-2023.jpg'),M.altFromName('/img/IMG_1234.jpg'),M.altFromName('/a/3f9a8c7d1e2b4455.png'),M.altFromName('/x/photo-300x200.jpg'),M.altFromName('/Biblioteca%20Centrala.webp?x=1')]}}""", LONG)
         ok(r['v'] == ['nh', 'ph', 'zin', 'zin', 'down', None, None], f'parseVoice RO/EN {r["v"]}')
         ok(r['sum'] == 2, 'rezumat extractiv întoarce n propoziții')
-        ok(r['defs'].get('CNRED', '').startswith('Centrul Național') and 'Diplomelor' in r['defs'].get('CNRED', ''), f'glosar: definiție CNRED {r["defs"]}')
-        ok('XYZ' in r['undef'] and 'CNRED' not in r['undef'], f'glosar: abrevieri nedefinite {r["undef"]}')
+        ok(r['defs'].get('CNPED', '').startswith('Centrul Național') and 'Diplomelor' in r['defs'].get('CNPED', ''), f'glosar: definiție CNPED {r["defs"]}')
+        ok('XYZ' in r['undef'] and 'CNPED' not in r['undef'], f'glosar: abrevieri nedefinite {r["undef"]}')
         ok('extraordinariamente' in r['hard'], 'glosar: cuvinte lungi')
         ok(len(r['simp']) >= 2 and all(len(x.split()) < 22 for x in r['simp']), f'simplificare împarte propoziția lungă {r["simp"]}')
         ok(r['alt'][0] == 'Casa din brasov' or r['alt'][0].startswith('Casa din'), f'alt din nume fișier {r["alt"]}')
@@ -113,7 +113,7 @@ async def main():
         s2 = await feat('spot'); ok(s2.get('on') is False, 'spotlight oprit')
         pn = await feat('panel'); await page.wait_for_timeout(900)
         pt = await page.evaluate("()=>{const p=document.getElementById('clr-m2').shadowRoot.querySelector('.pnl'); return {t:p.textContent, dt:Array.from(p.querySelectorAll('dt')).map(x=>x.textContent)}}")
-        ok(pn.get('ok') and 'CNRED' in pt['dt'] and 'Summary' in pt['t'] and 'Simplified' in pt['t'], f'panou rezumat/glosar {pt["dt"][:4]}')
+        ok(pn.get('ok') and 'CNPED' in pt['dt'] and 'Summary' in pt['t'] and 'Simplified' in pt['t'], f'panou rezumat/glosar {pt["dt"][:4]}')
         await page.evaluate("()=>document.getElementById('clr-m2').shadowRoot.querySelector('.pnl').dispatchEvent(new KeyboardEvent('keydown',{key:'Escape',bubbles:true}))")
         vc = await feat('voiceCmd', text='zoom in'); await page.wait_for_timeout(600)
         ts = await sw.evaluate("async()=>(await chrome.storage.local.get('settings')).settings.textScale")

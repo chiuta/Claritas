@@ -55,6 +55,12 @@ Aucune requête réseau, aucune télémétrie, aucun compte. Les captures et enr
 - Safari iOS peut rogner les captures ; utilisez la capture de région ou d’élément.
 - Vérifié en direct dans Chrome ; Firefox, Safari et les autres navigateurs ont été examinés statiquement.
 
+## Résultats mesurés
+
+Mesuré sur des pages réelles (CI, Chrome for Testing, 20 pages publiques qui se chargent de la même façon sans l’extension) : la règle de contraste indépendante d’axe-core a signalé 292 éléments défaillants sans Claritas et 0 avec (11 des 20 pages n’en avaient aucun au départ). Une exécution antérieure, sur un ensemble de pages légèrement différent (les pages changent d’une exécution à l’autre), a laissé 11 défaillances et une page aggravée d’un seul élément : « zéro » n’est donc pas garanti. Non mesuré : texte sur images ou dégradés, états de survol et de focus, contenu chargé plus tard, pages derrière une connexion. Ce n’est pas une preuve de conformité.
+
+[`tools/contrast_benchmark.py`](tools/contrast_benchmark.py) · [workflow](.github/workflows/benchmark.yml)
+
 ## Licence
 
 MIT — copyright Alexandru-Ionuț Chiuță (Alexio).

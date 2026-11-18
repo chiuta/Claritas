@@ -55,6 +55,12 @@ Nincsenek hálózati kérések, nincs telemetria, nincs fiók. A képernyőképe
 - A Safari iOS levághatja a képernyőképeket; használja a terület- vagy elemrögzítést.
 - Élőben Chrome-ban ellenőrizve; a Firefoxot, a Safarit és a többi böngészőt statikusan vizsgáltuk.
 
+## Mért eredmények
+
+Valódi oldalakon mérve (CI, Chrome for Testing, 20 nyilvános oldal, amely a bővítmény nélkül is ugyanúgy töltődik be): az axe-core független kontrasztszabálya a Claritas nélkül 292 hibás elemet jelzett, a Claritasszal 0-t (a 20 oldalból 11-en eleve nem volt egy sem). Egy korábbi, kissé eltérő oldalkészleten futtatott mérés (az oldalak futásról futásra változnak) 11 hibát hagyott, és egy oldal egyetlen elemmel rosszabb lett, ezért a „nulla” nem garantált. Nem mértük: képek vagy színátmenetek feletti szöveget, hover- és fókuszállapotokat, később betöltődő tartalmat, bejelentkezés mögötti oldalakat. Ez nem megfelelőségi igazolás.
+
+[`tools/contrast_benchmark.py`](tools/contrast_benchmark.py) · [workflow](.github/workflows/benchmark.yml)
+
 ## Licenc
 
 MIT — szerzői jog: Alexandru-Ionuț Chiuță (Alexio).

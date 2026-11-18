@@ -55,6 +55,12 @@ Fără telemetrie, fără conturi, fără servere proprii. Capturile și înregi
 - Safari iOS poate decupa capturile; folosește captura de regiune sau de element.
 - Verificat live în Chrome; Firefox, Safari și celelalte browsere au fost analizate static.
 
+## Rezultate măsurate
+
+Măsurat pe pagini reale (CI, Chrome for Testing, 20 de pagini publice care se încarcă la fel și fără extensie): regula independentă axe-core pentru contrast a raportat 292 de elemente care pică fără Claritas și 0 cu Claritas (11 din cele 20 de pagini nu aveau niciunul de la început). O rulare anterioară, pe un set ușor diferit de pagini (paginile se schimbă între rulări), a lăsat 11 elemente nereparate și o pagină cu un element în plus care pică, deci „zero” nu este garantat. Nemăsurat: text peste imagini sau degrade, stările la trecerea cursorului sau la focalizare, conținut încărcat mai târziu, pagini după autentificare. Aceasta nu este o dovadă de conformitate.
+
+[`tools/contrast_benchmark.py`](tools/contrast_benchmark.py) · [workflow](.github/workflows/benchmark.yml)
+
 ## Licență
 
 MIT — drepturi de autor Alexandru-Ionuț Chiuță (Alexio).

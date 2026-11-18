@@ -15,7 +15,7 @@ def ok(c, m):
     print(('PASS ' if c else 'FAIL ') + m); sys.stdout.flush()
     if not c: fails.append(m)
 H = '<!doctype html><html lang="ro"><head><meta charset="utf-8"><title>T</title></head><body>%s</body></html>'
-LONGP = 'Centrul Național de Recunoaștere și Echivalare a Diplomelor (CNRED) este instituția care analizează diplomele; CNRED colaborează cu autoritățile, iar rezultatul analizei se comunică solicitantului în termen legal. Procedura de recunoaștere profesională presupune verificarea documentelor, compararea programelor de studii și evaluarea echivalenței, ceea ce poate dura mai multe săptămâni, deoarece dosarele incomplete sunt returnate. '
+LONGP = 'Centrul Național pentru Examinarea Diplomelor (CNPED) este instituția care analizează diplomele; CNPED colaborează cu autoritățile, iar rezultatul analizei se comunică solicitantului în termen legal. Procedura de recunoaștere profesională presupune verificarea documentelor, compararea programelor de studii și evaluarea echivalenței, ceea ce poate dura mai multe săptămâni, deoarece dosarele incomplete sunt returnate. '
 PAGES = {
  '/contrast.html': H % '<h1>Test</h1><p id="p" style="color:#bbbbbb;background:#ffffff">Text pal pe alb</p><input id="d" disabled value="Câmp dezactivat" style="color:#c8c8c8;background:#f0f0f0"><p>Contact: <span id="mail">ion.popescu@example.com</span></p><button id="b1">Buton</button>',
  '/mod.html': H % ('<header><a href="#c">Sari</a></header><nav aria-label="Principal"><a href="/a">Acasă</a></nav><main id="c"><h1>Titlu principal</h1><p>' + LONGP*3 + '</p><h2>Secțiunea doi</h2><p>' + LONGP*2 + '</p><h3>Subsecțiune</h3><p>' + LONGP*2 + '</p><figure><img id="i1" src="/x/a1.png"><figcaption>Casa veche din Brașov, 1900</figcaption></figure><img id="i2" src="/img/casa-din-brasov-2023.jpg"><img id="i4" src="/q.png" alt="Grafic vânzări"></main><aside aria-label="Lateral"><p>Notă laterală cu text suficient de lung.</p></aside><footer><p>Subsol</p></footer>' + ''.join('<p>umplutură %d</p>' % i for i in range(30))),
@@ -157,7 +157,7 @@ try:
         d.execute_script("document.getElementById('clr-m2').shadowRoot.querySelector('.pnl').dispatchEvent(new KeyboardEvent('keydown',{key:'Escape',bubbles:true}))")
         m2('panel'); time.sleep(1.2)
         pt = d.execute_script("const p=document.getElementById('clr-m2').shadowRoot.querySelector('.pnl');return p?[p.textContent,Array.from(p.querySelectorAll('dt')).map(x=>x.textContent)]:null")
-        ok(pt and 'CNRED' in pt[1] and 'Summary' in pt[0], f'Firefox v1.7: rezumat + glosar {pt[1][:3] if pt else None}')
+        ok(pt and 'CNPED' in pt[1] and 'Summary' in pt[0], f'Firefox v1.7: rezumat + glosar {pt[1][:3] if pt else None}')
         vc = m2('voiceCmd', text='zoom in'); time.sleep(0.8)
         ok(vc.get('id') == 'zin', f'Firefox v1.7: comandă vocală interpretată ({vc})')
         sp = m2('spot'); ok(sp.get('on') is True, 'Firefox v1.7: spotlight'); m2('spot')

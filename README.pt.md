@@ -55,6 +55,12 @@ Sem pedidos de rede, sem telemetria, sem contas. As capturas e gravações são 
 - O Safari iOS pode cortar as capturas; use a captura de região ou de elemento.
 - Verificado em direto no Chrome; Firefox, Safari e os restantes navegadores foram analisados estaticamente.
 
+## Resultados medidos
+
+Medido em páginas reais (CI, Chrome for Testing, 20 páginas públicas que carregam da mesma forma sem a extensão): a regra de contraste independente do axe-core reportou 292 elementos com falha sem o Claritas e 0 com ele (11 das 20 páginas não tinham nenhum à partida). Uma execução anterior, com um conjunto de páginas ligeiramente diferente (as páginas mudam entre execuções), deixou 11 falhas e uma página pior em um único elemento, por isso «zero» não é garantido. Não medido: texto sobre imagens ou gradientes, estados de hover e foco, conteúdo carregado mais tarde, páginas atrás de login. Não é prova de conformidade.
+
+[`tools/contrast_benchmark.py`](tools/contrast_benchmark.py) · [workflow](.github/workflows/benchmark.yml)
+
 ## Licença
 
 MIT — copyright Alexandru-Ionuț Chiuță (Alexio).

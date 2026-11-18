@@ -54,6 +54,12 @@ No network requests, no telemetry, no accounts. Screenshots and recordings are c
 - Safari and Samsung Internet have no enterprise (managed) policies; Firefox Android has no screen recording.
 - Safari iOS may crop screenshots; use region or element capture.
 
+## Measured results
+
+Measured on real pages (CI, Chrome for Testing, 20 public pages that load the same without the extension): the independent axe-core colour-contrast rule reported 292 failing elements without Claritas and 0 with it (11 of the 20 pages had none to begin with). An earlier run on a slightly different set of pages (pages change between runs) left 11 failures and one page worse by a single element, so “zero” is not guaranteed. Not measured: text over images or gradients, hover/focus states, content loaded later, pages behind a login. This is not proof of conformity.
+
+[`tools/contrast_benchmark.py`](tools/contrast_benchmark.py) · [workflow](.github/workflows/benchmark.yml)
+
 ## License
 
 MIT — copyright Alexandru-Ionuț Chiuță (Alexio).

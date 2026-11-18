@@ -55,6 +55,12 @@ Nessuna richiesta di rete, nessuna telemetria, nessun account. Schermate e regis
 - Safari iOS può ritagliare le schermate; usa l’acquisizione di regione o di elemento.
 - Verificato dal vivo in Chrome; Firefox, Safari e gli altri browser sono stati analizzati in modo statico.
 
+## Risultati misurati
+
+Misurato su pagine reali (CI, Chrome for Testing, 20 pagine pubbliche che si caricano allo stesso modo senza l’estensione): la regola di contrasto indipendente di axe-core ha segnalato 292 elementi non conformi senza Claritas e 0 con Claritas (11 pagine su 20 non ne avevano all’inizio). Un’esecuzione precedente, su un insieme di pagine leggermente diverso (le pagine cambiano da un’esecuzione all’altra), ha lasciato 11 errori e una pagina peggiorata di un solo elemento, quindi «zero» non è garantito. Non misurato: testo su immagini o sfumature, stati di hover e focus, contenuti caricati dopo, pagine dietro login. Non è una prova di conformità.
+
+[`tools/contrast_benchmark.py`](tools/contrast_benchmark.py) · [workflow](.github/workflows/benchmark.yml)
+
 ## Licenza
 
 MIT — copyright Alexandru-Ionuț Chiuță (Alexio).
