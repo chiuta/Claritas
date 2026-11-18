@@ -1,0 +1,29 @@
+name: a11y-self
+# Audit independent (axe-core) al propriilor pagini: popup în 8 limbi/toate filele/mod simplu + site în 8 limbi. Orice încălcare = eșec.
+on:
+  workflow_dispatch:
+  push:
+    paths: ['extension/popup.*', 'extension/shared.js', 'extension/lang/**', 'site/**', 'test/t22_*', 'test/t23_*']
+permissions: { contents: read }
+jobs:
+  axe:
+    runs-on: ubuntu-26.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: latest }
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.x' }
+      - name: Chrome for Testing (acceptă --load-extension)
+        run: |
+          npx --yes @puppeteer/browsers install chrome@stable --path /tmp/cft | tee /tmp/cft.txt
+          echo "CHROME_PATH=$(tail -1 /tmp/cft.txt | sed -E 's/^[^ ]+ //')" >> $GITHUB_ENV
+      - run: pip install playwright && sudo apt-get update && sudo apt-get install -y xvfb
+      - run: npm install --no-save axe-core
+      - run: python3 build.py
+      - name: Teste popup + axe
+        working-directory: test
+        run: |
+          xvfb-run -a python3 t22_popup_a11y.py
+          AXE_JS=$GITHUB_WORKSPACE/node_modules/axe-core/axe.min.js xvfb-run -a python3 t23_axe_self.py

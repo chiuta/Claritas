@@ -3,6 +3,7 @@ import os, asyncio, pathlib
 from playwright.async_api import async_playwright
 EXT = str(pathlib.Path('../dist/chromium').resolve())
 fails = []
+LAUNCH = {'executable_path': os.environ['CHROME_PATH']} if os.environ.get('CHROME_PATH') else {'channel': 'chrome'}
 def ok(c, m):
     print(('PASS ' if c else 'FAIL ') + m)
     if not c: fails.append(m)
@@ -19,7 +20,7 @@ NAMES = """() => {
 }"""
 async def main():
     async with async_playwright() as p:
-        ctx = await p.chromium.launch_persistent_context('/tmp/prof22', channel='chrome', headless=True,
+        ctx = await p.chromium.launch_persistent_context('/tmp/prof22', **LAUNCH, headless=True,
             args=[f'--disable-extensions-except={EXT}', f'--load-extension={EXT}', '--headless=new', '--no-sandbox'])
         sw = ctx.service_workers[0] if ctx.service_workers else await ctx.wait_for_event('serviceworker', timeout=30000)
         eid = sw.url.split('/')[2]

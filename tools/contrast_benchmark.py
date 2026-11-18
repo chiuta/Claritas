@@ -61,12 +61,18 @@ async def main():
         sw = withx.service_workers[0] if withx.service_workers else await withx.wait_for_event('serviceworker', timeout=30000)
         await sw.evaluate("() => chrome.storage.local.set({settings:{enabled:true,autoFix:true,target:4.5}})")
         for u in urls:
-            b = await measure(base, u, a.wait); x = await measure(withx, u, a.wait + 1500)
-            res.append({'url': u, 'before': b, 'after': x}); print(u, b, x, flush=True)
+            b = await measure(base, u, a.wait); x = await measure(withx, u, a.wait + 1500); b2 = await measure(base, u, a.wait)  # b2 = control: aceeași pagină, tot fără extensie
+            res.append({'url': u, 'before': b, 'after': x, 'control': b2}); print(u, b, x, flush=True)
         await base.close(); await withx.close()
-    good = [r for r in res if 'error' not in r['before'] and 'error' not in r['after'] and r['before']['total'] > a.min]
+    def stable(r):  # pagina se schimbă singură (banner, încărcare leneșă, anti-bot) între două măsurători FĂRĂ extensie => nu poate fi atribuită extensiei
+        c, b = r.get('control', {}), r['before']
+        if 'error' in c: return False
+        return abs(c['total'] - b['total']) <= 0.1 * max(b['total'], 1) and (not b['docH'] or abs(c['docH'] - b['docH']) / b['docH'] <= 0.2)
+    for r in res: r['stable'] = 'error' not in r['before'] and 'error' not in r['after'] and stable(r)
+    good = [r for r in res if r['stable'] and r['before']['total'] > a.min]
+    unstable = [r['url'] for r in res if 'error' not in r['before'] and 'error' not in r['after'] and not r['stable']]
     rate = lambda d: d['pass'] / d['total'] if d['total'] else 1
-    summary = {'pages_measured': len(good), 'pages_failed': len(res) - len(good),
+    summary = {'pages_measured': len(good), 'pages_failed': len(res) - len(good) - len(unstable), 'pages_unstable_excluded': len(unstable),
                'aa_pass_before_median': round(statistics.median([rate(r['before']) for r in good]), 4) if good else None,
                'aa_pass_after_median': round(statistics.median([rate(r['after']) for r in good]), 4) if good else None,
                'pages_improved': sum(1 for r in good if rate(r['after']) > rate(r['before']) + 0.001),
@@ -83,6 +89,7 @@ async def main():
         f.write('| Pagină | Trec AA înainte | după | axe înainte | axe după | depășire X înainte→după |\n|---|---|---|---|---|---|\n')
         for r in res:
             if 'error' in r['before'] or 'error' in r['after']: f.write(f"| {r['url']} | eroare de încărcare | | | | |\n"); continue
+            if not r['stable']: f.write(f"| {r['url']} | instabilă (se schimbă și fără extensie) — exclusă | | | | |\n"); continue
             b, x = r['before'], r['after']
             f.write(f"| {r['url']} | {b['pass']}/{b['total']} | {x['pass']}/{x['total']} | {b.get('axe_violations', '-')} | {x.get('axe_violations', '-')} | {b['overflowX']}→{x['overflowX']} |\n")
     json.dump({'summary': summary, 'pages': res}, open(a.out, 'w'), indent=1, ensure_ascii=False)

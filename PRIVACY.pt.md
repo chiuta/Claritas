@@ -1,6 +1,6 @@
 # Claritas — Política de privacidade
 
-**Versão 1.10.1 · Última atualização: 18 nov 2026** · [English](PRIVACY.md) · [Română](PRIVACY.ro.md) · [Français](PRIVACY.fr.md) · [Italiano](PRIVACY.it.md) · [Español](PRIVACY.es.md) · Português · [Deutsch](PRIVACY.de.md) · [Magyar](PRIVACY.hu.md)
+**Versão 1.10.2 · Última atualização: 18 nov 2026** · [English](PRIVACY.md) · [Română](PRIVACY.ro.md) · [Français](PRIVACY.fr.md) · [Italiano](PRIVACY.it.md) · [Español](PRIVACY.es.md) · Português · [Deutsch](PRIVACY.de.md) · [Magyar](PRIVACY.hu.md)
 
 > Tradução assistida por máquina, ainda não revista por um falante nativo. Em caso de diferença, prevalece o texto em inglês (PRIVACY.md).
 

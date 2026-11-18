@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.10.2 — 18 Nov 2026
+- **Accessibility fixes found by an independent audit (axe-core on our own pages):** the popup's A−/A+ buttons now include their visible text in the accessible name (WCAG 2.5.3); the two install-command blocks on the site are keyboard-focusable (WCAG 2.1.1). New test `t23_axe_self.py` + workflow `a11y-self.yml`: popup in 8 languages × every tab × simple mode, and the site in 8 languages — 0 violations after the fixes.
+- **Benchmark:** `tools/contrast_benchmark.py` now also runs the axe-core `color-contrast` rule (third-party, not written by us), adds a control measurement without the extension, excludes pages that change on their own, and writes a per-page table. Results are in the READMEs.
+- **Hardening:** the dictionary link for selected text validates the language code before building the URL; README dates made consistent in all 8 languages.
+
 ## Unreleased
 - **Site:** the landing page (`site/index.html`) runs in older browsers (Chrome/Edge 55+, Firefox 52+, Safari 10.1+/iOS 10.3+): fff-kit 1.8.0 compatibility layer and ES2017 syntax. This concerns the web page only, not the extension builds. Checked with an ES2017 parser and in a simulated old engine, not on real old devices.
 

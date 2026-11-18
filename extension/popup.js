@@ -63,7 +63,8 @@
     if (!CLR.I18N[CLR.langCode(L)]) CLR.loadLang(L).then(() => translate());
     $$('[data-i18n]').forEach((el) => { el.textContent = t(L, el.dataset.i18n); });
     $$('[data-i18n-title]').forEach((el) => { el.title = t(L, el.dataset.i18nTitle); if (el.matches("button[data-tts]")) el.setAttribute("aria-label", el.title); });
-    $$('[data-i18n-aria]').forEach((el) => { const v = t(L, el.dataset.i18nAria); el.setAttribute('aria-label', v); if (el.tagName === 'BUTTON') el.title = v; });
+    $$('[data-i18n-aria]').forEach((el) => { const v = t(L, el.dataset.i18nAria); /* WCAG 2.5.3: dacă butonul are text vizibil (ex. „A−”), numele accesibil îl conține */
+      const vis = (el.textContent || '').trim(); el.setAttribute('aria-label', vis && !v.includes(vis) ? vis + ' ' + v : v); if (el.tagName === 'BUTTON') el.title = v; });
     $$('[data-i18n-ph]').forEach((el) => { const v = t(L, el.dataset.i18nPh); el.placeholder = v + '…'; el.setAttribute('aria-label', v); });
     document.documentElement.lang = (window.CLR && CLR.langCode) ? CLR.langCode(L) : (L === 'auto' ? (navigator.language || 'en').slice(0, 2) : L);
   }
