@@ -1,0 +1,25 @@
+WEBVTT
+
+1
+00:00.000 --> 00:05.000
+Descarcă de pe site-ul Claritas pachetul pentru browserul tău.
+
+2
+00:06.000 --> 00:11.000
+Dezarhivează-l într-un folder.
+
+3
+00:12.000 --> 00:17.000
+Deschide about:debugging#/runtime/this-firefox.
+
+4
+00:18.000 --> 00:26.000
+Alege „Load Temporary Add-on” și selectează manifest.json.
+
+5
+00:27.000 --> 00:34.000
+Claritas e încărcat. Deschide-l din bara de instrumente.
+
+6
+00:35.000 --> 00:41.000
+Firefox elimină suplimentele temporare la repornire. Pentru instalare permanentă, semnează pachetul ca add-on nelistat.

@@ -1,0 +1,25 @@
+WEBVTT
+
+1
+00:00.000 --> 00:05.000
+Download the package for your browser from the Claritas website.
+
+2
+00:06.000 --> 00:11.000
+Unzip it into a folder.
+
+3
+00:12.000 --> 00:17.000
+Open about:debugging#/runtime/this-firefox.
+
+4
+00:18.000 --> 00:26.000
+Choose “Load Temporary Add-on” and select manifest.json.
+
+5
+00:27.000 --> 00:34.000
+Claritas is loaded. Open it from the toolbar.
+
+6
+00:35.000 --> 00:41.000
+Firefox removes temporary add-ons when it restarts. For a permanent install, sign the package as an unlisted add-on.

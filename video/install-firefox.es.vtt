@@ -1,0 +1,25 @@
+WEBVTT
+
+1
+00:00.000 --> 00:05.000
+Descarga desde el sitio de Claritas el paquete de tu navegador.
+
+2
+00:06.000 --> 00:11.000
+Descomprímelo en una carpeta.
+
+3
+00:12.000 --> 00:17.000
+Abre about:debugging#/runtime/this-firefox.
+
+4
+00:18.000 --> 00:26.000
+Elige «Load Temporary Add-on» y selecciona manifest.json.
+
+5
+00:27.000 --> 00:34.000
+Claritas está cargada. Ábrela desde la barra de herramientas.
+
+6
+00:35.000 --> 00:41.000
+Firefox elimina los complementos temporales al reiniciarse. Para una instalación permanente, firma el paquete como complemento no listado.
