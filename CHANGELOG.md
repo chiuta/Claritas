@@ -1,13 +1,14 @@
 # Changelog
 
+## 1.10.3 — 19 Nov 2026
+- **Site:** the landing page (`site/index.html`) runs in older browsers (Chrome/Edge 55+, Firefox 52+, Safari 10.1+/iOS 10.3+): fff-kit 1.8.0 compatibility layer and ES2017 syntax. This concerns the web page only, not the extension builds. Checked with an ES2017 parser and in a simulated old engine, not on real old devices.
+- **Version stamps:** README, privacy policy, site and manifests moved to 1.10.3.
+
 ## 1.10.2 — 18 Nov 2026
 - **Accessibility fixes found by an independent audit (axe-core on our own pages):** the popup's A−/A+ buttons now include their visible text in the accessible name (WCAG 2.5.3); the two install-command blocks on the site are keyboard-focusable (WCAG 2.1.1). New test `t23_axe_self.py` + workflow `a11y-self.yml`: popup in 8 languages × every tab × simple mode, and the site in 8 languages — 0 violations after the fixes.
 - **Benchmark:** `tools/contrast_benchmark.py` now also runs the axe-core `color-contrast` rule (third-party, not written by us), adds a control measurement without the extension, excludes pages that change on their own, and writes a per-page table. Results are in the READMEs.
 - **Docs:** a “Measured results” section in all 8 READMEs and on the site (axe-core: 292 failing elements without Claritas → 0 with, 20 public pages; an earlier run left 11 and one page one element worse; what was not measured is listed); the site's “last updated” date was stale (13 Nov) and is fixed; test fixtures no longer name a real institution; the benchmark URL list no longer contains an institutional site.
 - **Hardening:** the dictionary link for selected text validates the language code before building the URL; README dates made consistent in all 8 languages.
-
-## Unreleased
-- **Site:** the landing page (`site/index.html`) runs in older browsers (Chrome/Edge 55+, Firefox 52+, Safari 10.1+/iOS 10.3+): fff-kit 1.8.0 compatibility layer and ES2017 syntax. This concerns the web page only, not the extension builds. Checked with an ES2017 parser and in a simulated old engine, not on real old devices.
 
 ## 1.10.1 — 18 Nov 2026
 - **Popup:** new *Simple mode* (contrast and size only, remembered); checkboxes enlarged to 24×24 px (WCAG 2.2 target size). New test `t22_popup_a11y.py` (accessible names, targets, mode, persistence).
