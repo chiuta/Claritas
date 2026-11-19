@@ -1,0 +1,10 @@
+{
+ "t21_single_page.py": {
+  "pass": 0,
+  "fail": 1,
+  "rc": 1,
+  "secs": 8,
+  "fails": [],
+  "tail": "16/x64/lib/python3.12/asyncio/runners.py\", line 195, in run\n    return runner.run(main)\n           ^^^^^^^^^^^^^^^^\n  File \"/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/asyncio/runners.py\", line 118, in run\n    return self._loop.run_until_complete(task)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/asyncio/base_events.py\", line 691, in run_until_complete\n    return future.result()\n           ^^^^^^^^^^^^^^^\n  File \"t21_single_page.py\", line 16, in main\n    page = [pg for pg in ctx.pages if not pg.is_closed()][0]; errs = []\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^\nIndexError: list index out of range\n"
+ }
+}
