@@ -2,7 +2,7 @@
 
 [English](README.md) · [Română](README.ro.md) · [Français](README.fr.md) · [Italiano](README.it.md) · **Español** · [Português](README.pt.md) · [Deutsch](README.de.md) · [Magyar](README.hu.md)
 
-**Versión: 1.10.2 · Última actualización: 18/11/2026**
+**Versión: 1.10.2 · Última actualización: 2026-11-22**
 
 Extensión de accesibilidad todo en uno, gratuita. Sin telemetría, sin red, sin cuentas: todo se queda en tu navegador.
 
