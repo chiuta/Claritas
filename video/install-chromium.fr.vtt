@@ -1,0 +1,29 @@
+WEBVTT
+
+1
+00:00.000 --> 00:05.000
+Téléchargez depuis le site de Claritas le paquet de votre navigateur.
+
+2
+00:06.000 --> 00:11.000
+Décompressez-le dans un dossier.
+
+3
+00:12.000 --> 00:16.000
+Ouvrez la page des extensions : chrome://extensions (edge://extensions, opera://extensions…).
+
+4
+00:17.000 --> 00:21.000
+Activez le mode développeur.
+
+5
+00:22.000 --> 00:29.000
+Choisissez « Charger l’extension non empaquetée » et sélectionnez le dossier.
+
+6
+00:30.000 --> 00:37.000
+Claritas apparaît dans la liste. Épinglez-la dans la barre d’outils.
+
+7
+00:38.000 --> 00:43.000
+Ouvrez la fenêtre de Claritas depuis la barre d’outils. Terminé.

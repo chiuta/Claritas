@@ -1,0 +1,29 @@
+WEBVTT
+
+1
+00:00.000 --> 00:05.000
+Download the package for your browser from the Claritas website.
+
+2
+00:06.000 --> 00:11.000
+Unzip it into a folder.
+
+3
+00:12.000 --> 00:21.000
+On a Mac with Xcode, run ./build-safari.sh in the unzipped folder.
+
+4
+00:22.000 --> 00:29.000
+Open Safari → Settings → Extensions.
+
+5
+00:30.000 --> 00:36.000
+Turn on Claritas and allow it on websites.
+
+6
+00:37.000 --> 00:41.000
+Open the Claritas popup from the toolbar.
+
+7
+00:42.000 --> 00:46.000
+If Claritas is not listed, enable Develop → Allow Unsigned Extensions. We have not yet verified activation on real Safari.

@@ -1,0 +1,29 @@
+WEBVTT
+
+1
+00:00.000 --> 00:05.000
+Téléchargez depuis le site de Claritas le paquet de votre navigateur.
+
+2
+00:06.000 --> 00:11.000
+Décompressez-le dans un dossier.
+
+3
+00:12.000 --> 00:21.000
+Sur un Mac avec Xcode, lancez ./build-safari.sh dans le dossier décompressé.
+
+4
+00:22.000 --> 00:29.000
+Ouvrez Safari → Réglages → Extensions.
+
+5
+00:30.000 --> 00:36.000
+Activez Claritas et autorisez-la sur les sites web.
+
+6
+00:37.000 --> 00:41.000
+Ouvrez la fenêtre de Claritas depuis la barre d’outils.
+
+7
+00:42.000 --> 00:46.000
+Si Claritas n’apparaît pas, activez Développement → Autoriser les extensions non signées. Nous n’avons pas encore vérifié l’activation dans un vrai Safari.
