@@ -1,0 +1,5 @@
+Xcode Project Location: /tmp/safari
+App Name: Claritas
+App Bundle Identifier: com.yourCompany.Claritas
+Platform: macOS
+Language: Swift
